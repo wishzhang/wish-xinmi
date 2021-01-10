@@ -1,5 +1,6 @@
 import user from './user';
 import menu from './menu';
+import route from './route';
 
 /**
  * 模拟数据mock
@@ -10,3 +11,5 @@ import menu from './menu';
 user({mock: true});
 
 menu({mock: true});
+
+route({mock: true});
