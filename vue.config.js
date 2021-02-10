@@ -22,17 +22,10 @@ module.exports = {
         port: 2021,
         proxy: {
             '/api': {
-                target: 'http://localhost:3000',
+                target: `${process.env.VUE_APP_SERVER_ORIGIN}`,
                 ws: true,
                 pathRewrite: {
                     '^/api': '/'
-                }
-            },
-            '/ws': {
-                target: 'http://localhost:3001/socket.io/',
-                ws: true,
-                pathRewrite: {
-                    '^/ws': '/'
                 }
             }
         }

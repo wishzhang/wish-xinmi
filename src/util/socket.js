@@ -4,7 +4,7 @@ let socket = null;
 
 const initSocket = (userId) => {
   if(socket === null){
-    socket = io('http://192.168.1.101:3000', {
+    socket = io(process.env.VUE_APP_SERVER_ORIGIN, {
       path: '/socket.io',
       withCredentials: true,
     });
