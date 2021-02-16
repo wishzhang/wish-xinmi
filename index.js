@@ -1,7 +1,7 @@
 const errorHandlerMiddleware = require('./middleware/error-handler-middleware');
 const Koa = require('koa');
 const koaBody = require('koa-body');
-const router = require('./router/index');
+const initRouter = require('./router/index');
 const createSocketServer = require('./create-socket-server');
 
 const app = new Koa();
@@ -15,7 +15,7 @@ app.use(require('koa-static')('./public'));
 app.use(errorHandlerMiddleware());
 
 // 请求路由表
-app.use(router());
+initRouter(app);
 
 app.use(async ctx => {
   console.log(ctx.request.body);
