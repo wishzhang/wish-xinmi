@@ -3,10 +3,13 @@ const Koa = require('koa');
 const koaBody = require('koa-body');
 const initRouter = require('./router/index');
 const createSocketServer = require('./create-socket-server');
+const fileUploader = require('./util/file-util');
+const ip = require('./util/index').getIPAddress();
+const afterMiddleware = require('./middleware/after-middleware');
 
 const app = new Koa();
 
-app.use(koaBody());
+app.use(koaBody({multipart: true}));
 
 // 静态资源
 app.use(require('koa-static')('./public'));
@@ -17,29 +20,12 @@ app.use(errorHandlerMiddleware());
 // 请求路由表
 initRouter(app);
 
-app.use(async ctx => {
-  console.log(ctx.request.body);
-  ctx.body = 'Hello World';
-});
+// minio中间件
+app.use(afterMiddleware());
 
 const server = createSocketServer(app);
 
-function getIPAddress() {
-  var interfaces = require('os').networkInterfaces();
-  for (let [networkType, networks] of Object.entries(interfaces)) {
-    if (networkType.startsWith('VM')) continue;
-
-    for (let network of networks) {
-      if (network.family === 'IPv4'
-        && network.address !== '127.0.0.1'
-        && !network.internal) {
-        return network.address;
-      }
-    }
-  }
-}
-
 server.listen(3000, () => {
   console.log('http://localhost:3000');
-  console.log(`http://${getIPAddress()}:3000`);
+  console.log(`http://${ip}:3000`);
 });

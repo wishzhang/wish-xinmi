@@ -2,9 +2,7 @@ const util = require('../util/index');
 const successRes = util.successRes;
 const messageService = require('../service/message-service');
 
-const router = require('koa-router')({
-  prefix: '/message'
-});
+const router = require('./router-factory')('/message');
 
 router.get('/getContactMessageList', async (ctx) => {
   const query = ctx.query;

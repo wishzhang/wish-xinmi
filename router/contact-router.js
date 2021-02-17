@@ -3,9 +3,7 @@ const contactService = require('../service/contact-service');
 
 const successRes = util.successRes;
 
-const router = require('koa-router')({
-  prefix: '/contact'
-});
+const router = require('./router-factory')('/contact');
 
 router.get('/getYesContactList', async (ctx) => {
   const query = ctx.query;

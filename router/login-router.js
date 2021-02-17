@@ -2,10 +2,7 @@ const util = require('../util/index');
 const successRes = util.successRes;
 const loginService = require('../service/login-service');
 
-const router = require('koa-router')({
-  prefix: '/login'
-});
-
+const router = require('./router-factory')('/login');
 router.get('/', async (ctx) => {
   const query = ctx.request.query;
   const obj = {

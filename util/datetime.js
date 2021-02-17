@@ -34,7 +34,7 @@ const dateFromNow = (date) => {
     const num = m.weekday() + '';
     return z[num];
     // 本年的显示某月某日
-  } else if (m.isSameOrAfter(now.startOf('month'))) {
+  } else if (m.isSameOrAfter(now.startOf('year'))) {
     return m.format('M月D日');
     // 去年的显示某年某月某日
   } else if (m.isBefore(now.startOf('year'))) {

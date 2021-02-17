@@ -3,6 +3,7 @@ const loginRouter = require('./login-router');
 const contactRouter = require('./contact-router');
 const messageRouter = require('./message-router');
 const circleRouter = require('./circle-router');
+const fileRouter = require('./file-router');
 
 module.exports = (app) => {
   app.use(userRouter.routes());
@@ -10,4 +11,5 @@ module.exports = (app) => {
   app.use(circleRouter.routes());
   app.use(contactRouter.routes());
   app.use(messageRouter.routes());
+  app.use(fileRouter.routes());
 }

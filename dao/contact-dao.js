@@ -4,33 +4,33 @@ const uuid = util.uuid;
 
 // 当用户添加联系人
 const addContact = async ({userId, contactId, validateMsg = '', originName, targetName}) => {
-  // 如果对方已给自己发送了验证消息，则将对方-自己 更新3，并且将自己-对方更新3
-  // 如果对方没有，则给对方-自己 插入2，自己-对方 插入1
-  const rows = await getUserContactStatus({userId: contactId, contactId: userId});
-  if (rows.length > 0) {
-    const status = rows[0].status;
-    if (status === 1) {
-      await mysql.transaction([
-        () => {
-          return `
+    // 如果对方已给自己发送了验证消息，则将对方-自己 更新3，并且将自己-对方更新3
+    // 如果对方没有，则给对方-自己 插入2，自己-对方 插入1
+    const rows = await getUserContactStatus({userId: contactId, contactId: userId});
+    if (rows.length > 0) {
+        const status = rows[0].status;
+        if (status === 1) {
+            await mysql.transaction([
+                () => {
+                    return `
           update xinmi_contact 
           set status = 3, update_time = now()
           where user_id = '${userId}' and contact_id = '${contactId}'
         `
-        },
-        () => {
-          return `
+                },
+                () => {
+                    return `
           update xinmi_contact set 
           status = 3, update_time = now()
           where user_id = '${contactId}' and contact_id = '${userId}'
         `
+                }
+            ])
         }
-      ])
-    }
-  } else {
-    await mysql.transaction([
-      () => {
-        return `
+    } else {
+        await mysql.transaction([
+            () => {
+                return `
           insert into xinmi.xinmi_contact 
           (
             user_id, contact_id, status, 
@@ -44,9 +44,9 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
             now()
           )
         `
-      },
-      () => {
-        return `
+            },
+            () => {
+                return `
           insert into xinmi.xinmi_contact
           (
             user_id, contact_id, status, 
@@ -60,36 +60,36 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
             now()
           )
       `
-      }
-    ]);
-  }
+            }
+        ]);
+    }
 }
 
 // 确认联系人
 const confirmContact = async ({userId, contactId}) => {
-  await mysql.transaction([
-    () => {
-      return `
+    await mysql.transaction([
+        () => {
+            return `
     update xinmi_contact
       set status = 3, update_time = now()
             where user_id = '${userId}'
               and contact_id = '${contactId}'
   `
-    },
-    () => {
-      return `
+        },
+        () => {
+            return `
     update xinmi_contact
       set status = 3, update_time = now()
             where user_id = '${contactId}'
               and contact_id = '${userId}'
   `
-    }
-  ])
+        }
+    ])
 }
 
 // 获取当前人和联系人的状态
 const getUserContactStatus = async ({userId, contactId}) => {
-  return await mysql.query(`
+    return await mysql.query(`
    select status
       from xinmi_contact
       where user_id = '${userId}' and contact_id = '${contactId}'
@@ -98,8 +98,8 @@ const getUserContactStatus = async ({userId, contactId}) => {
 
 // 获取当前用户的已添加的联系人
 const getYesContactList = async ({userId}) => {
-  return await mysql.query(`
-    select xu.id, xu.username
+    return await mysql.query(`
+    select xu.id, xu.username,xu.avatar_url
     from xinmi_user xu
              inner join xinmi_contact xc 
              on xu.id = xc.contact_id and xc.status = 3
@@ -109,7 +109,7 @@ const getYesContactList = async ({userId}) => {
 
 // 获取当前用户待确认的联系人
 const getConfirmContactList = async ({userId}) => {
-  return await mysql.query(`
+    return await mysql.query(`
     select xu.id, xu.username, xc.validate_msg
     from xinmi_user xu
              inner join xinmi_contact xc 
@@ -120,7 +120,7 @@ const getConfirmContactList = async ({userId}) => {
 
 // 获取当前用户的可添加的联系人
 const getNoContactList = async ({userId, username}) => {
-  return await mysql.query(`
+    return await mysql.query(`
     select xu.id, xu.username
       from xinmi_user xu
       where xu.id not in (
@@ -132,8 +132,8 @@ const getNoContactList = async ({userId, username}) => {
 }
 
 // 获取联系人详情
-const getContactDetail =  async ({userId, contactId}) => {
-  return await mysql.query(`
+const getContactDetail = async ({userId, contactId}) => {
+    return await mysql.query(`
       SELECT
         * 
       FROM
@@ -145,11 +145,11 @@ const getContactDetail =  async ({userId, contactId}) => {
 }
 
 module.exports = {
-  addContact,
-  getYesContactList,
-  confirmContact,
-  getNoContactList,
-  getConfirmContactList,
-  getUserContactStatus,
-  getContactDetail
+    addContact,
+    getYesContactList,
+    confirmContact,
+    getNoContactList,
+    getConfirmContactList,
+    getUserContactStatus,
+    getContactDetail
 }

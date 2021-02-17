@@ -2,9 +2,7 @@ const util = require('../util/index');
 const successRes = util.successRes;
 const circleService = require('../service/circle-service');
 
-const router = require('koa-router')({
-  prefix: '/circle'
-});
+const router = require('./router-factory')('/circle');
 
 router.get('/getMineAllList', async (ctx) => {
   const query = ctx.query;
