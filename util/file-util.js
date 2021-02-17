@@ -1,16 +1,14 @@
 const Minio = require('minio');
 const util = require('./index');
-const bucketName = 'xinmi';
-var fs = require('fs');
-const ip = require('./index').getIPAddress();
-const port = 9000;
+const fs = require('fs');
+const bucketName = global.config.minioBucketName;
 
 const minioClient = new Minio.Client({
-    endPoint: ip,
-    port: port,
-    useSSL: false,
-    accessKey: 'minioadmin',
-    secretKey: 'minioadmin'
+    endPoint: global.config.minioEndPoint,
+    port: global.config.minioPort,
+    useSSL: global.config.minioUseSSL,
+    accessKey: global.config.minioAccessKey,
+    secretKey: global.config.minioSecretKey
 });
 
 const putFile = async (file) => {
@@ -27,7 +25,7 @@ const putFile = async (file) => {
     return {
         originName: file.name,
         filename: newName,
-        link: `http://${ip}:${port}/${bucketName}/${newName}`
+        link: `http://${global.config.minioEndPoint}:${global.config.minioPort}/${bucketName}/${newName}`
     }
 }
 

@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev-debug-all": "set DEBUG=xinmi-* & nodemon --inspect index.js",
-    "dev-debug-pure": "nodemon --inspect index.js",
-    "dev": "nodemon --inspect index.js"
+    "dev-debug-all": "cross-env NODE_ENV=development DEBUG=xinmi-* nodemon --inspect index.js",
+    "dev-debug-pure": "cross-env NODE_ENV=development nodemon --inspect index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --inspect index.js",
+    "prod": "cross-env NODE_ENV=production nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +24,8 @@
     "pinyin": "^2.9.1",
     "socket.io": "^3.1.0",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

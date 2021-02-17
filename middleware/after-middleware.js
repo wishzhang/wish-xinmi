@@ -1,10 +1,9 @@
 const util = require('../util/index');
-const host = util.getMinio().host;
 
 const fields = ['avatarUrl'];
 
 const convertValue = (val) => {
-    return host + val;
+    return util.getMinioUrl(val);
 }
 
 function fillFields(arr) {

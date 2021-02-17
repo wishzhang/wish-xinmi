@@ -74,32 +74,13 @@ function getSuffix(filename) {
     return /\.[^\.]+$/.exec(filename)
 }
 
-function getIPAddress() {
-    var interfaces = require('os').networkInterfaces();
-    for (let [networkType, networks] of Object.entries(interfaces)) {
-        if (networkType.startsWith('VM')) continue;
-
-        for (let network of networks) {
-            if (network.family === 'IPv4'
-                && network.address !== '127.0.0.1'
-                && !network.internal) {
-                return network.address;
-            }
-        }
-    }
-}
-
-function getMinio() {
-    return {
-        ip: getIPAddress(),
-        port: 9000,
-        host: `http://${getIPAddress()}:9000`
-    }
-}
-
-function removeDomain(url){
+function removeDomain(url) {
     url = '/' + url.split('/').slice(3).join('/');
     return url;
+}
+
+function getMinioUrl(path) {
+    return global.config.minioHost + path;
 }
 
 module.exports = {
@@ -109,7 +90,6 @@ module.exports = {
     getFirstUpperLetter,
     toHumpList,
     getSuffix,
-    getIPAddress,
-    getMinio,
-    removeDomain
+    removeDomain,
+    getMinioUrl
 }

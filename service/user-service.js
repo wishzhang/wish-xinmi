@@ -18,7 +18,6 @@ const getUserDetail = async ({userId}) => {
     const list = await userDao.getUserDetail({userId});
     if (list.length > 0) {
         const user = list[0];
-        // user.avatarUrl = `${util.getMinio().host}` + user.avatarUrl;
         return list[0];
     } else {
         return null;

@@ -1,10 +1,14 @@
+// 加载环境配置
+const configDev = require('./config.dev');
+var configProd = require('./config.prod');
+global.config = process.env.NODE_ENV === "development" ? configDev : configProd;
+
 const errorHandlerMiddleware = require('./middleware/error-handler-middleware');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const initRouter = require('./router/index');
 const createSocketServer = require('./create-socket-server');
 const fileUploader = require('./util/file-util');
-const ip = require('./util/index').getIPAddress();
 const afterMiddleware = require('./middleware/after-middleware');
 
 const app = new Koa();
@@ -25,7 +29,7 @@ app.use(afterMiddleware());
 
 const server = createSocketServer(app);
 
-server.listen(3000, () => {
-  console.log('http://localhost:3000');
-  console.log(`http://${ip}:3000`);
+server.listen(global.config.serverPort, () => {
+  console.log(`http://localhost:${global.config.serverPort}`);
+  console.log(`http://${global.config.serverIp}:${global.config.serverPort}`);
 });
