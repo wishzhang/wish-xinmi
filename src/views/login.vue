@@ -25,42 +25,44 @@
 </template>
 
 <script>
-  import {socket} from "../util/socket";
-  import {mapGetters} from 'vuex';
+    import {socket} from "../util/socket";
+    import {mapGetters} from 'vuex';
 
-  export default {
-    name: "login",
-    data() {
-      return {
-        username: '',
-        password: '',
-      };
-    },
-    computed: {
-      ...mapGetters(['userInfo'])
-    },
-    created() {
-      if (socket) {
-        socket.disconnect();
-      }
-    },
-    methods: {
-      onSubmit(values) {
-        this.$store.dispatch('Login', {
-          username: values.username,
-          password: values.password
-        }).then((res) => {
-          if (res.code === 0) {
-            this.$toast.success('登录成功');
-            this.$router.push({path: '/frame'});
-          } else {
-            this.$toast.fail(res.msg);
-          }
-        }).catch(() => {
-        })
-      },
-    },
-  }
+    export default {
+        name: "login",
+        data() {
+            return {
+                username: '',
+                password: '',
+            };
+        },
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        created() {
+            if (socket) {
+                socket.disconnect();
+            }
+        },
+        methods: {
+            onSubmit(values) {
+                this.$store.dispatch('Login', {
+                    username: values.username,
+                    password: values.password
+                }).then((res) => {
+                    if (res.code === 0) {
+                        this.$store.dispatch('FetchUserInfo', res.data.id).then(res2 => {
+                            this.$toast.success('登录成功');
+                            this.$router.push({path: '/frame'});
+                        })
+                    } else {
+                        this.$toast.fail(res.msg);
+                    }
+                }).catch(() => {
+                })
+            },
+        },
+    }
 </script>
 
 <style scoped lang="scss">

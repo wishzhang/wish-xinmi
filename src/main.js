@@ -31,6 +31,7 @@ import {
     Dialog,
     Divider,
     Image as VanImage,
+    Uploader
 } from 'vant';
 
 Vue.config.productionTip = false
@@ -55,6 +56,7 @@ Vue.use(Sticky)
 Vue.use(Dialog)
 Vue.use(VanImage)
 Vue.use(Divider)
+Vue.use(Uploader)
 
 Vue.component('basic-container', BasicContainer)
 

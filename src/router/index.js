@@ -15,6 +15,7 @@ import Discover from '../views/frame/discover'
 import Thought from '../views/frame/thought'
 import ThoughtSend from '../views/frame/thought-send'
 import ThoughtPeople from '../views/frame/thought-people'
+import MineDetail from '../views/frame/mine-detail'
 
 Vue.use(VueRouter)
 
@@ -94,6 +95,11 @@ const routes = [
         path: '/thought-people',
         component: ThoughtPeople
     },
+    // 个人信息详情
+    {
+        path: '/mine-detail',
+        component: MineDetail
+    }
 ]
 
 const router = new VueRouter({

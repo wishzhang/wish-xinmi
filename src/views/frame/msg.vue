@@ -26,7 +26,7 @@
             <van-cell v-for="item in list"
                       :key="item.chatId"
                       :value="item.createTime"
-                      :title="getTitle(item)"
+                      :title="item.towardsName"
                       @click="onChatClick(item)"
                       :label="item.content">
                 <template #icon>
@@ -34,7 +34,7 @@
                             radius="4"
                             width="48"
                             height="48"
-                            src="/api/img/default-avatar.png" style="margin-right: 8px;"/>
+                            :src="item.avatarUrl|imageAvatar" style="margin-right: 8px;"/>
                 </template>
             </van-cell>
         </van-list>
@@ -70,13 +70,6 @@
             })
         },
         methods: {
-            getTitle(item) {
-                if (item.originUser === this.userInfo.id) {
-                    return item.targetName;
-                } else if (item.targetUser === this.userInfo.id) {
-                    return item.originName;
-                }
-            },
             onSelect(action) {
                 if (action.text === '添加朋友') {
                     this.$router.push({path: '/contact-add'})

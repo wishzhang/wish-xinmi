@@ -42,7 +42,7 @@
                                     radius="4"
                                     width="36"
                                     height="36"
-                                    src="/api/img/default-avatar.png" style="margin: 0 8px 0 0;"/>
+                                    :src="sub.avatarUrl|imageAvatar" style="margin: 0 8px 0 0;"/>
                         </template>
                     </van-cell>
                 </template>

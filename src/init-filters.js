@@ -26,4 +26,9 @@ export function initFilters(Vue) {
         if (!value) return ''
         return datePastLong(value);
     })
+
+    // 默认头像
+    Vue.filter('imageAvatar', function (value) {
+        return value || '/img/default-avatar.png'
+    })
 }

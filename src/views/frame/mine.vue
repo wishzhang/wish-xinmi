@@ -1,7 +1,11 @@
 <template>
     <basic-container>
         <van-cell-group>
-            <van-cell v-if="userInfo!==null" label="无签名" :title="userInfo.username">
+            <van-cell v-if="userInfo!==null" label="无签名"
+                      is-link
+                      :to="{path: '/mine-detail'}"
+                      @click="onToMineDetail"
+                      :title="userInfo.username">
                 <template #icon>
                     <van-image
                             radius="4"
@@ -26,20 +30,25 @@
 </template>
 
 <script>
-  import {fetchUserInfoRequest} from "../../api/user";
-  import {mapGetters} from 'vuex';
+    import {fetchUserInfoRequest} from "../../api/user";
+    import {mapGetters} from 'vuex';
 
-  export default {
-    name: "frame-index-mine",
-    data() {
-      return {}
-    },
-    computed: {
-      ...mapGetters(['userInfo']),
-    },
-    created() {
-    },
-  }
+    export default {
+        name: "frame-index-mine",
+        data() {
+            return {}
+        },
+        computed: {
+            ...mapGetters(['userInfo']),
+        },
+        created() {
+        },
+        methods: {
+            onToMineDetail() {
+
+            }
+        }
+    }
 </script>
 
 <style scoped>
