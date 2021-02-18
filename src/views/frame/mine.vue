@@ -11,7 +11,7 @@
                             radius="4"
                             width="48"
                             height="48"
-                            src="/api/img/default-avatar.png" style="margin: 0 8px 0 0;"/>
+                            :src="userInfo.avatarUrl|imageAvatar" style="margin: 0 8px 0 0;"/>
                 </template>
             </van-cell>
         </van-cell-group>

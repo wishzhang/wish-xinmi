@@ -15,7 +15,7 @@
             <div v-for="item in list" :key="item.id">
                 <div class="circle-item">
                     <van-image style="margin-right:10px;" width="40" height="40"
-                               src="/api/img/default-avatar.png"></van-image>
+                               :src="item.avatarUrl|imageAvatar"></van-image>
                     <div class="circle-item-right">
                         <div class="circle-item-name">{{getName(item)}}</div>
                         <div class="circle-item-content">

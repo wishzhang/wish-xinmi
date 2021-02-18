@@ -27,6 +27,7 @@
     import {mapGetters} from 'vuex';
     import {putFile} from "@/api/common";
     import {updateUserInfoRequest} from "../../api/user";
+    import Vue from 'vue';
 
     export default {
         name: "mine-detail",
@@ -39,8 +40,11 @@
             ...mapGetters(['userInfo']),
         },
         mounted() {
+            const imageAvatar = Vue.filter('imageAvatar');
+            const avatarUrl = imageAvatar(this.userInfo.avatarUrl);
+
             const obj = {
-                url: this.userInfo.avatarUrl,
+                url: avatarUrl,
                 previewSize: 60,
                 deletable: false,
             };

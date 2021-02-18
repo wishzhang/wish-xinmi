@@ -3,7 +3,13 @@ module.exports = {
     publicPath: "/",
     lintOnSave: true,
     productionSourceMap: false,
-    chainWebpack: (config) => {
+    chainWebpack: config => {
+        config
+            .plugin('html')
+            .tap(args => {
+                args[0].title= '信迷'
+                return args
+            })
     },
     css: {
         loaderOptions: {

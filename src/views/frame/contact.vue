@@ -54,43 +54,43 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
-  import {fetchYetContactListRequest} from "../../api/contact";
+    import {mapGetters} from 'vuex';
+    import {fetchYetContactListRequest} from "../../api/contact";
 
-  export default {
-    name: "frame-index-contact",
-    data() {
-      return {
-        contactList: [],
-        showPopover: false,
-        actions: [{text: '添加朋友', icon: 'friends'}],
-      }
-    },
-    computed: {
-      ...mapGetters(['userInfo']),
-      indexList() {
-        return this.contactList.map(el => el.label);
-      }
-    },
-    created() {
-      const params = {
-        id: this.userInfo.id
-      }
-      fetchYetContactListRequest(params).then(res => {
-        this.contactList = res.data
-      })
-    },
-    methods: {
-      onSelect(action) {
-        if (action.text === '添加朋友') {
-          this.$router.push({path: '/contact-add'})
+    export default {
+        name: "frame-index-contact",
+        data() {
+            return {
+                contactList: [],
+                showPopover: false,
+                actions: [{text: '添加朋友', icon: 'friends'}],
+            }
+        },
+        computed: {
+            ...mapGetters(['userInfo']),
+            indexList() {
+                return this.contactList.map(el => el.label);
+            }
+        },
+        created() {
+            const params = {
+                id: this.userInfo.id
+            }
+            fetchYetContactListRequest(params).then(res => {
+                this.contactList = res.data
+            })
+        },
+        methods: {
+            onSelect(action) {
+                if (action.text === '添加朋友') {
+                    this.$router.push({path: '/contact-add'})
+                }
+            },
+            onContactItemClick(item) {
+                this.$router.push({path: '/contact-info-had', query: {id: item.id}})
+            }
         }
-      },
-      onContactItemClick(item) {
-        this.$router.push({path: '/contact-info', query: {id: item.id}})
-      }
     }
-  }
 </script>
 
 <style scoped>

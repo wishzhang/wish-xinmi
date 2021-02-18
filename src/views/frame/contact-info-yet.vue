@@ -2,13 +2,13 @@
     <basic-container>
         <van-nav-bar left-arrow @click-left="onClickLeft"/>
         <van-cell-group>
-            <van-cell v-if="userData!==null" :title="userData.contactName" center>
+            <van-cell v-if="userData!==null" :title="userData.username" center>
                 <template #icon>
                     <van-image
                             radius="4"
                             width="36"
                             height="36"
-                            src="/api/img/default-avatar.png" style="margin: 0 8px 0 0;"/>
+                            :src="userData.avatarUrl|imageAvatar" style="margin: 0 8px 0 0;"/>
                 </template>
             </van-cell>
         </van-cell-group>
@@ -28,15 +28,6 @@
                 type="info">已发送验证请求
         </van-button>
         <van-button
-                v-else-if="userContactStatus===3"
-                style="margin-top: 10px;"
-                block
-                plain
-                hairline
-                type="info"
-                @click="onChat">发消息
-        </van-button>
-        <van-button
                 v-else-if="userData!==null"
                 style="margin-top: 10px;"
                 block
@@ -51,6 +42,7 @@
 
 <script>
     import {fetchContactDetailRequest} from "../../api/contact";
+    import {fetchUserInfoRequest} from "@/api/user";
     import {addContactRequest, fetchUserContactStatusRequest} from "../../api/contact";
     import {mapGetters} from 'vuex';
 
@@ -68,10 +60,9 @@
         },
         created() {
             const params1 = {
-                userId: this.userInfo.id,
-                contactId: this.$route.query.id
+                id: this.$route.query.id
             }
-            fetchContactDetailRequest(params1).then(res => {
+            fetchUserInfoRequest(params1).then(res => {
                 if (res.code === 0) {
                     this.userData = res.data;
                 }

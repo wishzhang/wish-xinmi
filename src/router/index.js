@@ -7,7 +7,8 @@ import Msg from '../views/frame/msg'
 import Contact from '../views/frame/contact'
 import Mine from '../views/frame/mine'
 import ContactAdd from '../views/frame/contact-add'
-import ContactInfo from '../views/frame/contact-info'
+import ContactInfoHad from '../views/frame/contact-info-had'
+import ContactInfoYet from '../views/frame/contact-info-yet'
 import ContactConfirm from '../views/frame/contact-confirm'
 import Chat from '../views/frame/chat'
 import Setting from '../views/setting'
@@ -60,10 +61,15 @@ const routes = [
         path: '/contact-add',
         component: ContactAdd
     },
-    // 联系人简介
+    // 联系人简介：已添加为联系人
     {
-        path: '/contact-info',
-        component: ContactInfo
+        path: '/contact-info-had',
+        component: ContactInfoHad
+    },
+    // 联系人简介：还没成为联系人
+    {
+        path: '/contact-info-yet',
+        component: ContactInfoYet
     },
     // 待确认的联系人
     {
@@ -103,7 +109,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    mode: 'history',
+    mode: 'hash',
     base: process.env.BASE_URL,
     routes
 })

@@ -35,7 +35,7 @@
                                 radius="4"
                                 width="36"
                                 height="36"
-                                src="/api/img/default-avatar.png" style="margin: 0 8px 0 0;"/>
+                                :src="item.avatarUrl|imageAvatar" style="margin: 0 8px 0 0;"/>
                     </template>
                 </van-cell>
             </van-list>
@@ -44,52 +44,52 @@
 </template>
 
 <script>
-  import {fetchNoContactListRequest} from "../../api/contact";
-  import {mapGetters} from 'vuex';
+    import {fetchNoContactListRequest} from "../../api/contact";
+    import {mapGetters} from 'vuex';
 
-  export default {
-    name: "contact-add",
-    data() {
-      return {
-        username: '',
-        list: [],
-        loading: false,
-        finished: false,
-      }
-    },
-    computed: {
-      ...mapGetters(['userInfo'])
-    },
-    methods: {
-      onClear() {
-        this.onLoad();
-      },
-      onClickLeft() {
-        history.back()
-      },
-      onSearch() {
-        this.onLoad();
-      },
-      onCancel() {
-        history.back()
-      },
-      onItemClick(item) {
-        this.$router.push({path: '/contact-info', query: {id: item.id}})
-      },
-      onLoad() {
-        this.loading = false
-        this.finished = true
+    export default {
+        name: "contact-add",
+        data() {
+            return {
+                username: '',
+                list: [],
+                loading: false,
+                finished: false,
+            }
+        },
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        methods: {
+            onClear() {
+                this.onLoad();
+            },
+            onClickLeft() {
+                history.back()
+            },
+            onSearch() {
+                this.onLoad();
+            },
+            onCancel() {
+                history.back()
+            },
+            onItemClick(item) {
+                this.$router.push({path: '/contact-info-yet', query: {id: item.id}})
+            },
+            onLoad() {
+                this.loading = false
+                this.finished = true
 
-        const params = {
-          id: this.userInfo.id,
-          username: this.username
+                const params = {
+                    id: this.userInfo.id,
+                    username: this.username
+                }
+                fetchNoContactListRequest(params).then(res => {
+                    this.list = res.data
+                })
+            },
         }
-        fetchNoContactListRequest(params).then(res => {
-          this.list = res.data
-        })
-      },
     }
-  }
 </script>
 
 <style scoped>
