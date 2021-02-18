@@ -8,27 +8,29 @@
 </template>
 
 <script>
-  import {socket} from "../util/socket";
-  import {mapGetters} from 'vuex';
+    import {socket} from "../util/socket";
+    import {mapGetters} from 'vuex';
 
-  export default {
-    name: "setting",
-    computed: {
-      ...mapGetters(['userInfo'])
-    },
-    methods: {
-      onLoginOut() {
-        if (socket !== null) {
-          socket.emit('sessionOff', {userId: this.userInfo.id})
-          socket.disconnect();
+    export default {
+        name: "setting",
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        methods: {
+            onLoginOut() {
+                this.$store.dispatch('Logout').then(() => {
+                    if (socket !== null) {
+                        socket.emit('sessionOff', {userId: this.userInfo.id})
+                        socket.disconnect();
+                    }
+                    this.$router.push({path: '/login'});
+                })
+            },
+            onClickLeft() {
+                history.back();
+            }
         }
-        this.$router.push({path: '/login'});
-      },
-      onClickLeft(){
-        history.back();
-      }
     }
-  }
 </script>
 
 <style scoped>

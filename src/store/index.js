@@ -17,7 +17,7 @@ export default new Vuex.Store({
     },
     modules: {
         user: {
-            state:{
+            state: {
                 userInfo: getStore({name: 'userInfo'}) || {}
             },
             mutations: {
@@ -40,13 +40,16 @@ export default new Vuex.Store({
                     const params = {
                         id: userId
                     }
-                    fetchUserInfoRequest(params).then(res => {
+                    return fetchUserInfoRequest(params).then(res => {
                         if (res.code === 0) {
                             const data = res.data;
                             commit('SET_USER_INFO', data);
                         }
                         return res;
                     })
+                },
+                Logout({commit}) {
+                    commit('SET_USER_INFO', {});
                 }
             },
             getters: {}

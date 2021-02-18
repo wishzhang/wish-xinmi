@@ -18,13 +18,11 @@
 
         <van-cell value="设置"
                   is-link
-                  :to="{path: '/setting'}"
-                  icon="setting-o">
+                  :to="{path: '/setting'}">
         </van-cell>
-        <van-cell value="我的朋友圈"
+        <van-cell value="我发的"
                   is-link
-                  :to="{path: '/thought-people', query: {id: userInfo.id}}"
-                  icon="setting-o">
+                  :to="{path: '/thought-people', query: {id: userInfo.id}}">
         </van-cell>
     </basic-container>
 </template>
