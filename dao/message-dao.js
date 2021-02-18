@@ -4,11 +4,16 @@ const uuid = util.uuid;
 
 const getContactMessageList = async ({originUser, targetUser}) => {
     const resList = await mysql.query(`
-        select * 
-        from xinmi_message 
-          where (origin_user='${originUser}' and target_user = '${targetUser}')
-          or (origin_user='${targetUser}' and target_user = '${originUser}')
-          order by create_time asc
+        SELECT
+         xm.*, xu.avatar_url
+        FROM
+            xinmi_message xm
+            INNER JOIN xinmi_user xu ON xm.origin_user = xu.id
+        WHERE
+            ( xm.origin_user = '${originUser}' AND xm.target_user = '${targetUser}' ) 
+            OR ( xm.origin_user = '${targetUser}' AND xm.target_user = '${originUser}' ) 
+        ORDER BY
+            xm.create_time ASC
     `);
     return util.toHumpList(resList);
 }

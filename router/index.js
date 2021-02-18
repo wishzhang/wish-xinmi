@@ -5,6 +5,11 @@ const messageRouter = require('./message-router');
 const circleRouter = require('./circle-router');
 const fileRouter = require('./file-router');
 
+const router = require('./router-factory')('/');
+router.all('/', async (ctx) => {
+
+})
+
 module.exports = (app) => {
   app.use(userRouter.routes());
   app.use(loginRouter.routes());

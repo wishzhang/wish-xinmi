@@ -31,9 +31,11 @@ function fillFields(arr) {
 
 module.exports = () => {
     return (async (ctx, next) => {
-        const data = ctx.body.data;
-        fillFields(data);
-        ctx.body.data = data;
+        if(ctx.body&&ctx.body.data){
+            const data = ctx.body.data;
+            fillFields(data);
+            ctx.body.data = data;
+        }
         next();
     });
 }

@@ -20,6 +20,13 @@ const routerFactory = function (prefix) {
                 next();
             });
         },
+        all(path, callback) {
+            return router.all(path, async (ctx, next) => {
+                debug('请求路径为：' + ctx.request.path);
+                await callback(ctx);
+                next();
+            });
+        },
         routes() {
             return router.routes();
         }

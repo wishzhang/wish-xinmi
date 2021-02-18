@@ -11,6 +11,7 @@ const getMineAllList = async ({userId}) => {
       xt.create_time,
       xt.create_user,
       xu.username,
+      xu.avatar_url,
       xc.contact_name
     FROM
       xinmi_thought xt

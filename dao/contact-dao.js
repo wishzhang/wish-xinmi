@@ -110,37 +110,48 @@ const getYesContactList = async ({userId}) => {
 // 获取当前用户待确认的联系人
 const getConfirmContactList = async ({userId}) => {
     return await mysql.query(`
-    select xu.id, xu.username, xc.validate_msg
-    from xinmi_user xu
-             inner join xinmi_contact xc 
-             on xu.id = xc.contact_id and xc.status = 2
-    where xc.user_id = '${userId}'
+        select 
+            xu.id, 
+            xu.username, 
+            xc.validate_msg,
+            xu.avatar_url
+        from xinmi_user xu
+                 inner join xinmi_contact xc 
+                 on xu.id = xc.contact_id and xc.status = 2
+        where xc.user_id = '${userId}'
   `)
 }
 
 // 获取当前用户的可添加的联系人
 const getNoContactList = async ({userId, username}) => {
     return await mysql.query(`
-    select xu.id, xu.username
-      from xinmi_user xu
-      where xu.id not in (
-        select xc.contact_id from xinmi_contact xc where xc.user_id = '${userId}' and xc.status =3
-      )
-        and xu.username like '%${username}%'
-        and xu.id != '${userId}'
+        select 
+            xu.id, 
+            xu.username,
+            xu.avatar_url
+          from xinmi_user xu
+          where xu.id not in (
+            select xc.contact_id from xinmi_contact xc where xc.user_id = '${userId}' and xc.status =3
+          )
+            and xu.username like '%${username}%'
+            and xu.id != '${userId}'
     `)
 }
 
-// 获取联系人详情
-const getContactDetail = async ({userId, contactId}) => {
+// 获取联系人详情,已经是联系人
+const getContactInfoHad= async ({userId, contactId}) => {
     return await mysql.query(`
-      SELECT
-        * 
-      FROM
-        xinmi_contact 
-      WHERE
-        user_id = '${userId}' 
-        AND contact_id = '${contactId}'
+        SELECT
+            xu.id,
+            xc.contact_name,
+            xu.avatar_url 
+        FROM
+            xinmi_contact xc
+            INNER JOIN xinmi_user xu ON xc.contact_id = xu.id 
+        WHERE
+            xc.user_id = '${userId}' 
+            AND xc.contact_id = '${contactId}'
+            AND xc.status=3
     `)
 }
 
@@ -151,5 +162,5 @@ module.exports = {
     getNoContactList,
     getConfirmContactList,
     getUserContactStatus,
-    getContactDetail
+    getContactInfoHad
 }

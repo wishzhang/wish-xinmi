@@ -9,9 +9,12 @@ const koaBody = require('koa-body');
 const initRouter = require('./router/index');
 const createSocketServer = require('./create-socket-server');
 const fileUploader = require('./util/file-util');
+const beforeMiddleware = require('./middleware/before-middleware');
 const afterMiddleware = require('./middleware/after-middleware');
 
 const app = new Koa();
+
+app.use(beforeMiddleware());
 
 app.use(koaBody({multipart: true}));
 

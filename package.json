@@ -7,19 +7,12 @@
     "dev-debug-all": "cross-env NODE_ENV=development DEBUG=xinmi-* nodemon --inspect index.js",
     "dev-debug-pure": "cross-env NODE_ENV=development nodemon --inspect index.js",
     "dev": "cross-env NODE_ENV=development nodemon --inspect index.js",
-    "prod:start": "cross-env NODE_ENV=production DEBUG=xinmi-*  pm2 start index.js --name xinmi",
-    "prod:stop": "pm2 stop xinmi",
-    "prod:monit": "pm2 monit xinmi",
-    "prod:restart": "pm2 restart xinmi",
-    "prod:reload": "pm2 reload xinmi",
-    "prod:delete": "pm2 delete xinmi",
-    "prod:logs": "pm2 logs xinmi"
+    "prod": "cross-env NODE_ENV=production DEBUG=xinmi-* nodemon --inspect index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^3.1.0",
-    "iconv-lite": "^0.6.2",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
     "koa-router": "^10.0.0",
