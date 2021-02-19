@@ -1,5 +1,5 @@
 <template>
-    <basic-container style="background:white;">
+    <basic-container white>
         <van-nav-bar left-arrow
                      left-text="发表文字"
                      @click-left="onClickLeft">

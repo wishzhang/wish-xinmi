@@ -17,6 +17,7 @@ import Thought from '../views/frame/thought'
 import ThoughtSend from '../views/frame/thought-send'
 import ThoughtPeople from '../views/frame/thought-people'
 import MineDetail from '../views/frame/mine-detail'
+import IndexLayout from '../components/index-layout'
 
 Vue.use(VueRouter)
 
@@ -34,78 +35,84 @@ const routes = [
         component: Register
     },
     {
-        path: '/frame',
-        redirect: '/frame/msg',
-        component: Frame,
+        path: '/index-layout',
+        component: IndexLayout,
         children: [
             {
-                path: 'msg',
-                component: Msg
+                path: 'frame',
+                redirect: 'frame/msg',
+                component: Frame,
+                children: [
+                    {
+                        path: 'msg',
+                        component: Msg
+                    },
+                    {
+                        path: 'contact',
+                        component: Contact
+                    },
+                    {
+                        path: 'discover',
+                        component: Discover
+                    },
+                    {
+                        path: 'mine',
+                        component: Mine
+                    }
+                ]
             },
+            // 添加联系人
             {
-                path: 'contact',
-                component: Contact
+                path: 'contact-add',
+                component: ContactAdd
             },
+            // 联系人简介：已添加为联系人
             {
-                path: 'discover',
-                component: Discover
+                path: 'contact-info-had',
+                component: ContactInfoHad
             },
+            // 联系人简介：还没成为联系人
             {
-                path: 'mine',
-                component: Mine
+                path: 'contact-info-yet',
+                component: ContactInfoYet
+            },
+            // 待确认的联系人
+            {
+                path: 'contact-confirm',
+                component: ContactConfirm
+            },
+            // 聊天窗口
+            {
+                path: 'chat',
+                component: Chat
+            },
+            // 设置
+            {
+                path: 'setting',
+                component: Setting
+            },
+            // 朋友圈
+            {
+                path: 'thought',
+                component: Thought
+            },
+            // 发朋友圈
+            {
+                path: 'thought-send',
+                component: ThoughtSend
+            },
+            // 我的朋友圈
+            {
+                path: 'thought-people',
+                component: ThoughtPeople
+            },
+            // 个人信息详情
+            {
+                path: 'mine-detail',
+                component: MineDetail
             }
         ]
     },
-    // 添加联系人
-    {
-        path: '/contact-add',
-        component: ContactAdd
-    },
-    // 联系人简介：已添加为联系人
-    {
-        path: '/contact-info-had',
-        component: ContactInfoHad
-    },
-    // 联系人简介：还没成为联系人
-    {
-        path: '/contact-info-yet',
-        component: ContactInfoYet
-    },
-    // 待确认的联系人
-    {
-        path: '/contact-confirm',
-        component: ContactConfirm
-    },
-    // 聊天窗口
-    {
-        path: '/chat',
-        component: Chat
-    },
-    // 设置
-    {
-        path: '/setting',
-        component: Setting
-    },
-    // 朋友圈
-    {
-        path: '/thought',
-        component: Thought
-    },
-    // 发朋友圈
-    {
-        path: '/thought-send',
-        component: ThoughtSend
-    },
-    // 我的朋友圈
-    {
-        path: '/thought-people',
-        component: ThoughtPeople
-    },
-    // 个人信息详情
-    {
-        path: '/mine-detail',
-        component: MineDetail
-    }
 ]
 
 const router = new VueRouter({

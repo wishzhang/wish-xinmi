@@ -18,7 +18,7 @@
         </van-nav-bar>
 
         <!--待验证的联系人-->
-        <van-cell value="" :to="{path: '/contact-confirm'}">
+        <van-cell value="" :to="{path: '/index-layout/contact-confirm'}">
             <!-- 使用 title 插槽来自定义标题 -->
             <template #title>
                 <span class="custom-title">新的联系人</span>
@@ -83,11 +83,11 @@
         methods: {
             onSelect(action) {
                 if (action.text === '添加朋友') {
-                    this.$router.push({path: '/contact-add'})
+                    this.$router.push({path: '/index-layout/contact-add'})
                 }
             },
             onContactItemClick(item) {
-                this.$router.push({path: '/contact-info-had', query: {id: item.id}})
+                this.$router.push({path: '/index-layout/contact-info-had', query: {id: item.id}})
             }
         }
     }

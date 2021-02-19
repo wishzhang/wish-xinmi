@@ -131,7 +131,7 @@
                 }
             },
             onClickLeft() {
-                this.$router.push({path: '/frame/msg'})
+                this.$router.push({path: '/index-layout/frame/msg'})
             },
             onSend() {
                 if (!this.message) {

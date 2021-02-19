@@ -53,7 +53,7 @@
                     if (res.code === 0) {
                         this.$store.dispatch('FetchUserInfo', res.data.id).then(res2 => {
                             this.$toast.success('登录成功');
-                            this.$router.push({path: '/frame'});
+                            this.$router.push({path: '/index-layout/frame'});
                         })
                     } else {
                         this.$toast.fail(res.msg);
@@ -61,6 +61,7 @@
                 }).catch(() => {
                 })
             },
+
         },
     }
 </script>

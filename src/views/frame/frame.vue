@@ -5,19 +5,19 @@
         </div>
         <van-tabbar route>
             <van-tabbar-item
-                    replace to="/frame/msg"
+                    replace to="/index-layout/frame/msg"
                     icon="chat-o">消息
             </van-tabbar-item>
             <van-tabbar-item
-                    replace to="/frame/contact"
+                    replace to="/index-layout/frame/contact"
                     icon="friends-o">联系人
             </van-tabbar-item>
             <van-tabbar-item
-                    replace to="/frame/discover"
+                    replace to="/index-layout/frame/discover"
                     icon="friends-o">朋友圈
             </van-tabbar-item>
             <van-tabbar-item
-                    replace to="/frame/mine"
+                    replace to="/index-layout/frame/mine"
                     icon="user-circle-o">我的
             </van-tabbar-item>
         </van-tabbar>

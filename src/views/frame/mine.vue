@@ -3,7 +3,7 @@
         <van-cell-group>
             <van-cell v-if="userInfo!==null" label="无签名"
                       is-link
-                      :to="{path: '/mine-detail'}"
+                      :to="{path: '/index-layout/mine-detail'}"
                       @click="onToMineDetail"
                       :title="userInfo.username">
                 <template #icon>
@@ -18,11 +18,11 @@
 
         <van-cell value="设置"
                   is-link
-                  :to="{path: '/setting'}">
+                  :to="{path: '/index-layout/setting'}">
         </van-cell>
         <van-cell value="我发的"
                   is-link
-                  :to="{path: '/thought-people', query: {id: userInfo.id}}">
+                  :to="{path: '/index-layout/thought-people', query: {id: userInfo.id}}">
         </van-cell>
     </basic-container>
 </template>

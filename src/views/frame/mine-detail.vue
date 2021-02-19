@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <basic-container>
         <van-nav-bar left-arrow
                      left-text="个人信息"
                      @click-left="onClickLeft">
@@ -20,7 +20,7 @@
             </template>
         </van-cell>
         <van-cell :title="userInfo.username"></van-cell>
-    </div>
+    </basic-container>
 </template>
 
 <script>

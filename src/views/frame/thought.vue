@@ -1,5 +1,5 @@
 <template>
-    <basic-container style="background:white;">
+    <basic-container white>
         <van-nav-bar left-arrow
                      left-text="朋友圈"
                      @click-left="onClickLeft">
@@ -71,7 +71,7 @@
 
             },
             onSendThoughtClick() {
-                this.$router.push({path: '/thought-send'});
+                this.$router.push({path: '/index-layout/thought-send'});
             }
         }
     }

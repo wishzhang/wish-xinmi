@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import BasicContainer from './components/basic-container'
+import IndexLayout from './components/index-layout'
 import {initFilters} from "./init-filters";
 import './style/index.less'
 
@@ -59,6 +60,7 @@ Vue.use(Divider)
 Vue.use(Uploader)
 
 Vue.component('basic-container', BasicContainer)
+Vue.component('index-layout', IndexLayout)
 
 new Vue({
     router,

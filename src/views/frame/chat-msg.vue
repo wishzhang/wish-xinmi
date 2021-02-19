@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <basic-container>
         <div v-if="type==='left'" class="chat-bubble chat-bubble-left">
             <slot/>
         </div>
         <div v-else-if="type==='right'" class="chat-bubble chat-bubble-right">
             <slot/>
         </div>
-    </div>
+    </basic-container>
 </template>
 
 <script>

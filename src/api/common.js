@@ -12,3 +12,10 @@ export const putFile = (file) => {
         }
     })
 }
+
+export const fetchServerTimeRequest = () => {
+    return request({
+        url: '/common/serverTime',
+        method: 'get'
+    })
+}

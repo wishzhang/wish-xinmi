@@ -15,7 +15,7 @@
 
         <van-cell value="朋友圈"
                   is-link
-                  :to="{path: '/thought-people', query: {id: $route.query.id}}">
+                  :to="{path: '/index-layout/thought-people', query: {id: $route.query.id}}">
         </van-cell>
 
         <van-button
@@ -107,7 +107,7 @@
                 })
             },
             onChat() {
-                this.$router.push({path: '/chat', query: {id: this.$route.query.id}})
+                this.$router.push({path: '/index-layout/chat', query: {id: this.$route.query.id}})
             }
         }
     }

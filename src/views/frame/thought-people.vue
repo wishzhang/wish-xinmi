@@ -1,5 +1,5 @@
 <template>
-    <basic-container style="background:white;">
+    <basic-container white>
         <van-nav-bar left-arrow
                      fixed
                      placeholder

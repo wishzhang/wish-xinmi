@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import {getStore, setStore} from "../util/store";
 import {loginRequest} from "../api/login";
 import {fetchUserInfoRequest} from "../api/user";
+import {fetchServerTimeRequest} from "@/api/common";
 
 Vue.use(Vuex)
 
@@ -13,17 +14,24 @@ export default new Vuex.Store({
     getters: {
         userInfo: (state) => {
             return state.user.userInfo
+        },
+        serverTime: (state) => {
+            return state.common.serverTime
         }
     },
     modules: {
         user: {
             state: {
-                userInfo: getStore({name: 'userInfo'}) || {}
+                userInfo: getStore({name: 'userInfo'}) || {},
+                serverTime: undefined
             },
             mutations: {
                 SET_USER_INFO(state, userInfo) {
                     state.userInfo = userInfo;
                     setStore({name: 'userInfo', content: userInfo});
+                },
+                SET_SERVER_TIME(state, serverTime) {
+                    state.serverTime = serverTime;
                 }
             },
             actions: {
@@ -50,6 +58,28 @@ export default new Vuex.Store({
                 },
                 Logout({commit}) {
                     commit('SET_USER_INFO', {});
+                }
+            },
+            getters: {}
+        },
+        common: {
+            state: {
+                serverTime: undefined
+            },
+            mutations: {
+                SET_SERVER_TIME(state, serverTime) {
+                    state.serverTime = serverTime;
+                }
+            },
+            actions: {
+                FetchServerTime({commit}) {
+                    return fetchServerTimeRequest().then(res => {
+                        if (res.code === 0) {
+                            const serverTime = res.data.serverTime;
+                            commit('SET_SERVER_TIME', serverTime);
+                            return serverTime;
+                        }
+                    })
                 }
             },
             getters: {}

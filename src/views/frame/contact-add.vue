@@ -74,7 +74,7 @@
                 history.back()
             },
             onItemClick(item) {
-                this.$router.push({path: '/contact-info-yet', query: {id: item.id}})
+                this.$router.push({path: '/index-layout/contact-info-yet', query: {id: item.id}})
             },
             onLoad() {
                 this.loading = false

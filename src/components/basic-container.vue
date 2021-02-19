@@ -1,22 +1,26 @@
 <template>
-    <div class="basic-container">
+    <div :style="{backgroundColor: white}" class="basic-container">
         <slot></slot>
     </div>
 </template>
 
 <script>
-  import {initSocket} from "../util/socket";
-  import {mapGetters} from 'vuex';
+    import {initSocket} from "../util/socket";
+    import {mapGetters} from 'vuex';
 
-  export default {
-    name: "basic-container",
-    computed: {
-      ...mapGetters(['userInfo'])
-    },
-    created() {
-      initSocket(this.userInfo.id);
+    export default {
+        name: "basic-container",
+        props: {
+            white: {
+                default: false
+            }
+        },
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        created() {
+        }
     }
-  }
 </script>
 
 <style scoped>

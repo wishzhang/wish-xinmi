@@ -72,7 +72,7 @@
         methods: {
             onSelect(action) {
                 if (action.text === '添加朋友') {
-                    this.$router.push({path: '/contact-add'})
+                    this.$router.push({path: '/index-layout/contact-add'})
                 }
             },
             onLoad() {
@@ -92,7 +92,7 @@
                     throw TypeError();
                 }
 
-                this.$router.push({path: '/chat', query: {id: id}})
+                this.$router.push({path: '/index-layout/chat', query: {id: id}})
             }
         }
     }
