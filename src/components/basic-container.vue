@@ -1,5 +1,5 @@
 <template>
-    <div :style="{backgroundColor: white}" class="basic-container">
+    <div :style="style" class="basic-container">
         <slot></slot>
     </div>
 </template>
@@ -12,11 +12,19 @@
         name: "basic-container",
         props: {
             white: {
+                type: Boolean,
                 default: false
             }
         },
         computed: {
-            ...mapGetters(['userInfo'])
+            ...mapGetters(['userInfo']),
+            style(){
+                let s = {};
+                if(this.white){
+                    s.backgroundColor = 'white';
+                }
+                return s;
+            }
         },
         created() {
         }
