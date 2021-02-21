@@ -21,7 +21,15 @@
                                 <span class="day">{{item.createTime|dateDay}}</span>
                                 <span class="month">{{item.createTime|dateMonth}}月</span>
                             </div>
-                            <div class="content van-multi-ellipsis--l2">
+                            <div v-if="item.photosUrl&&item.photosUrl.length>0"
+                                 style="display: flex">
+                                <thought-people-photos :photos-url="item.photosUrl"></thought-people-photos>
+                                <div style="margin-left: 6px;display: flex;flex-direction: column;justify-content: space-between;">
+                                    <div>{{item.content}}</div>
+                                    <div style="font-size:12px;color: #999;" v-if="getPhotosLen(item.photosUrl)>1">共{{getPhotosLen(item.photosUrl)}}张</div>
+                                </div>
+                            </div>
+                            <div v-else class="content van-multi-ellipsis--l2">
                                 {{item.content}}
                             </div>
                         </div>
@@ -37,6 +45,7 @@
     import {fetchPeopleListRequest} from "@/api/thought";
     import {fetchContactDetailRequest} from "../../api/contact";
     import moment from "moment";
+    import ThoughtPeoplePhotos from './thought-people-photos';
 
     export default {
         name: "thought-mine",
@@ -47,6 +56,9 @@
                 finished: true,
                 contactDetail: {}
             }
+        },
+        components: {
+            ThoughtPeoplePhotos
         },
         computed: {
             ...mapGetters(['userInfo']),
@@ -92,6 +104,10 @@
             })
         },
         methods: {
+            getPhotosLen(photosUrl) {
+                if (!photosUrl) return 0;
+                return photosUrl.split(',').length;
+            },
             getName(item) {
                 return item.createUser === this.userInfo.id ?
                     item.username :
@@ -142,8 +158,9 @@
                     .content {
                         flex: 1;
                         font-size: 14px;
-                        background: #efefef;
-                        padding: 3px 8px;
+                        background: #f7f8fa;
+                        padding: 4px 8px;
+                        align-self: flex-start;
                     }
 
                 }

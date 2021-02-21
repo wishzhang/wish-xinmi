@@ -166,7 +166,7 @@
 <style scoped lang="scss">
     .chat-list {
         padding-bottom: 60px;
-        background-color: #f1f1f1;
+        background-color: #f7f8fa;
 
         .chat-list-item {
             .list-item {

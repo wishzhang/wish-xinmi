@@ -1,10 +1,10 @@
 import request from '../router/axios';
 
-export const addThoughtRequest = (params) => {
+export const addThoughtRequest = (formData) => {
     return request({
         url: '/circle/addThought',
-        method: 'get',
-        params: params
+        method: 'post',
+        data: formData
     })
 }
 

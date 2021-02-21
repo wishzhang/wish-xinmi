@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import website from './website'
 import BasicContainer from './components/basic-container'
 import IndexLayout from './components/index-layout'
+import PhotoGallery from './components/photo-gallery'
 import {initFilters} from "./init-filters";
 import './style/index.less'
 
@@ -11,6 +13,7 @@ import './style/index.less'
 initFilters(Vue);
 
 // 导入vant组件
+import { Lazyload } from 'vant';
 import {
     Button,
     Form,
@@ -32,11 +35,14 @@ import {
     Dialog,
     Divider,
     Image as VanImage,
-    Uploader
+    Uploader,
+    Row,
+    Col
 } from 'vant';
 
 Vue.config.productionTip = false
 
+Vue.use(Lazyload);
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(Field)
@@ -58,9 +64,15 @@ Vue.use(Dialog)
 Vue.use(VanImage)
 Vue.use(Divider)
 Vue.use(Uploader)
+Vue.use(Row)
+Vue.use(Col)
+
+
+Vue.use(website);
 
 Vue.component('basic-container', BasicContainer)
 Vue.component('index-layout', IndexLayout)
+Vue.component('photo-gallery', PhotoGallery)
 
 new Vue({
     router,

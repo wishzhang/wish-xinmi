@@ -20,7 +20,7 @@
                   is-link
                   :to="{path: '/index-layout/setting'}">
         </van-cell>
-        <van-cell value="我发的"
+        <van-cell value="我发的朋友圈"
                   is-link
                   :to="{path: '/index-layout/thought-people', query: {id: userInfo.id}}">
         </van-cell>

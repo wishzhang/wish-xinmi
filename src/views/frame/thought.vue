@@ -1,6 +1,8 @@
 <template>
     <basic-container white>
         <van-nav-bar left-arrow
+                     fixed
+                     placeholder
                      left-text="朋友圈"
                      @click-left="onClickLeft">
             <template #right>
@@ -20,6 +22,9 @@
                         <div class="circle-item-name">{{getName(item)}}</div>
                         <div class="circle-item-content">
                             {{item.content}}
+                        </div>
+                        <div class="circle-item-photo">
+                            <photo-gallery :photosUrl="item.photosUrl"></photo-gallery>
                         </div>
                         <div class="circle-item-footer">
                             <span class="circle-item-footer-time">{{item.createTime}}</span>
@@ -98,12 +103,19 @@
 
             .circle-item-content {
                 margin-top: 3px;
-                min-height: 30px;
+            }
+
+            .circle-item-photo{
+                margin-top:  8px;
             }
 
             .circle-item-footer {
+                margin: 8px 0px;
                 .circle-item-footer-time {
+                    position: relative;
+                    top: 1px;
                     font-size: 12px;
+                    color: #999;
                 }
             }
         }
