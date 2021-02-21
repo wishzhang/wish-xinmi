@@ -26,14 +26,20 @@ router.get('/getPeopleList', async (ctx) => {
   }
 });
 
-router.get('/addThought', async (ctx) => {
-  const query = ctx.query;
+router.post('/addThought', async (ctx) => {
+  const query = ctx.request.body;
+  let photoFiles = ctx.request.files.photos;
+  if(!Array.isArray(photoFiles)){
+    photoFiles = [photoFiles];
+  }
+
   const createUser = query.createUser;
   const content = query.content;
   try {
-    await circleService.addThought({createUser, content});
+    await circleService.addThought({createUser, content, photoFiles});
     ctx.body = successRes({data: {}});
   } catch (e) {
+    console.log(e);
     ctx.body = successRes({code: 1, msg: '添加失败'});
   }
 })

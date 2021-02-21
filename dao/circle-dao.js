@@ -4,12 +4,13 @@ const uuid = util.uuid;
 
 /*查询我发的和我朋友发的所有朋友圈*/
 const getMineAllList = async ({userId}) => {
-  const list = await mysql.query(`
+    const list = await mysql.query(`
     SELECT
       DISTINCT xt.thought_id,
       xt.content,
       xt.create_time,
       xt.create_user,
+      xt.photos_url,
       xu.username,
       xu.avatar_url,
       xc.contact_name
@@ -21,14 +22,20 @@ const getMineAllList = async ({userId}) => {
       xt.create_user IN ( SELECT contact_id FROM xinmi_contact WHERE user_id = '${userId}' ) 
       OR xt.create_user = '${userId}' order by xt.create_time desc
       `)
-  return list;
+    return list;
 }
 
 // 查询我发的朋友圈
 const getPeopleList = async ({userId}) => {
-  const list = await mysql.query(`
+    const list = await mysql.query(`
     SELECT
-    DISTINCT xt.thought_id, xt.content, xt.create_user, xt.create_time, xu.username, xc.contact_name
+    DISTINCT xt.thought_id, 
+    xt.content, 
+    xt.create_user, 
+    xt.create_time, 
+    xt.photos_url,
+    xu.username, 
+    xc.contact_name
     FROM
       xinmi_thought xt
       INNER JOIN xinmi_user xu ON xt.create_user = xu.id
@@ -36,21 +43,21 @@ const getPeopleList = async ({userId}) => {
     WHERE
       xt.create_user = '${userId}';
     `)
-  return list;
+    return list;
 }
 
 // 添加一条朋友圈
-const addThought = async ({createUser, content}) => {
-  await mysql.query(`
-    INSERT INTO xinmi_thought ( thought_id, content, create_time, create_user )
+const addThought = async ({createUser, content, photosUrl}) => {
+    await mysql.query(`
+    INSERT INTO xinmi_thought ( thought_id, content, create_time, create_user, photos_url )
     VALUES
-      ( UUID( ), '${content}', NOW( ), '${createUser}' );
+      ( UUID( ), '${content}', NOW( ), '${createUser}', '${photosUrl}' );
     `)
 }
 
 module.exports = {
-  addThought,
-  getPeopleList,
-  getMineAllList,
+    addThought,
+    getPeopleList,
+    getMineAllList,
 }
 
