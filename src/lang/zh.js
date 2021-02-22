@@ -1,6 +1,6 @@
 export default {
   tip: '提示',
-  title: 'Saber企业级开发平台',
+  title: '信迷后台管理系统',
   logoutTip: '退出系统, 是否继续?',
   submitText: '确定',
   cancelText: '取消',
@@ -65,7 +65,7 @@ export default {
   },
   login: {
     title: '登录 ',
-    info: '企业级开发平台',
+    info: '信迷后台管理系统',
     tenantId: '请输入租户ID',
     username: '请输入账号',
     password: '请输入密码',

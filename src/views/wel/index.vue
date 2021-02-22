@@ -1,7 +1,7 @@
 <template>
   <div>
     <basic-container>
-      <third-register></third-register>
+      <!--<third-register></third-register>-->
       <p style="text-align: center;">
         <img src="https://img.shields.io/badge/Release-V2.8.0-green.svg" alt="Downloads"/>
         <img src="https://img.shields.io/badge/JDK-1.8+-green.svg" alt="Build Status"/>

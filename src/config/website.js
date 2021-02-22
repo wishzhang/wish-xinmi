@@ -2,8 +2,8 @@
  * 全局配置文件
  */
 export default {
-  title: "saber",
-  indexTitle: 'Saber Admin',
+  title: "信迷",
+  indexTitle: '信迷后台管理系统',
   clientId: 'saber', // 客户端id
   clientSecret: 'saber_secret', // 客户端密钥
   tenantMode: true, // 是否开启租户模式

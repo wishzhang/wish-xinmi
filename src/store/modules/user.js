@@ -5,6 +5,7 @@ import {deepClone} from '@/util/util'
 import webiste from '@/config/website'
 import {Message} from 'element-ui'
 import {loginByUsername, loginBySocial, getUserInfo, getMenu, getTopMenu, logout, refreshToken, getButtons} from '@/api/user'
+import menus from '@/const/menus'
 
 
 function addPath(ele, first) {
@@ -152,18 +153,28 @@ const user = {
     //获取系统菜单
     GetMenu({commit, dispatch}, parentId) {
       return new Promise(resolve => {
-        getMenu(parentId).then((res) => {
-          const data = res.data.data
-          let menu = deepClone(data);
-          menu.forEach(ele => {
-            addPath(ele, true);
-          })
-          commit('SET_MENU', menu);
-          commit('SET_MENU_ALL', menu);
-          dispatch('GetButtons');
-          resolve(menu)
+        const data = menus;
+        let menu = deepClone(data);
+        menu.forEach(ele => {
+          addPath(ele, true);
         })
+        commit('SET_MENU', menu);
+        commit('SET_MENU_ALL', menu);
+        resolve(menu)
       })
+      // return new Promise(resolve => {
+      //   getMenu(parentId).then((res) => {
+      //     const data = res.data.data
+      //     let menu = deepClone(data);
+      //     menu.forEach(ele => {
+      //       addPath(ele, true);
+      //     })
+      //     commit('SET_MENU', menu);
+      //     commit('SET_MENU_ALL', menu);
+      //     dispatch('GetButtons');
+      //     resolve(menu)
+      //   })
+      // })
     },
     GetButtons({commit}) {
       return new Promise((resolve) => {
