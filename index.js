@@ -12,14 +12,22 @@ const fileUploader = require('./util/file-util');
 const beforeMiddleware = require('./middleware/before-middleware');
 const afterMiddleware = require('./middleware/after-middleware');
 const Operation = require('./util/sql-util');
+const ResUtil = require('./util/res-util');
 
-// 赋值全局变量
+/**
+ * 赋值全局变量
+ */
+// 数据库工具
 Object.defineProperty(global, 'L', {
   set(v) {
   },
   get() {
     return new Operation();
   }
+})
+// 响应工具
+Object.defineProperty(global, 'R', {
+  value: ResUtil
 })
 
 const app = new Koa();

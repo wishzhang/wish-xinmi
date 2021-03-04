@@ -32,15 +32,6 @@ const uuid = () => {
     return uuidv4();
 }
 
-const successRes = ({code = 0, msg = '成功', data = {}}) => {
-    const obj = {
-        code: code,
-        msg: msg,
-        data: data
-    };
-    return obj;
-}
-
 const getFirstUpperLetter = (str) => {
     const arr = pinyin(str, {
         style: pinyin.STYLE_FIRST_LETTER,
@@ -86,7 +77,6 @@ function getMinioUrl(path) {
 module.exports = {
     generateRouteKey,
     uuid,
-    successRes,
     getFirstUpperLetter,
     toHumpList,
     getSuffix,

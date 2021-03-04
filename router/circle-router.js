@@ -1,5 +1,3 @@
-const util = require('../util/index');
-const successRes = util.successRes;
 const circleService = require('../service/circle-service');
 
 const router = require('./router-factory')('/circle');
@@ -8,35 +6,22 @@ router.get('/getMineAllList', async (ctx) => {
     const query = ctx.query;
     const userId = query.id;
     const list = await circleService.getMineAllList({userId});
-    if (list.length > 0) {
-        ctx.body = successRes({data: list});
-    } else {
-        ctx.body = successRes({code: 1, msg: '获取我的朋友圈列表失败'});
-    }
+    ctx.body = R.success(list);
 });
 
 router.get('/getPage', async (ctx) => {
-    try {
-        const query = ctx.query;
-        const current = query.current || L.defaultCurrent;
-        const size = query.size || L.defaultSize;
-        const res = await circleService.getAllCirclePage({current, size});
-        ctx.body = successRes({data: res});
-    } catch (e) {
-        ctx.body = successRes({code: 1, msg: '获取我的朋友圈列表失败'});
-    }
-
+    const query = ctx.query;
+    const current = query.current || L.defaultCurrent;
+    const size = query.size || L.defaultSize;
+    const res = await circleService.getAllCirclePage({current, size});
+    ctx.body = R.success(res);
 });
 
 router.get('/getPeopleList', async (ctx) => {
     const query = ctx.query;
     const userId = query.id;
     const list = await circleService.getPeopleList({userId});
-    if (list.length > 0) {
-        ctx.body = successRes({data: list});
-    } else {
-        ctx.body = successRes({code: 1, msg: '获取朋友圈列表失败'});
-    }
+    ctx.body = R.success(list);
 });
 
 router.post('/addThought', async (ctx) => {
@@ -48,13 +33,8 @@ router.post('/addThought', async (ctx) => {
 
     const createUser = query.createUser;
     const content = query.content;
-    try {
-        await circleService.addThought({createUser, content, photoFiles});
-        ctx.body = successRes({data: {}});
-    } catch (e) {
-        console.log(e);
-        ctx.body = successRes({code: 1, msg: '添加失败'});
-    }
+    await circleService.addThought({createUser, content, photoFiles});
+    ctx.body = R.success();
 })
 
 module.exports = router;

@@ -4,7 +4,7 @@ module.exports = () => {
       await next();
     } catch (e) {
       ctx.status = 500;
-      ctx.body = '服务器出错了';
+      ctx.body = e;
       console.log(e);
     }
   }
