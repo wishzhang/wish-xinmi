@@ -72,25 +72,43 @@ const genTQuery = (func) => {
   }
 };
 
-module.exports = {
-  async query(sql) {
-    const conn = await executor();
-    return new Promise((resolve, reject) => {
-      output.begin(sql);
-      conn.query(sql, function (err, rows, fields) {
-        if (err) {
-          transactionFail(reject(err))
-          output.end(err);
-          return;
-        }
-        let list = Array.isArray(rows) ? util.toHumpList(rows) : rows;
-        resolve(list);
-        output.end(list);
-      })
-    }).finally(() => {
-      conn.end();
+const query = async(sql)=> {
+  const conn = await executor();
+  return new Promise((resolve, reject) => {
+    output.begin(sql);
+    conn.query(sql, function (err, rows, fields) {
+      if (err) {
+        transactionFail(reject(err))
+        output.end(err);
+        return;
+      }
+      let list = Array.isArray(rows) ? util.toHumpList(rows) : rows;
+      resolve(list);
+      output.end(list);
     })
+  }).finally(() => {
+    conn.end();
+  })
+};
+
+module.exports = {
+  // 分页查询
+  async queryPage(sql, current, size) {
+    const totalSql = `select count(*) as total from (${sql}) as tmp`;
+    const pageSql = `${sql} ${L.page({current, size})}`
+
+    const total = await query(totalSql);
+    const list = await query(pageSql);
+
+    return {
+      current,
+      size,
+      total: total[0].total,
+      records: list
+    }
   },
+  query,
+  // 执行
   async transaction(rawArr = []) {
     debug('-----------------------执行MySQL事务开始----------------------------');
     const queryArr = rawArr.map(el => genTQuery(el));

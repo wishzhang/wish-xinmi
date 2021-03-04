@@ -11,6 +11,16 @@ const createSocketServer = require('./create-socket-server');
 const fileUploader = require('./util/file-util');
 const beforeMiddleware = require('./middleware/before-middleware');
 const afterMiddleware = require('./middleware/after-middleware');
+const Operation = require('./util/sql-util');
+
+// 赋值全局变量
+Object.defineProperty(global, 'L', {
+  set(v) {
+  },
+  get() {
+    return new Operation();
+  }
+})
 
 const app = new Koa();
 

@@ -82,10 +82,30 @@ const addMessage = async ({originUser, targetUser, content}) => {
     }
 }
 
+// 获取所有用户发的消息
+const getAllMessagePage = async ({current, size}) => {
+    const res = await mysql.queryPage(`
+        SELECT
+            xm.message_id,
+            xu1.username as origin_username,
+            xu2.username as target_username,
+            xm.content,
+            xm.create_time 
+        FROM
+            xinmi_message xm
+            INNER JOIN xinmi_user xu1 ON xm.origin_user = xu1.id 
+            INNER JOIN xinmi_user xu2 ON xm.target_user = xu2.id
+        ORDER BY
+            xm.create_time DESC
+    `, current, size);
+    return res;
+}
+
 module.exports = {
     addMessage,
     getContactMessageList,
     getMineAllChatList,
-    getContactMessageListByChatId
+    getContactMessageListByChatId,
+    getAllMessagePage
 }
 

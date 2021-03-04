@@ -7,7 +7,7 @@ const router = require('./router-factory')('/user');
 
 router.get('/page', async (ctx) => {
     const list = await userService.getUserList();
-    ctx.body = list;
+    ctx.body = successRes({data: list});
 })
 
 router.get('/add', async (ctx) => {

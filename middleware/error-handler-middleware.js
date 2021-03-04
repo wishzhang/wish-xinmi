@@ -5,6 +5,7 @@ module.exports = () => {
     } catch (e) {
       ctx.status = 500;
       ctx.body = '服务器出错了';
+      console.log(e);
     }
   }
 }

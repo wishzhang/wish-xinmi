@@ -55,9 +55,29 @@ const addThought = async ({createUser, content, photosUrl}) => {
     `)
 }
 
+// 查询所有朋友圈记录列表
+const getAllCirclePage = async ({current, size}) => {
+    return await mysql.queryPage(`
+        SELECT
+          xu.id as user_id,
+            xu.username,
+            xu.avatar_url,
+            xt.thought_id,
+            xt.content,
+            xt.create_user,
+            xt.photos_url,
+            xt.create_time
+        FROM
+            xinmi_thought xt
+            INNER JOIN xinmi_user xu ON xt.create_user = xu.id 
+         ORDER BY xt.create_time
+    `, current, size);
+}
+
 module.exports = {
     addThought,
     getPeopleList,
     getMineAllList,
+    getAllCirclePage
 }
 

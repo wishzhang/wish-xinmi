@@ -29,8 +29,14 @@ const getMineAllList = async ({userId}) => {
     return list;
 }
 
+const getAllCirclePage = async ({current, size})=>{
+    const list = await circleDao.getAllCirclePage({current,size});
+    return list;
+}
+
 module.exports = {
     addThought,
     getPeopleList,
     getMineAllList,
+    getAllCirclePage
 }
