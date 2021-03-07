@@ -46,7 +46,11 @@ router.get('/getUserContactStatus', async (ctx) => {
     const userId = query.id;
     const contactId = query.contactId;
     const list = await contactService.getUserContactStatus({userId, contactId});
-    ctx.body = R.success(list[0].status);
+    if (list.length > 0) {
+        ctx.body = R.success(list[0].status);
+    } else {
+        ctx.body = R.fail(1, '这两个用户之间的状态：无!');
+    }
 });
 
 router.get('/getContactInfoHad', async (ctx) => {
