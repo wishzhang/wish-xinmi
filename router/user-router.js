@@ -25,6 +25,7 @@ router.get('/update', async (ctx) => {
         username: query.username,
         password: query.password,
         avatarUrl: query.avatarUrl,
+        bgUrl: query.bgUrl,
         id: query.id
     }
     await userService.updateUser(obj);

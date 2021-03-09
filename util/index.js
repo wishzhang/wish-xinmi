@@ -66,6 +66,7 @@ function getSuffix(filename) {
 }
 
 function removeDomain(url) {
+    if (!url) return '';
     url = '/' + url.split('/').slice(3).join('/');
     return url;
 }

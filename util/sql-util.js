@@ -2,6 +2,17 @@ function Operation() {
     this.str = '';
 }
 
+Operation.prototype.pair = function (obj) {
+    // this.str += Object.entries(obj).map(el => {
+    //     if (el[1] === undefined || el[1]) {
+    //         el[1] = '';
+    //     }
+    //     return el.join('=');
+    // }).join(',');
+    //
+    // return this;
+}
+
 Operation.prototype.and = function (obj) {
     this.str += Object.entries(obj).map(el => {
         return ' and ' + el.join('=');

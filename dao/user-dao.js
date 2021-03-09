@@ -21,14 +21,22 @@ const updateUser = async (obj) => {
         arr.push(`password='${obj.password}'`)
     } else if (obj.avatarUrl) {
         arr.push(`avatar_url='${obj.avatarUrl}'`)
+    } else if (obj.bgUrl) {
+        arr.push(`bg_url='${obj.bgUrl}'`)
     }
     sql = `UPDATE xinmi_user SET ${arr.join(',')} WHERE id = '${obj.id}'`
-    return await mysql.query(sql)
+    return await mysql.query(sql);
 }
 
 const getUserDetail = async ({userId}) => {
     return await mysql.query(
-        `select user.id, user.username, user.avatar_url from xinmi_user user where user.id = '${userId}'`
+        `select 
+            user.id, 
+            user.username, 
+            user.avatar_url,
+            user.bg_url 
+        from xinmi_user user 
+        where user.id = '${userId}'`
     )
 }
 
