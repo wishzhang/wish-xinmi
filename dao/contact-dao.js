@@ -144,7 +144,8 @@ const getContactInfoHad= async ({userId, contactId}) => {
         SELECT
             xu.id,
             xc.contact_name,
-            xu.avatar_url 
+            xu.avatar_url,
+            xu.bg_url 
         FROM
             xinmi_contact xc
             INNER JOIN xinmi_user xu ON xc.contact_id = xu.id 
