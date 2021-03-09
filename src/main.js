@@ -37,7 +37,10 @@ import {
     Image as VanImage,
     Uploader,
     Row,
-    Col
+    Col,
+    ActionSheet,
+    Picker,
+    Popup
 } from 'vant';
 
 Vue.config.productionTip = false
@@ -66,6 +69,9 @@ Vue.use(Divider)
 Vue.use(Uploader)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(ActionSheet)
+Vue.use(Picker)
+Vue.use(Popup)
 
 
 Vue.use(website);
