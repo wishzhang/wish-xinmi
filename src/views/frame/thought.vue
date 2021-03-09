@@ -24,7 +24,7 @@
                             height="60"
                             fit="cover"
                             :radius="4"
-                            :src="userInfo.avatarUrl"/>
+                            :src="userInfo.avatarUrl|imageAvatar"/>
                 </div>
             </div>
             <van-list
