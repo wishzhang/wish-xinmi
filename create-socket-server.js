@@ -1,5 +1,4 @@
 const util = require('./util/index');
-const successRes = util.successRes;
 const messageService = require('./service/message-service');
 
 module.exports = (koaInstance) => {
@@ -22,9 +21,9 @@ module.exports = (koaInstance) => {
       let socketId = hashSocketId[targetUser]
       if (socketId) {
         const s = io.to(socketId);
-        s.send(successRes({data: data}));
+        s.send(R.success(data));
       } else {
-        socket.send(successRes({code: 1, msg: '对方不在线'}));
+        socket.send(R.fail({code: 1, msg: '对方不在线'}));
       }
     }
 

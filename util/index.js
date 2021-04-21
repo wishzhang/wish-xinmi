@@ -72,7 +72,7 @@ function removeDomain(url) {
 }
 
 function getMinioUrl(path) {
-    return global.config.minioHost + path;
+    return `/${global.config.minioBucketName}/${path}`;
 }
 
 module.exports = {

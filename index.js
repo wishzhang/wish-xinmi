@@ -1,7 +1,6 @@
 // 加载环境配置
-const configDev = require('./config.dev');
-var configProd = require('./config.prod');
-global.config = process.env.NODE_ENV === "development" ? configDev : configProd;
+const config = require('./config');
+global.config = config;
 
 const errorHandlerMiddleware = require('./middleware/error-handler-middleware');
 const Koa = require('koa');
@@ -19,15 +18,15 @@ const ResUtil = require('./util/res-util');
  */
 // 数据库工具
 Object.defineProperty(global, 'L', {
-  set(v) {
-  },
-  get() {
-    return new Operation();
-  }
+    set(v) {
+    },
+    get() {
+        return new Operation();
+    }
 })
 // 响应工具
 Object.defineProperty(global, 'R', {
-  value: ResUtil
+    value: ResUtil
 })
 
 const app = new Koa();
@@ -51,6 +50,6 @@ app.use(afterMiddleware());
 const server = createSocketServer(app);
 
 server.listen(global.config.serverPort, () => {
-  console.log(`http://localhost:${global.config.serverPort}`);
-  console.log(`http://${global.config.serverIp}:${global.config.serverPort}`);
+    console.log(`http://localhost:${global.config.serverPort}`);
+    console.log(`http://${global.config.serverIp}:${global.config.serverPort}`);
 });

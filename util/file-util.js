@@ -23,13 +23,10 @@ const putFile = async (file) => {
     const rs = fs.createReadStream(file.path);
     await minioClient.putObject(bucketName, newName, rs);
 
-    const link = `http://${global.config.minioEndPoint}:${global.config.minioPort}/${bucketName}/${newName}`;
-    const path = util.removeDomain(link);
     return {
         originName: file.name,
         filename: newName,
-        link: link,
-        path: path
+        link: newName
     }
 }
 

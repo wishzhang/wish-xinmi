@@ -14,20 +14,17 @@ const ip = (function getIPAddress() {
 })();
 
 // 公共环境配置
-const configBase = {
-    // 服务器配置
+module.exports = {
+    projectName: 'xinmi',
+    // 服务器配置, 没有实际用到，只用来打印
     serverIp: ip,
-
+    serverPort: 3000,
     // minio配置
-    minioEndPoint: ip,
+    minioEndPoint: 'localhost',
     minioPort: 9000,
-    minioHost: `http://${ip}:9000`,
+    minioHost: `http://localhost:9000`,
     minioAccessKey: 'minioadmin',
     minioSecretKey: 'minioadmin',
     minioUseSSL: false,
-    minioBucketName: 'xinmi'
-};
-
-module.exports = function (config) {
-    return Object.assign({}, configBase, config);
+    minioBucketName: `xinmi-minio`
 };
