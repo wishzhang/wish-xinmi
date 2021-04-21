@@ -8,7 +8,7 @@
 import axios from 'axios';
 import {Toast} from 'vant';
 
-axios.defaults.baseURL = '/api'
+axios.defaults.baseURL = process.env.VUE_APP_BASE_API;
 
 axios.defaults.timeout = 10000;
 

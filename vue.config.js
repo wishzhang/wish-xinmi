@@ -7,7 +7,7 @@ module.exports = {
         config
             .plugin('html')
             .tap(args => {
-                args[0].title= '信迷'
+                args[0].title = '信迷'
                 return args
             })
     },
@@ -27,11 +27,17 @@ module.exports = {
     devServer: {
         port: 2021,
         proxy: {
-            '/api': {
-                target: `${process.env.VUE_APP_SERVER_ORIGIN}`,
+            [process.env.VUE_APP_MINIO_API]: {
+                target: `${process.env.VUE_APP_MINIO_PROXY}`,
+                pathRewrite: {
+                    ['^' + process.env.VUE_APP_MINIO_API]: process.env.VUE_APP_MINIO_API
+                }
+            },
+            [process.env.VUE_APP_BASE_API]: {
+                target: `${process.env.VUE_APP_SERVER_PROXY}`,
                 ws: true,
                 pathRewrite: {
-                    '^/api': '/'
+                    ['^' + process.env.VUE_APP_BASE_API]: '/'
                 }
             }
         }

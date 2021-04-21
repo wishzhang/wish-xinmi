@@ -27,6 +27,7 @@
             }
         },
         created() {
+            initSocket(this.userInfo.id);
         }
     }
 </script>

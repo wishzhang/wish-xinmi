@@ -14,7 +14,7 @@ Object.defineProperty(website, 'winWidth', {
     }
 })
 
-website.install = function(Vue){
+website.install = function (Vue) {
     Vue.prototype.website = website;
 }
 
