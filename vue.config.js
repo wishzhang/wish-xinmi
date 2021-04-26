@@ -10,6 +10,13 @@ module.exports = {
                 args[0].title = '信迷'
                 return args
             })
+
+        config.module
+            .rule('change-markdown')
+            .test(/\.md$/)
+            .use('text-loader')
+            .loader('text-loader')
+            .end()
     },
     css: {
         loaderOptions: {

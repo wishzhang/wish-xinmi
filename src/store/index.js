@@ -17,6 +17,9 @@ export default new Vuex.Store({
         },
         serverTime: (state) => {
             return state.common.serverTime
+        },
+        loginType: (state)=>{
+            return state.common.loginType
         }
     },
     modules: {
@@ -64,11 +67,17 @@ export default new Vuex.Store({
         },
         common: {
             state: {
-                serverTime: undefined
+                serverTime: undefined,
+                // 登录方式
+                loginType: getStore({name: 'loginType'}) || 'email'
             },
             mutations: {
                 SET_SERVER_TIME(state, serverTime) {
                     state.serverTime = serverTime;
+                },
+                SET_LOGIN_TYPE(state, typeName) {
+                    state.loginType = typeName;
+                    setStore({name: 'loginType', content: typeName});
                 }
             },
             actions: {

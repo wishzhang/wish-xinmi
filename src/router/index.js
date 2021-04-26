@@ -18,6 +18,12 @@ import ThoughtSend from '../views/frame/thought-send'
 import ThoughtPeople from '../views/frame/thought-people'
 import MineDetail from '../views/frame/mine-detail'
 import IndexLayout from '../components/index-layout'
+import ForgetPassword from '../views/forget-password'
+import UserAgreement from '../views/user-agreement'
+import PrivacyPolicy from '../views/privacy-policy.'
+import AccoutnSetting from '../views/account-setting'
+import EmailSetting from '../views/email-setting'
+import PasswordSetting from '../views/password-setting'
 
 Vue.use(VueRouter)
 
@@ -34,10 +40,40 @@ const routes = [
         path: '/register',
         component: Register
     },
+    // 隐私政策
+    {
+        path: '/privacy-policy',
+        component: PrivacyPolicy
+    },
+    // 用户协议
+    {
+        path: '/user-agreement',
+        component: UserAgreement
+    },
+    // 找回密码
+    {
+        path: '/forget-password',
+        component: ForgetPassword
+    },
     {
         path: '/index-layout',
         component: IndexLayout,
         children: [
+            // 修改密码
+            {
+                path: 'password-setting',
+                component: PasswordSetting
+            },
+            // 修改邮箱
+            {
+                path: 'email-setting',
+                component: EmailSetting
+            },
+            // 修改账号
+            {
+                path: 'account-setting',
+                component: AccoutnSetting
+            },
             {
                 path: 'frame',
                 redirect: 'frame/msg',

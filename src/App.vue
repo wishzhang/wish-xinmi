@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     html, body {
         height: 100%;
     }
@@ -18,7 +18,7 @@
         -moz-osx-font-smoothing: grayscale;
         color: #2c3e50;
         font-size: 14px;
-        background-color: #f7f8fa;
+        background-color: @app-bg-color;
     }
 
     #nav {
