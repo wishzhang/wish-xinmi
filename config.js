@@ -16,6 +16,7 @@ const ip = (function getIPAddress() {
 // 公共环境配置
 module.exports = {
     projectName: 'xinmi',
+    projectCName: '信迷',
     // 服务器配置, 没有实际用到，只用来打印
     serverIp: ip,
     serverPort: 3000,

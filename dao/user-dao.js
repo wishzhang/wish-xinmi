@@ -28,15 +28,24 @@ const updateUser = async (obj) => {
     return await mysql.query(sql);
 }
 
-const getUserDetail = async ({userId}) => {
+const getUserDetail = async ({userId, username}) => {
+    let arr = [];
+    let conditionStr = '';
+    if (userId) {
+        arr.push(`id='${userId}'`);
+    } else if (username) {
+        arr.push(`username='${username}'`);
+    }
+    conditionStr = arr.join(',');
+
     return await mysql.query(
         `select 
             user.id, 
             user.username, 
             user.avatar_url,
-            user.bg_url 
+            user.bg_url
         from xinmi_user user 
-        where user.id = '${userId}'`
+        where ${conditionStr}`
     )
 }
 

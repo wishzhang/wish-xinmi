@@ -27,7 +27,8 @@ router.get('/getPeopleList', async (ctx) => {
 router.post('/addThought', async (ctx) => {
     const query = ctx.request.body;
     let photoFiles = ctx.request.files.photos;
-    if (!Array.isArray(photoFiles)) {
+
+    if (!Array.isArray(photoFiles) && typeof photoFiles === 'object' && photoFiles.type) {
         photoFiles = [photoFiles];
     }
 

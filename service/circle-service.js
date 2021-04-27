@@ -9,7 +9,7 @@ const addThought = async ({createUser, content, photoFiles = []}) => {
 
     const resArr = await Promise.all(ps);
     const links = resArr.map(res=>{
-        return res.path;
+        return res.link;
     });
     const photosUrl = links.join(',');
 
