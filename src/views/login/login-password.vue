@@ -25,26 +25,26 @@
                               @click="onSwitchSeePassword"/>
                     <van-icon size="16px" style="font-size: 16px;" v-else name="closed-eye"
                               @click="onSwitchSeePassword"/>
-                    <router-link to="/forget-password" class="primary-color"
-                                 style="display: inline-block;margin-left: 8px;"
-                                 @click="onForgetPassword">忘记密码
+                    <router-link to="/login/forget-password" class="primary-color"
+                                 style="display: inline-block;margin-left: 8px;">忘记密码
                     </router-link>
                 </div>
             </template>
         </van-field>
-        <div style="margin: 16px;">
-            <van-button class="login-btn" round block type="info" native-type="button" @click="onLogin">登录</van-button>
+        <div style="margin: 32px 16px;">
+            <van-button class="login-btn" block type="info" native-type="button" @click="onLogin">登录</van-button>
         </div>
     </van-form>
-
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
     import {validAccount} from "@/util/validate";
+    import {loginByPasswordRequest} from "@/api/login";
 
     export default {
         name: "login-password",
+        inject: ['login'],
         data() {
             return {
                 username: '',
@@ -56,9 +56,6 @@
             ...mapGetters(['userInfo']),
             passwordInputType() {
                 return this.canSeePassword ? 'text' : 'password';
-            },
-            passwordRules() {
-
             },
             usernameRules() {
                 return [{
@@ -74,32 +71,28 @@
             onSwitchSeePassword() {
                 this.canSeePassword = !this.canSeePassword;
             },
-            onLogin() {
-                this.$refs.form.validate('username').then(() => {
-                    this.$refs.form.validate('password').then(() => {
-                        this.$store.dispatch('Login', {
-                            username: this.username,
-                            password: this.password
-                        }).then((res) => {
-                            if (res.code === 0) {
-                                this.$store.dispatch('FetchUserInfo', res.data.id).then(res2 => {
-                                    this.$toast.success('登录成功');
-                                    this.$router.push({path: '/index-layout/frame'});
-                                })
-                            } else {
-                                this.$toast.fail(res.msg);
-                            }
-                        }).catch(() => {
-                        })
-                    }).catch(() => {
+            async onLogin() {
+                if (!this.login.isAgree) {
+                    this.$toast.fail('请阅读并勾选下方协议');
+                    return;
+                }
 
-                    })
-                }).catch(() => {
+                await this.$refs.form.validate('username');
+                await this.$refs.form.validate('password');
 
+                const params = {
+                    username: this.username,
+                    password: this.password
+                }
+                loginByPasswordRequest(params).then(res => {
+                    if (res.code === 0) {
+                        this.$toast.success('登录成功');
+                        this.$store.commit('SET_USER_INFO', res.data);
+                        this.$router.push({path: '/index-layout/frame'});
+                    } else if (res.code === 1) {
+                        this.$toast.fail('用户名或密码错误');
+                    }
                 })
-            },
-            onForgetPassword() {
-                alert();
             }
         },
     }

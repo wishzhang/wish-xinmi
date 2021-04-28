@@ -15,3 +15,11 @@ export const updateUserInfoRequest = (params) => {
         params: params
     })
 }
+
+export const editEmailAddressRequest = (params) => {
+    return request({
+        url: '/user/editEmailAddress',
+        method: 'get',
+        params: params
+    })
+}

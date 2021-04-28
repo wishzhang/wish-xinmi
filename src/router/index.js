@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/login'
-import Register from '../views/register'
+import Login from '../views/login/login'
 import Frame from '../views/frame/frame'
 import Msg from '../views/frame/msg'
 import Contact from '../views/frame/contact'
@@ -18,16 +17,18 @@ import ThoughtSend from '../views/frame/thought-send'
 import ThoughtPeople from '../views/frame/thought-people'
 import MineDetail from '../views/frame/mine-detail'
 import IndexLayout from '../components/index-layout'
-import ForgetPassword from '../views/forget-password'
-import UserAgreement from '../views/user-agreement'
-import PrivacyPolicy from '../views/privacy-policy.'
-import AccoutnSetting from '../views/account-setting'
+import ForgetPassword from '../views/login/forget-password'
+import UserAgreement from '../views/login/user-agreement'
+import PrivacyPolicy from '../views/login/privacy-policy.'
 import EmailSetting from '../views/email-setting'
 import PasswordSetting from '../views/password-setting'
 
 Vue.use(VueRouter)
 
 const routes = [
+    /**
+     * 登录模块
+     */
     {
         path: '/',
         redirect: '/login'
@@ -36,25 +37,24 @@ const routes = [
         path: '/login',
         component: Login
     },
-    {
-        path: '/register',
-        component: Register
-    },
     // 隐私政策
     {
-        path: '/privacy-policy',
+        path: '/login/privacy-policy',
         component: PrivacyPolicy
     },
     // 用户协议
     {
-        path: '/user-agreement',
+        path: '/login/user-agreement',
         component: UserAgreement
     },
     // 找回密码
     {
-        path: '/forget-password',
+        path: '/login/forget-password',
         component: ForgetPassword
     },
+    /**
+     * 其他模块
+     */
     {
         path: '/index-layout',
         component: IndexLayout,
@@ -68,11 +68,6 @@ const routes = [
             {
                 path: 'email-setting',
                 component: EmailSetting
-            },
-            // 修改账号
-            {
-                path: 'account-setting',
-                component: AccoutnSetting
             },
             {
                 path: 'frame',

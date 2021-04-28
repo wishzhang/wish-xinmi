@@ -3,14 +3,9 @@
         <van-nav-bar left-arrow
                      left-text="设置"
                      @click-left="onClickLeft"/>
-        <van-cell title="账号"
-                  value="把握吧你"
-                  is-link
-                  :to="{path: '/index-layout/account-setting'}">
-        </van-cell>
         <van-cell
                 title="邮箱"
-                value="142342@qq.com"
+                :value="userInfo.emailAddress"
                 is-link
                 :to="{path: '/index-layout/email-setting'}">
         </van-cell>

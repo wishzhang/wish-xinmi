@@ -1,14 +1,14 @@
 <template>
     <van-form ref="form" label-width="3em">
         <van-field
-                v-model="address"
-                name="address"
+                v-model="emailAddress"
+                name="emailAddress"
                 label="邮箱"
                 placeholder="请输入邮箱"
                 autofocus
                 clearable
                 autocomplete="off"
-                :rules="addressRules"/>
+                :rules="emailAddressRules"/>
         <van-field
                 v-model="verifyCode"
                 name="verifyCode"
@@ -19,11 +19,11 @@
                 maxlength="30"
                 :rules="[{ required: true, message: '请输入验证码', trigger: 'none' }]">
             <template #button>
-                <verify-code-button :disabled="!canGetVerifyCode"/>
+                <verify-code-button :disabled="!canGetVerifyCode" :email-address="emailAddress"/>
             </template>
         </van-field>
-        <div style="margin: 16px;">
-            <van-button class="login-btn" round block type="info" native-type="button" @click="onLogin">登录</van-button>
+        <div style="margin:32px 16px;">
+            <van-button class="login-btn" block type="info" native-type="button" @click="onLogin">登录</van-button>
             <van-cell class="login-tip" style="padding-top: 8px;text-align: center;" :border="false" title=""
                       :value="null"
                       label="未注册的邮箱验证通过后将自动注册"/>
@@ -32,19 +32,21 @@
 </template>
 
 <script>
-    import {socket} from "../util/socket";
+    import {socket} from "../../util/socket";
     import {mapGetters} from 'vuex';
     import {validEmail} from "@/util/validate";
     import VerifyCodeButton from '@/components/verify-code-button';
+    import {loginByEmailRequest} from "@/api/login";
 
     export default {
         name: "login-email",
+        inject: ['login'],
         components: {
             VerifyCodeButton
         },
         data() {
             return {
-                address: '',
+                emailAddress: '',
                 verifyCode: '',
                 canSeePassword: false
             };
@@ -54,7 +56,7 @@
             passwordInputType() {
                 return this.canSeePassword ? 'text' : 'password';
             },
-            addressRules() {
+            emailAddressRules() {
                 return [{
                     message: '邮箱格式不正确',
                     validator(val) {
@@ -64,7 +66,7 @@
                 }];
             },
             canGetVerifyCode() {
-                return validEmail(this.address);
+                return validEmail(this.emailAddress);
             }
         },
         created() {
@@ -76,28 +78,27 @@
             onSwitchSeePassword() {
                 this.canSeePassword = !this.canSeePassword;
             },
-            onLogin() {
-                this.$refs.form.validate('address').then(() => {
-                    this.$refs.form.validate('verifyCode').then(() => {
-                        this.$store.dispatch('Login', {
-                            address: this.address,
-                            verifyCode: this.verifyCode
-                        }).then((res) => {
-                            if (res.code === 0) {
-                                this.$store.dispatch('FetchUserInfo', res.data.id).then(res2 => {
-                                    this.$toast.success('登录成功');
-                                    this.$router.push({path: '/index-layout/frame'});
-                                })
-                            } else {
-                                this.$toast.fail(res.msg);
-                            }
-                        }).catch(() => {
-                        })
-                    }).catch(() => {
+            async onLogin() {
+                if (!this.login.isAgree) {
+                    this.$toast.fail('请阅读并勾选下方协议');
+                    return;
+                }
 
-                    })
-                }).catch(() => {
+                await this.$refs.form.validate('emailAddress');
+                await this.$refs.form.validate('verifyCode');
 
+                const params = {
+                    emailAddress: this.emailAddress,
+                    verifyCode: this.verifyCode
+                };
+                loginByEmailRequest(params).then(res => {
+                    if (res.code === 0) {
+                        this.$toast.success('登录成功');
+                        this.$store.commit('SET_USER_INFO', res.data);
+                        this.$router.push({path: '/index-layout/frame'});
+                    } else if (res.code === 2) {
+                        this.$toast.fail('验证码错误');
+                    }
                 })
             },
             onGetVerifyCode() {

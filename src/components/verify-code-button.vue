@@ -14,12 +14,18 @@
 </template>
 
 <script>
+    import {sendEmailRequest} from "@/api/verifycode";
+
     export default {
         name: "verify-code-button",
         props: {
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            emailAddress: {
+                type: String,
+                required: true
             }
         },
         data() {
@@ -34,10 +40,11 @@
             onGetVerifyCode() {
                 if (!this.isLoading) {
                     this.isLoading = true;
-                    // 请求
-                    setTimeout(() => {
-                        this.isLoading = false;
-                        // 请求成功，锁定60s
+                    const params = {
+                        emailAddress: this.emailAddress
+                    };
+                    sendEmailRequest(params).then(res => {
+                        this.$toast.success('已发送验证码');
                         this.isLocking = true;
                         this.restSeconds = 60;
                         this.timer = setInterval(() => {
@@ -47,6 +54,10 @@
                                 clearInterval(this.timer);
                             }
                         }, 1000)
+                    }).catch(() => {
+                        this.$toast.fail('发送失败');
+                    }).finally(() => {
+                        this.isLoading = false;
                     })
                 }
             }

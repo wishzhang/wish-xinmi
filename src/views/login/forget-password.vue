@@ -8,13 +8,13 @@
         <van-form ref="form" style="margin-top: 8px;" label-width="3em">
             <van-field
                     label="邮箱"
-                    v-model="address"
-                    name="address"
+                    v-model="emailAddress"
+                    name="emailAddress"
                     placeholder="请输入邮箱"
                     autofocus
                     clearable
                     autocomplete="off"
-                    :rules="addressRules"/>
+                    :rules="emailAddressRules"/>
             <van-field
                     v-model="verifyCode"
                     name="verifyCode"
@@ -25,7 +25,7 @@
                     maxlength="30"
                     :rules="[{ required: true, message: '请输入验证码', trigger: 'none' }]">
                 <template #button>
-                    <verify-code-button :disabled="!canGetVerifyCode"/>
+                    <verify-code-button :disabled="!canGetVerifyCode" :email-address="emailAddress"/>
                 </template>
             </van-field>
             <van-field
@@ -50,8 +50,8 @@
             <van-cell class="tip" style="padding-top: 3px;text-align: left;" :border="false" title=""
                       :value="null"
                       label="密码为6-20位数字字母组合 不能有空格"/>
-            <div style="margin: 16px;">
-                <van-button class="register-btn" round block type="info" native-type="button" @click="onSubmit">提交
+            <div style="margin: 20px 16px;">
+                <van-button class="register-btn" block type="info" native-type="button" @click="onSubmit">提交
                 </van-button>
             </div>
         </van-form>
@@ -61,6 +61,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import {validEmail, validPassword} from "@/util/validate";
+    import {findPasswordByEmailRequest} from "@/api/login";
     import VerifyCodeButton from '@/components/verify-code-button';
 
     export default {
@@ -70,7 +71,7 @@
         },
         data() {
             return {
-                address: '',
+                emailAddress: '',
                 verifyCode: '',
                 password: '',
                 canSeePassword: false
@@ -81,7 +82,7 @@
             passwordInputType() {
                 return this.canSeePassword ? 'text' : 'password';
             },
-            addressRules() {
+            emailAddressRules() {
                 return [{
                     message: '邮箱格式不正确',
                     validator(val) {
@@ -100,7 +101,7 @@
                 }];
             },
             canGetVerifyCode() {
-                return validEmail(this.address);
+                return validEmail(this.emailAddress);
             }
         },
         methods: {
@@ -109,9 +110,25 @@
             },
             async onSubmit() {
                 try {
-                    await this.$refs.form.validate('address');
+                    await this.$refs.form.validate('emailAddress');
                     await this.$refs.form.validate('verifyCode');
                     await this.$refs.form.validate('password');
+
+                    const params = {
+                        emailAddress: this.emailAddress,
+                        verifyCode: this.verifyCode,
+                        newPassword: this.password
+                    }
+                    findPasswordByEmailRequest(params).then(res => {
+                        if (res.code === 0) {
+                            this.$toast.fail('提交成功！');
+                            history.back();
+                        } else if (res.code === 1) {
+                            this.$toast.fail('邮箱未注册');
+                        } else if (res.code === 2) {
+                            this.$toast.fail('验证码错误');
+                        }
+                    })
                 } catch (e) {
 
                 }

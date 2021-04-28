@@ -2,7 +2,7 @@
     <forward-container title="修改密码">
         <van-cell :border="false">
             <template #title>
-                <span>当前绑定的邮箱：</span><a>{{address}}</a>
+                <span>当前绑定的邮箱：</span><a>{{userInfo.emailAddress}}</a>
             </template>
         </van-cell>
         <van-form ref="form" label-width="4em">
@@ -16,7 +16,7 @@
                     maxlength="30"
                     :rules="[{ required: true, message: '请输入验证码', trigger: 'none' }]">
                 <template #button>
-                    <verify-code-button :disabled="!canGetVerifyCode"/>
+                    <verify-code-button :disabled="!canGetVerifyCode" :email-address="userInfo.emailAddress"/>
                 </template>
             </van-field>
             <van-field
@@ -58,7 +58,7 @@
                 </template>
             </van-field>
             <div style="margin: 16px;">
-                <van-button class="login-btn" round block type="info" native-type="button" @click="onSubmit">提交
+                <van-button class="login-btn" block type="info" native-type="button" @click="onSubmit">提交
                 </van-button>
                 <div style="margin-top: 16px;">
                     <div class="van-cell__label" style="font-size: 13px;">密码为6-20位数字字母组合 不能有空格</div>
@@ -74,6 +74,7 @@
     import {mapGetters} from 'vuex';
     import {validEmail, validPassword} from "@/util/validate";
     import VerifyCodeButton from '@/components/verify-code-button';
+    import {findPasswordByEmailRequest} from "@/api/login";
 
     export default {
         name: "email-setting",
@@ -83,7 +84,6 @@
         },
         data() {
             return {
-                address: 'fasdfasdfa@qq.com',
                 verifyCode: '',
                 password: '',
                 rePassword: '',
@@ -98,15 +98,6 @@
             },
             rePasswordInputType() {
                 return this.reCanSeePassword ? 'text' : 'password';
-            },
-            addressRules() {
-                return [{
-                    message: '邮箱格式不正确',
-                    validator(val) {
-                        return validEmail(val);
-                    },
-                    trigger: 'none'
-                }];
             },
             passwordRules() {
                 return [{
@@ -130,7 +121,12 @@
                 }];
             },
             canGetVerifyCode() {
-                return validEmail(this.address);
+                return validEmail(this.userInfo.emailAddress);
+            }
+        },
+        watch: {
+            password() {
+                this.rePassword = '';
             }
         },
         created() {
@@ -143,11 +139,32 @@
                 this.reCanSeePassword = !this.reCanSeePassword;
             },
             async onSubmit() {
-                await this.$refs.form.validate('verifyCode');
-                await this.$refs.form.validate('password');
-                await this.$refs.form.validate('rePassword');
-                await this.$refs.form.validate('address');
+                try {
+                    await this.$refs.form.validate('verifyCode');
+                    await this.$refs.form.validate('password');
+                    await this.$refs.form.validate('rePassword');
 
+                    if (this.password !== this.rePassword) {
+                        this.$toast.fail('密码不一致');
+                        return;
+                    }
+
+                    const params = {
+                        emailAddress: this.userInfo.emailAddress,
+                        verifyCode: this.verifyCode,
+                        newPassword: this.password
+                    };
+                    findPasswordByEmailRequest(params).then(res => {
+                        if (res.code === 0) {
+                            this.$toast.success('密码修改成功!');
+                            history.back();
+                        } else if (res.code === 2) {
+                            this.$toast.fail('该邮箱未注册!');
+                        }
+                    });
+                } catch (e) {
+
+                }
             }
         },
     }

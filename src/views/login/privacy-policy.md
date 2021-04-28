@@ -1,4 +1,4 @@
-<div align='center' style="margin-bottom: 24px;font-weight:bold;font-size: 18px;">用户隐私政策</div>
+<div align='center' style="margin-bottom: 24px;font-weight:bold;font-size: 18px;">信迷用户隐私政策</div>
 
 
 

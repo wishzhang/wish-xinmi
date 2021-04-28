@@ -15,21 +15,23 @@
                    style="font-size: 23px;margin: 0 4px;" @click="onSelectloginTypeMap(loginTypeMap.password.name)"></i>
             </div>
             <div class="statement">
+                <van-checkbox v-model="isAgree" shape="square" icon-size="12px"
+                              style="position:relative;padding-right: 5px;"/>
                 登录表示同意
-                <router-link to="/user-agreement">用户协议</router-link>
+                <router-link :to="{path:'/login/user-agreement'}">用户协议</router-link>
                 和
-                <router-link to="/privacy-policy">隐私政策</router-link>
+                <router-link to="/login/privacy-policy">隐私政策</router-link>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {socket} from "../util/socket";
+    import {socket} from "../../util/socket";
     import {mapGetters} from 'vuex';
     import {validAccount} from "@/util/validate";
-    import LoginEmail from './login-email';
-    import LoginPassword from './login-password';
+    import LoginEmail from '@/views/login/login-email';
+    import LoginPassword from '@/views/login/login-password';
 
     export default {
         name: "login",
@@ -37,8 +39,14 @@
             LoginEmail,
             LoginPassword
         },
+        provide() {
+            return {
+                login: this
+            }
+        },
         data() {
             return {
+                isAgree: true,
                 curloginTypeMap: '',
                 loginTypeMap: {
                     email: {
@@ -122,8 +130,10 @@
         }
 
         .statement {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-top: 10px;
-            text-align: center;
         }
     }
 </style>
