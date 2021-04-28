@@ -24,16 +24,24 @@
                 default: false
             },
             emailAddress: {
-                type: String,
-                required: true
+                type: String
             }
         },
         data() {
             return {
+                theEmailAddress: '',
                 isLocking: false,
                 isLoading: false,
                 restSeconds: 60,
                 timer: null
+            }
+        },
+        watch: {
+            emailAddress: {
+                immediate: true,
+                handler(val) {
+                    this.theEmailAddress = val;
+                }
             }
         },
         methods: {
@@ -41,7 +49,7 @@
                 if (!this.isLoading) {
                     this.isLoading = true;
                     const params = {
-                        emailAddress: this.emailAddress
+                        emailAddress: this.theEmailAddress
                     };
                     sendEmailRequest(params).then(res => {
                         this.$toast.success('已发送验证码');
