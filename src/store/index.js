@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {getStore, setStore} from "../util/store";
-import {loginRequest} from "../api/login";
 import {fetchUserInfoRequest} from "../api/user";
 import {fetchServerTimeRequest} from "@/api/common";
 
@@ -38,15 +37,6 @@ export default new Vuex.Store({
                 }
             },
             actions: {
-                Login({commit}, {username, password}) {
-                    const params = {
-                        username: username,
-                        password: password
-                    };
-                    return loginRequest(params).then(res => {
-                        return res;
-                    })
-                },
                 FetchUserInfo({commit}, userId) {
                     const params = {
                         id: userId

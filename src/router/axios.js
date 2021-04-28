@@ -13,28 +13,29 @@ axios.defaults.baseURL = process.env.VUE_APP_BASE_API;
 axios.defaults.timeout = 10000;
 
 axios.defaults.validateStatus = function (status) {
-  return status >= 200 && status <= 500;
+    return status >= 200 && status <= 500;
 };
 
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(config => {
-  return config
+    return config
 }, error => {
-  return Promise.reject(error)
+    return Promise.reject(error)
 });
 
 axios.interceptors.response.use(res => {
-  if (res.status === 200) {
-    return res.data;
-  } else {
-    // TODO 开发环境这样子，生产环境有更好的做法
-    Toast.fail('服务器出错了');
-    return Promise.reject(res.data);
-  }
+    if (res.status === 200) {
+        return res.data;
+    } else if (res.status === 404) {
+        return Promise.reject(res.data);
+    } else if (res.status >= 500) {
+        Toast.fail('服务器出错了');
+        return Promise.reject(res.data);
+    }
 }, error => {
-  Toast.fail('服务器出错了');
-  return Promise.reject(new Error(error));
+    Toast.fail('服务器出错了');
+    return Promise.reject(new Error(error));
 });
 
 export default axios;
