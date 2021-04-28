@@ -49,8 +49,8 @@ router.get('/detail', async (ctx) => {
  * @param password
  * @return code: 1 该邮箱未注册 2 验证码错误
  */
-router.get('/editEmailAddress', async (ctx) => {
-    const {originEmailAddress, targetEmailAddress, verifyCode, password} = ctx.query;
+router.post('/editEmailAddress', async (ctx) => {
+    const {originEmailAddress, targetEmailAddress, verifyCode, password} = ctx.request.body;
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.checkCode(targetEmailAddress, verifyCode);

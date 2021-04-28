@@ -7,8 +7,8 @@ const userService = require('../service/user-service');
 
 const router = require('./router-factory')('/login');
 
-router.get('/loginByPassword', async (ctx) => {
-    const {username, password} = ctx.request.query;
+router.post('/loginByPassword', async (ctx) => {
+    const {username, password} = ctx.request.body;
 
     const user = await userService.getOneUser({username, password});
     if (user) {
@@ -24,10 +24,8 @@ router.get('/loginByPassword', async (ctx) => {
  * @param verifyCode 验证码
  * @return code: 1 没有对应的账号 2 验证码错误
  */
-router.get('/loginByEmail', async (ctx) => {
-    const query = ctx.query;
-    const emailAddress = query.emailAddress;
-    const verifyCode = query.verifyCode;
+router.post('/loginByEmail', async (ctx) => {
+    const {emailAddress, verifyCode} = ctx.request.body;
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.checkCode(emailAddress, verifyCode);
@@ -58,8 +56,8 @@ router.get('/loginByEmail', async (ctx) => {
  * @param newPassword
  * @return code: 1 该邮箱未注册 2 验证码错误
  */
-router.get('/findPasswordByEmail', async (ctx) => {
-    const {emailAddress, verifyCode, newPassword} = ctx.query;
+router.post('/findPasswordByEmail', async (ctx) => {
+    const {emailAddress, verifyCode, newPassword} = ctx.request.body;
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.checkCode(emailAddress, verifyCode);
