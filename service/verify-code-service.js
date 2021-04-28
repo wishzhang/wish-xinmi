@@ -2,8 +2,8 @@ const nodemailer = require("nodemailer");
 
 const codeCache = {};
 
-const validAddrAndCode = (addr, code) => {
-    return codeCache[addr] && codeCache[addr] === code;
+const checkCode = (emailAddress, code) => {
+    return codeCache[emailAddress] && codeCache[emailAddress] === code;
 }
 
 const sendEmail = async (targetAddr) => {
@@ -59,5 +59,5 @@ const genCode = () => {
 
 module.exports = {
     sendEmail,
-    validAddrAndCode
+    checkCode
 }

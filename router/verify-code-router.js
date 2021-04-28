@@ -8,7 +8,7 @@ const router = require('./router-factory')('/verifyCode');
  */
 router.get('/sendEmail', async (ctx) => {
     const query = ctx.query;
-    const addr = query.address;
+    const addr = query.emailAddress;
     const res = await verifyCodeService.sendEmail(addr);
     if (res.code === 0) {
         ctx.body = R.success();
