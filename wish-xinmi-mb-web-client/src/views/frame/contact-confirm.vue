@@ -61,7 +61,9 @@
             const params = {
                 userId: this.userInfo.id
             }
-            setAllContactCheckedRequest(params);
+            setAllContactCheckedRequest(params).then(() => {
+                this.$store.dispatch('FetchContactWarnNum');
+            })
         },
         methods: {
             onLoad() {

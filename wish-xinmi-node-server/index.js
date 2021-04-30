@@ -6,7 +6,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler-middleware');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const initRouter = require('./router/index');
-const createSocketServer = require('./create-socket-server');
+const socket = require('./socket/index');
 const fileUploader = require('./util/file-util');
 const beforeMiddleware = require('./middleware/before-middleware');
 const afterMiddleware = require('./middleware/after-middleware');
@@ -47,7 +47,8 @@ initRouter(app);
 // minio中间件
 app.use(afterMiddleware());
 
-const server = createSocketServer(app);
+const server = require('http').createServer(app.callback());
+socket.init(server);
 
 server.listen(global.config.serverPort, () => {
     console.log(`http://localhost:${global.config.serverPort}`);

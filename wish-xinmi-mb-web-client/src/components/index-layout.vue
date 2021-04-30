@@ -6,6 +6,7 @@
 
 <script>
     import {mapGetters} from 'vuex';
+    import {initSocket} from "../util/socket";
     import {dateFormat} from "@/util/datetime";
 
     let timer = null;
@@ -16,6 +17,16 @@
             ...mapGetters(['userInfo', 'serverTime'])
         },
         created() {
+            const self = this;
+            const socket = initSocket(this.userInfo.username);
+            if(socket){
+                socket.on('contact-add-contact', num=>{
+                    debugger
+                    self.$store.commit('SET_CONTACT_WARN_NUM', num);
+                })
+            }
+
+            this.$store.dispatch('FetchSuccessLoginInitData', this.userInfo.id);
             this.setServerTime();
         },
         methods: {

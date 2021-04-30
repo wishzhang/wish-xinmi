@@ -1,3 +1,4 @@
+const router = require('./router');
 const userRouter = require('./user-router');
 const loginRouter = require('./login-router');
 const contactRouter = require('./contact-router');
@@ -7,12 +8,8 @@ const fileRouter = require('./file-router');
 const commonRouter = require('./common-router');
 const verifyCodeRouter = require('./verify-code-router');
 
-const router = require('./router-factory')('/');
-router.all('/', async (ctx) => {
-
-})
-
 module.exports = (app) => {
+    app.use(router.routes());
     app.use(userRouter.routes());
     app.use(loginRouter.routes());
     app.use(circleRouter.routes());

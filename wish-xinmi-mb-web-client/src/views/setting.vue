@@ -32,7 +32,7 @@
             onLoginOut() {
                 this.$store.dispatch('Logout').then(() => {
                     if (socket !== null) {
-                        socket.emit('sessionOff', {userId: this.userInfo.id})
+                        socket.emit('sessionOff', {account: this.userInfo.username})
                         socket.disconnect();
                     }
                     this.$router.push({path: '/login'});

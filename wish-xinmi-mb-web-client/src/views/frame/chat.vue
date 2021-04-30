@@ -108,19 +108,19 @@
         },
         mounted() {
             if (socket) {
-                socket.on('message', res => {
-                    if (res.code === 0) {
-                        this.list.push({
-                            type: 'left',
-                            content: res.data.content
-                        });
-                        setTimeout(() => {
-                            this.scrollToBottom();
-                        })
-                    } else if (res.code === 1) {
-                        console.log(res);
-                    }
-                })
+                // socket.on('message', res => {
+                //     if (res.code === 0) {
+                //         this.list.push({
+                //             type: 'left',
+                //             content: res.data.content
+                //         });
+                //         setTimeout(() => {
+                //             this.scrollToBottom();
+                //         })
+                //     } else if (res.code === 1) {
+                //         console.log(res);
+                //     }
+                // })
             }
         },
         methods: {
@@ -144,16 +144,16 @@
                     content: this.message,
                 };
                 try {
-                    socket.send(obj);
-                    this.list.push({
-                        type: 'right',
-                        content: obj.content,
-                        avatarUrl: this.userInfo.avatarUrl
-                    });
-                    this.message = '';
-                    setTimeout(() => {
-                        this.scrollToBottom();
-                    })
+                    // socket.send(obj);
+                    // this.list.push({
+                    //     type: 'right',
+                    //     content: obj.content,
+                    //     avatarUrl: this.userInfo.avatarUrl
+                    // });
+                    // this.message = '';
+                    // setTimeout(() => {
+                    //     this.scrollToBottom();
+                    // })
                 } catch (e) {
                     console.log('....')
                     console.log(e);

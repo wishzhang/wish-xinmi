@@ -80,7 +80,6 @@
             onLoginSuccess(res) {
                 this.$toast.success('登录成功');
                 this.$store.commit('SET_USER_INFO', res.data);
-                this.$store.dispatch('FetchSuccessLoginInitData', res.data.id);
                 this.$router.push({path: '/index-layout/frame'});
             }
         },

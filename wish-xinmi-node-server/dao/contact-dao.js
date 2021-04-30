@@ -47,7 +47,8 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
                       ('${contactId}', '${userId}', '${originName}', now(), now())
                 `
                 }
-            ])
+            ]);
+            return 3;
         }
     } else {
         await mysql.transaction([
@@ -61,6 +62,7 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
                 `
             }
         ]);
+        return 1;
     }
 }
 

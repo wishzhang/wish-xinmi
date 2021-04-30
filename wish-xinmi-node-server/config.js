@@ -23,7 +23,6 @@ module.exports = {
     // minio配置
     minioEndPoint: 'localhost',
     minioPort: 9000,
-    minioHost: `http://localhost:9000`,
     minioAccessKey: 'minioadmin',
     minioSecretKey: 'minioadmin',
     minioUseSSL: false,

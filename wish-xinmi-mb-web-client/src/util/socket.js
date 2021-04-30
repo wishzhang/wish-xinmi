@@ -2,7 +2,24 @@ import {io} from 'socket.io-client';
 
 let socket = null;
 
-const initSocket = (userId) => {
+const withTimeout = (onSuccess, onTimeout, timeout) => {
+    let called = false;
+
+    const timer = setTimeout(() => {
+        if (called) return;
+        called = true;
+        onTimeout();
+    }, timeout);
+
+    return (...args) => {
+        if (called) return;
+        called = true;
+        clearTimeout(timer);
+        onSuccess.apply(this, args);
+    }
+}
+
+const initSocket = (account) => {
     if (socket === null) {
         socket = io('', {
             path: `${process.env.VUE_APP_BASE_API}/socket.io`,
@@ -11,21 +28,18 @@ const initSocket = (userId) => {
 
         socket.on("connect", () => {
             console.warn('connected:' + socket.id);
-            socket.emit('sessionOn', {userId: userId})
+            socket.emit('sessionOn', {account});
         });
 
         socket.on("connect_error", (err) => {
-            setTimeout(() => {
-                console.warn(err);
-                console.warn('reconnect');
-                socket.connect();
-            }, 1000);
+            console.warn('connect_error:', err);
         });
 
         socket.on("disconnect", (err) => {
-            console.warn(err);
-            console.warn('disconnect')
+            console.warn('disconnect:', err);
         });
+
+        return socket;
     }
 }
 

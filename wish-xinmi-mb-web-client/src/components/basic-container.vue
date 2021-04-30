@@ -5,9 +5,6 @@
 </template>
 
 <script>
-    import {initSocket} from "../util/socket";
-    import {mapGetters} from 'vuex';
-
     export default {
         name: "basic-container",
         props: {
@@ -17,7 +14,6 @@
             }
         },
         computed: {
-            ...mapGetters(['userInfo']),
             style(){
                 let s = {};
                 if(this.white){
@@ -27,7 +23,6 @@
             }
         },
         created() {
-            initSocket(this.userInfo.id);
         }
     }
 </script>

@@ -1,4 +1,6 @@
 const contactService = require('../service/contact-service');
+const userService = require('../service/user-service');
+const socket = require('../socket/index');
 
 const router = require('./router-factory')('/contact');
 
@@ -12,7 +14,12 @@ router.get('/getYesContactList', async (ctx) => {
 router.get('/addContact', async (ctx) => {
     const {id, contactId, validateMsg} = ctx.query;
 
-    await contactService.addContact({userId: id, contactId, validateMsg});
+    const status = await contactService.addContact({userId: id, contactId, validateMsg});
+
+    if (status === 1) {
+        await socket.emitContactAddContact({userId: id, contactId});
+    }
+
     ctx.body = R.success();
 })
 

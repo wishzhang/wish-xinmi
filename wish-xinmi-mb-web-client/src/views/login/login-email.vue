@@ -32,7 +32,6 @@
 </template>
 
 <script>
-    import {socket} from "../../util/socket";
     import {mapGetters} from 'vuex';
     import {validEmail} from "@/util/validate";
     import VerifyCodeButton from '@/components/verify-code-button';
@@ -70,9 +69,6 @@
             }
         },
         created() {
-            if (socket) {
-                socket.disconnect();
-            }
         },
         methods: {
             onSwitchSeePassword() {

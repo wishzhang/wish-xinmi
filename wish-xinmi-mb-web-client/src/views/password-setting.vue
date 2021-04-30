@@ -70,7 +70,6 @@
 
 <script>
     import ForwardContainer from '@/components/forward-container';
-    import {socket} from "../util/socket";
     import {mapGetters} from 'vuex';
     import {validEmail, validPassword} from "@/util/validate";
     import VerifyCodeButton from '@/components/verify-code-button';

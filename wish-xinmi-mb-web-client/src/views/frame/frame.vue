@@ -40,7 +40,6 @@
           ...mapGetters(['contactWarnNumStr'])
         },
         created() {
-            this.$store.dispatch('FetchContactWarnNum');
         },
         methods: {}
     }
