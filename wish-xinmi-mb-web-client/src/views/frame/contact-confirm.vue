@@ -9,17 +9,20 @@
         <van-list
                 v-model="loading"
                 :finished="finished"
-                finished-text="没有更多了"
+                finished-text=""
                 @load="onLoad">
-            <van-cell v-for="item in list" :key="item.id" :label="item.validateMsg" :title="item.username" center>
-                <template #right-icon>
+            <van-cell v-for="item in list" :key="item.contactId" :label="item.validateMsg" :title="item.name"
+                      center>
+                <template v-if="item.status === 1">已发送验证</template>
+                <template v-if="item.status ===2">
                     <van-button
                             :loading="loadingConfirm"
                             type="info"
                             size="mini"
-                            @click="onConfirm(item)">接受
+                            @click="onConfirm(item)">&nbsp;接受&nbsp;
                     </van-button>
                 </template>
+                <template v-if="item.status === 3">已添加</template>
                 <template #icon>
                     <van-image
                             radius="4"
@@ -34,7 +37,11 @@
 </template>
 
 <script>
-    import {confirmContactRequest, fetchConfirmContactListRequest} from "../../api/contact";
+    import {
+        confirmContactRequest,
+        fetchConfirmContactListRequest,
+        setAllContactCheckedRequest
+    } from "../../api/contact";
     import {mapGetters} from 'vuex';
 
     export default {
@@ -49,6 +56,12 @@
         },
         computed: {
             ...mapGetters(['userInfo'])
+        },
+        created() {
+            const params = {
+                userId: this.userInfo.id
+            }
+            setAllContactCheckedRequest(params);
         },
         methods: {
             onLoad() {
@@ -67,7 +80,7 @@
             onConfirm(item) {
                 const params = {
                     id: this.userInfo.id,
-                    contactId: item.id
+                    contactId: item.contactId
                 }
                 this.loadingConfirm = true;
                 confirmContactRequest(params).then(res => {

@@ -32,7 +32,7 @@ const uuid = () => {
     return uuidv4();
 }
 
-const getFirstUpperLetter = (str) => {
+const getFirstUpperLetter = (str = '') => {
     const arr = pinyin(str, {
         style: pinyin.STYLE_FIRST_LETTER,
     });

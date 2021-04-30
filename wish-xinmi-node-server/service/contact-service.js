@@ -10,7 +10,7 @@ const getYesContactList = async ({userId}) => {
     const list = ch.map(label => {
         const obj = {};
         const records = contactList.filter(user => {
-            const letter = util.getFirstUpperLetter(user.username);
+            const letter = util.getFirstUpperLetter(user.name);
             return letter === label;
         });
 
@@ -20,7 +20,7 @@ const getYesContactList = async ({userId}) => {
     });
 
     const otherRecords = contactList.filter(user => {
-        const letter = util.getFirstUpperLetter(user.username);
+        const letter = util.getFirstUpperLetter(user.name);
         return !ch.includes(letter);
     });
     const otherObj = {
@@ -38,7 +38,6 @@ const getNoContactList = async ({userId, username}) => {
 }
 
 const addContact = async ({userId, contactId, validateMsg}) => {
-    // 找到对应用户的名称
     const targetDetail = await userService.getUserDetail({userId: contactId});
     const originDetail = await userService.getUserDetail({userId: userId});
     let msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
@@ -52,12 +51,19 @@ const addContact = async ({userId, contactId, validateMsg}) => {
 }
 
 const getConfirmContactList = async ({userId}) => {
-    const list = await contactDao.getConfirmContactList({userId});
+    let list = await contactDao.getConfirmContactList({userId});
     return list;
 }
 
 const confirmContact = async ({userId, contactId}) => {
-    await contactDao.confirmContact({userId, contactId});
+    const targetDetail = await userService.getUserDetail({userId: contactId});
+    const originDetail = await userService.getUserDetail({userId: userId});
+    await contactDao.confirmContact({
+        userId,
+        contactId,
+        originName: originDetail.username,
+        targetName: targetDetail.username
+    });
 }
 
 const getUserContactStatus = async ({userId, contactId}) => {
@@ -69,6 +75,26 @@ const getContactInfoHad = async ({userId, contactId}) => {
     return await contactDao.getContactInfoHad({userId, contactId});
 }
 
+const getContactWarnNum = async ({userId}) => {
+    const list = await contactDao.getContactNoCheckedNum({userId});
+    if (list.length > 0) {
+        return list[0].num;
+    }
+    return 0;
+}
+
+const setAllContactChecked = async ({userId}) => {
+    return await contactDao.setAllContactChecked({userId});
+}
+
+const editContact = async ({userId, contactId, contactName}) => {
+    return await contactDao.editContact({userId, contactId, contactName});
+}
+
+const deleteContact = async ({userId, contactId}) => {
+    return await contactDao.deleteContact({userId, contactId});
+}
+
 module.exports = {
     getNoContactList,
     getYesContactList,
@@ -76,5 +102,9 @@ module.exports = {
     getConfirmContactList,
     confirmContact,
     getUserContactStatus,
-    getContactInfoHad: getContactInfoHad
+    getContactInfoHad,
+    getContactWarnNum,
+    setAllContactChecked,
+    editContact,
+    deleteContact
 }

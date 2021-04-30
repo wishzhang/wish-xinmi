@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import {getStore, setStore} from "../util/store";
 import {fetchUserInfoRequest} from "../api/user";
 import {fetchServerTimeRequest} from "@/api/common";
+import {fetchContactWarnNumRequest} from "../api/contact";
 
 Vue.use(Vuex)
 
@@ -17,8 +18,11 @@ export default new Vuex.Store({
         serverTime: (state) => {
             return state.common.serverTime
         },
-        loginType: (state)=>{
+        loginType: (state) => {
             return state.common.loginType
+        },
+        contactWarnNumStr: (state) => {
+            return state.common.contactWarnNum;
         }
     },
     modules: {
@@ -37,18 +41,6 @@ export default new Vuex.Store({
                 }
             },
             actions: {
-                FetchUserInfo({commit}, userId) {
-                    const params = {
-                        id: userId
-                    }
-                    return fetchUserInfoRequest(params).then(res => {
-                        if (res.code === 0) {
-                            const data = res.data;
-                            commit('SET_USER_INFO', data);
-                        }
-                        return res;
-                    })
-                },
                 Logout({commit}) {
                     commit('SET_USER_INFO', {});
                 }
@@ -59,7 +51,8 @@ export default new Vuex.Store({
             state: {
                 serverTime: undefined,
                 // 登录方式
-                loginType: getStore({name: 'loginType'}) || 'email'
+                loginType: getStore({name: 'loginType'}) || 'email',
+                contactWarnNum: getStore({name: 'contactWarnNum'})
             },
             mutations: {
                 SET_SERVER_TIME(state, serverTime) {
@@ -68,6 +61,12 @@ export default new Vuex.Store({
                 SET_LOGIN_TYPE(state, typeName) {
                     state.loginType = typeName;
                     setStore({name: 'loginType', content: typeName});
+                },
+                SET_CONTACT_WARN_NUM(state, num) {
+                    num = Number.parseInt(num);
+                    let str = num >= 1 ? num + '' : '';
+                    state.contactWarnNum = str;
+                    setStore({name: 'contactWarnNum', str})
                 }
             },
             actions: {
@@ -78,6 +77,17 @@ export default new Vuex.Store({
                             commit('SET_SERVER_TIME', serverTime);
                             return serverTime;
                         }
+                    })
+                },
+                FetchSuccessLoginInitData({dispatch, state, commit, rootState}) {
+                    dispatch('FetchContactWarnNum');
+                },
+                FetchContactWarnNum({dispatch, state, commit, rootState}) {
+                    const params = {
+                        userId: rootState.user.userInfo.id
+                    };
+                    return fetchContactWarnNumRequest(params).then(res => {
+                        commit('SET_CONTACT_WARN_NUM', res.data);
                     })
                 }
             },

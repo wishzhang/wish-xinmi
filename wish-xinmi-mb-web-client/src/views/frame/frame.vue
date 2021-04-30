@@ -9,6 +9,7 @@
                     icon="chat-o">消息
             </van-tabbar-item>
             <van-tabbar-item
+                    :badge="contactWarnNumStr"
                     replace to="/index-layout/frame/contact"
                     icon="friends-o">联系人
             </van-tabbar-item>
@@ -25,6 +26,8 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
+
     export default {
         name: "frame",
         components: {},
@@ -33,9 +36,11 @@
                 active: ''
             }
         },
-
+        computed: {
+          ...mapGetters(['contactWarnNumStr'])
+        },
         created() {
-
+            this.$store.dispatch('FetchContactWarnNum');
         },
         methods: {}
     }

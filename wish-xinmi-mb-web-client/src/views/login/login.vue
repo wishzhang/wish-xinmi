@@ -4,7 +4,7 @@
             <img class="login-top-bg"/>
             <div class="web-title">信迷</div>
         </div>
-        <component :is="curComponentName"/>
+        <component :is="curComponentName" @login-success="onLoginSuccess"/>
 
         <div class="login-footer">
             <van-divider style="margin: 8px 0px;">上次登录方式</van-divider>
@@ -76,6 +76,12 @@
             onSelectloginTypeMap(loginTypeMapName) {
                 this.curloginTypeMap = loginTypeMapName;
                 this.$store.commit('SET_LOGIN_TYPE', loginTypeMapName);
+            },
+            onLoginSuccess(res) {
+                this.$toast.success('登录成功');
+                this.$store.commit('SET_USER_INFO', res.data);
+                this.$store.dispatch('FetchSuccessLoginInitData', res.data.id);
+                this.$router.push({path: '/index-layout/frame'});
             }
         },
     }

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev",
     "dev:debug": "cross-env NODE_ENV=development DEBUG=xinmi-* nodemon --inspect index.js",
     "dev": "cross-env NODE_ENV=development nodemon --inspect index.js"
   },

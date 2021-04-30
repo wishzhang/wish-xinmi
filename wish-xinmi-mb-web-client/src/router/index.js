@@ -22,6 +22,7 @@ import UserAgreement from '../views/login/user-agreement'
 import PrivacyPolicy from '../views/login/privacy-policy.'
 import EmailSetting from '../views/email-setting'
 import PasswordSetting from '../views/password-setting'
+import ContactInfoEdit from '../views/frame/contact-info-edit'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,11 @@ const routes = [
         path: '/index-layout',
         component: IndexLayout,
         children: [
+            // 修改联系人信息
+            {
+                path: 'contact-info-edit',
+                component: ContactInfoEdit
+            },
             // 修改密码
             {
                 path: 'password-setting',

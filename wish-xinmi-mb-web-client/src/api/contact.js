@@ -56,4 +56,37 @@ export const fetchContactDetailRequest = (params) => {
     })
 }
 
+export const fetchContactWarnNumRequest = (params) => {
+    return request({
+        url: '/contact/getContactWarnNum',
+        method: 'get',
+        params: params
+    })
+}
+
+export const setAllContactCheckedRequest = (params) => {
+    return request({
+        url: '/contact/setAllContactChecked',
+        method: 'post',
+        data: params
+    })
+}
+
+export const editContactRequest = (params) => {
+    return request({
+        url: '/contact/editContact',
+        method: 'post',
+        data: params
+    })
+}
+
+export const deleteContactRequest = (params) => {
+    return request({
+        url: '/contact/deleteContact',
+        method: 'post',
+        data: params
+    })
+}
+
+
 

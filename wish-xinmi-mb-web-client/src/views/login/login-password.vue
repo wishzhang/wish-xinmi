@@ -86,9 +86,7 @@
                 }
                 loginByPasswordRequest(params).then(res => {
                     if (res.code === 0) {
-                        this.$toast.success('登录成功');
-                        this.$store.commit('SET_USER_INFO', res.data);
-                        this.$router.push({path: '/index-layout/frame'});
+                        this.$emit('login-success', res);
                     } else if (res.code === 1) {
                         this.$toast.fail('用户名或密码错误');
                     }

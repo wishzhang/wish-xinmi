@@ -2,10 +2,23 @@ const mysql = require('./mysql');
 const util = require('../util/index');
 const uuid = util.uuid;
 
-// 当用户添加联系人
+/**
+ * 当用户发送验证消息给联系人（不做校验），那么：
+ * 如果对方已经发给自己确认信息了，则直接添加为联系人{
+ *     将两条握手记录状态置为3，
+ *     再插入两条记录到联系表里
+ * }
+ * 如果没有，给自己-对方状态1、对方-自己状态2
+ *
+ *
+ * @param userId
+ * @param contactId
+ * @param validateMsg
+ * @param originName
+ * @param targetName
+ * @returns {Promise<void>}
+ */
 const addContact = async ({userId, contactId, validateMsg = '', originName, targetName}) => {
-    // 如果对方已给自己发送了验证消息，则将对方-自己 更新3，并且将自己-对方更新3
-    // 如果对方没有，则给对方-自己 插入2，自己-对方 插入1
     const rows = await getUserContactStatus({userId: contactId, contactId: userId});
     if (rows.length > 0) {
         const status = rows[0].status;
@@ -13,17 +26,26 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
             await mysql.transaction([
                 () => {
                     return `
-          update xinmi_contact 
-          set status = 3, update_time = now()
-          where user_id = '${userId}' and contact_id = '${contactId}'
-        `
+                      update xinmi_contact_record 
+                      set status = 3, update_time = now()
+                      where user_id = '${userId}' and contact_id = '${contactId}'
+                      `
                 },
                 () => {
                     return `
-          update xinmi_contact set 
-          status = 3, update_time = now()
-          where user_id = '${contactId}' and contact_id = '${userId}'
-        `
+                      update xinmi_contact_record set 
+                      status = 3, update_time = now()
+                      where user_id = '${contactId}' and contact_id = '${userId}'
+                      `
+                },
+                () => {
+                    return `
+                  insert into xinmi.xinmi_contact 
+                      (user_id, contact_id, contact_name, create_time, update_time)
+                  values 
+                      ('${userId}', '${contactId}', '${targetName}', now(), now()),
+                      ('${contactId}', '${userId}', '${originName}', now(), now())
+                `
                 }
             ])
         }
@@ -31,58 +53,44 @@ const addContact = async ({userId, contactId, validateMsg = '', originName, targ
         await mysql.transaction([
             () => {
                 return `
-          insert into xinmi.xinmi_contact 
-          (
-            user_id, contact_id, status, 
-            validate_msg, contact_name,create_time, 
-            update_time
-          )
-          values 
-          (
-            '${userId}', '${contactId}', 1, 
-            '${validateMsg}', '${targetName}', now(), 
-            now()
-          )
-        `
-            },
-            () => {
-                return `
-          insert into xinmi.xinmi_contact
-          (
-            user_id, contact_id, status, 
-            validate_msg, contact_name,create_time, 
-            update_time
-          )
-          values
-          (
-            '${contactId}', '${userId}', 2, 
-            '${validateMsg}', '${originName}', now(), 
-            now()
-          )
-      `
+                  insert into xinmi.xinmi_contact_record
+                      (user_id, contact_id, status, validate_msg, create_time, update_time)
+                  values 
+                      ('${userId}', '${contactId}', 1, '${validateMsg}', now(), now()),
+                      ('${contactId}', '${userId}', 2, '${validateMsg}', now(), now())
+                `
             }
         ]);
     }
 }
 
 // 确认联系人
-const confirmContact = async ({userId, contactId}) => {
+const confirmContact = async ({userId, contactId, originName, targetName}) => {
     await mysql.transaction([
         () => {
             return `
-    update xinmi_contact
-      set status = 3, update_time = now()
-            where user_id = '${userId}'
-              and contact_id = '${contactId}'
-  `
+                update xinmi_contact_record
+                  set status = 3, update_time = now()
+                        where user_id = '${userId}'
+                          and contact_id = '${contactId}'
+            `
         },
         () => {
             return `
-    update xinmi_contact
-      set status = 3, update_time = now()
-            where user_id = '${contactId}'
-              and contact_id = '${userId}'
-  `
+                update xinmi_contact_record
+                  set status = 3, update_time = now()
+                        where user_id = '${contactId}'
+                          and contact_id = '${userId}'
+            `
+        },
+        () => {
+            return `
+                  insert into xinmi.xinmi_contact 
+                      (user_id, contact_id, contact_name, create_time, update_time)
+                  values 
+                      ('${userId}', '${contactId}', '${targetName}', now(), now()),
+                      ('${contactId}', '${userId}', '${originName}', now(), now())
+                `
         }
     ])
 }
@@ -91,7 +99,7 @@ const confirmContact = async ({userId, contactId}) => {
 const getUserContactStatus = async ({userId, contactId}) => {
     return await mysql.query(`
    select status
-      from xinmi_contact
+      from xinmi_contact_record
       where user_id = '${userId}' and contact_id = '${contactId}'
   `)
 }
@@ -99,10 +107,10 @@ const getUserContactStatus = async ({userId, contactId}) => {
 // 获取当前用户的已添加的联系人
 const getYesContactList = async ({userId}) => {
     return await mysql.query(`
-    select xu.id, xu.username,xu.avatar_url
+    select xu.id, if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,xu.avatar_url
     from xinmi_user xu
              inner join xinmi_contact xc 
-             on xu.id = xc.contact_id and xc.status = 3
+             on xu.id = xc.contact_id
     where xc.user_id = '${userId}'
   `)
 }
@@ -110,50 +118,102 @@ const getYesContactList = async ({userId}) => {
 // 获取当前用户待确认的联系人
 const getConfirmContactList = async ({userId}) => {
     return await mysql.query(`
-        select 
-            xu.id, 
-            xu.username, 
-            xc.validate_msg,
-            xu.avatar_url
-        from xinmi_user xu
-                 inner join xinmi_contact xc 
-                 on xu.id = xc.contact_id and xc.status = 2
-        where xc.user_id = '${userId}'
-  `)
+            select 
+                xcr.contact_id, 
+                if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,
+                xcr.validate_msg,
+                xu.avatar_url,
+                xcr.status
+            from xinmi_contact_record xcr
+                     inner join xinmi_user xu
+                     on xcr.contact_id = xu.id
+                     left join xinmi_contact xc
+                     on xcr.user_id = xc.user_id and xcr.contact_id = xc.contact_id
+            where xcr.user_id = '${userId}';
+  `);
 }
 
 // 获取当前用户的可添加的联系人
 const getNoContactList = async ({userId, username}) => {
     return await mysql.query(`
-        select 
-            xu.id, 
-            xu.username,
-            xu.avatar_url
-          from xinmi_user xu
-          where xu.id not in (
-            select xc.contact_id from xinmi_contact xc where xc.user_id = '${userId}' and xc.status =3
-          )
-            and xu.username like '%${username}%'
-            and xu.id != '${userId}'
+    SELECT
+        xu.id,
+        xu.username,
+        xu.avatar_url 
+    FROM
+        xinmi_user xu 
+    WHERE
+        xu.id NOT IN ( SELECT xc.contact_id FROM xinmi_contact xc WHERE xc.user_id = '${userId}' ) 
+        AND xu.username LIKE '%${username}%' 
+        AND xu.id != '${userId}'
     `)
 }
 
 // 获取联系人详情,已经是联系人
-const getContactInfoHad= async ({userId, contactId}) => {
+const getContactInfoHad = async ({userId, contactId}) => {
     return await mysql.query(`
         SELECT
             xu.id,
-            xc.contact_name,
+            if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,
             xu.avatar_url,
-            xu.bg_url 
+            xu.bg_url,
+            xu.email_address,
+            xu.username,
+            xc.contact_name
         FROM
             xinmi_contact xc
             INNER JOIN xinmi_user xu ON xc.contact_id = xu.id 
         WHERE
             xc.user_id = '${userId}' 
             AND xc.contact_id = '${contactId}'
-            AND xc.status=3
     `)
+}
+
+// 获取联系人相关的提醒数量
+const getContactNoCheckedNum = async ({userId}) => {
+    return await mysql.query(`
+        select count(*) as num from xinmi_contact_record as xcr
+        where xcr.user_id='${userId}' 
+        and xcr.status=2
+        and (xcr.is_checked!=1 or xcr.is_checked is null)
+    `)
+}
+
+const setAllContactChecked = async ({userId}) => {
+    return await mysql.query(`
+        update xinmi_contact_record as xcr set xcr.is_checked=1 WHERE xcr.user_id='${userId}'
+    `)
+}
+
+/**
+ * 编辑联系人信息
+ *
+ */
+const editContact = async ({userId, contactId, contactName = ''}) => {
+    let arr = [];
+    let conStr = '';
+    arr.push(`contact_name='${contactName}'`)
+    conStr = arr.join(',');
+
+    return await mysql.query(`
+        update xinmi_contact set ${conStr} where xinmi_contact.user_id='${userId}' 
+        and xinmi_contact.contact_id='${contactId}'
+    `)
+}
+
+const deleteContact = async ({userId, contactId}) => {
+    await mysql.transaction([
+        () => {
+            return `
+       delete from xinmi_contact where user_id='${userId}' and contact_id='${contactId}' or user_id='${contactId}' and contact_id='${userId}'
+            `
+        },
+        () => {
+            return `
+           delete from xinmi_contact_record where user_id='${userId}' and contact_id='${contactId}' or user_id='${contactId}' and contact_id='${userId}'
+            `
+        }
+    ])
 }
 
 module.exports = {
@@ -163,5 +223,9 @@ module.exports = {
     getNoContactList,
     getConfirmContactList,
     getUserContactStatus,
-    getContactInfoHad
+    getContactInfoHad,
+    getContactNoCheckedNum,
+    setAllContactChecked,
+    editContact,
+    deleteContact
 }

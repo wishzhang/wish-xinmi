@@ -10,11 +10,9 @@ router.get('/getYesContactList', async (ctx) => {
 })
 
 router.get('/addContact', async (ctx) => {
-    const query = ctx.request.query;
-    const userId = query.id;
-    const contactId = query.contactId;
-    const validateMsg = query.validateMsg;
-    await contactService.addContact({userId, contactId, validateMsg});
+    const {id, contactId, validateMsg} = ctx.query;
+
+    await contactService.addContact({userId: id, contactId, validateMsg});
     ctx.body = R.success();
 })
 
@@ -60,5 +58,41 @@ router.get('/getContactInfoHad', async (ctx) => {
     const list = await contactService.getContactInfoHad({userId, contactId});
     ctx.body = R.success(list[0]);
 });
+
+/**
+ * 获取联系人的提醒数量，目前为未查看的待确认记录的数量
+ */
+router.get('/getContactWarnNum', async (ctx) => {
+    const {userId} = ctx.query;
+    const num = await contactService.getContactWarnNum({userId});
+    ctx.body = R.success(num);
+})
+
+/**
+ * 将该用户对应的联系人设置为已读
+ */
+router.post('/setAllContactChecked', async (ctx) => {
+    const {userId} = ctx.request.body;
+    await contactService.setAllContactChecked({userId});
+    ctx.body = R.success();
+})
+
+/**
+ * 修改联想人信息
+ */
+router.post('/editContact', async (ctx) => {
+    const {userId, contactId, contactName} = ctx.request.body;
+    await contactService.editContact({userId, contactId, contactName});
+    ctx.body = R.success();
+})
+
+/**
+ * 删除联想人
+ */
+router.post('/deleteContact', async (ctx) => {
+    const {userId, contactId} = ctx.request.body;
+    await contactService.deleteContact({userId, contactId});
+    ctx.body = R.success();
+})
 
 module.exports = router;

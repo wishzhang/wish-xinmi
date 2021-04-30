@@ -18,10 +18,20 @@
         </van-nav-bar>
 
         <!--待验证的联系人-->
-        <van-cell value="" :to="{path: '/index-layout/contact-confirm'}">
+        <van-cell value="" center :to="{path: '/index-layout/contact-confirm'}">
             <!-- 使用 title 插槽来自定义标题 -->
             <template #title>
                 <span class="custom-title">新的联系人</span>
+            </template>
+            <template #icon>
+                <div style="margin-right: 16px;">
+                    <van-badge :dot="contactWarnNumStr!==''">
+                        <div class="pretender-image-bg">
+                            <i style="position: relative; top: 1px; color: white;font-size: 24px;"
+                               class="iconfont iconlianxiren3" dot></i>
+                        </div>
+                    </van-badge>
+                </div>
             </template>
         </van-cell>
 
@@ -34,15 +44,15 @@
                     <van-cell
                             :key="j"
                             center
+                            :title="sub.name" value=""
                             v-for="(sub, j) in item.records"
-                            @click="onContactItemClick(sub)"
-                            :title="sub.username" value="">
+                            @click="onContactItemClick(sub)">
                         <template #icon>
                             <van-image
                                     radius="4"
                                     width="36"
                                     height="36"
-                                    :src="sub.avatarUrl|imageAvatar" style="margin: 0 8px 0 0;"/>
+                                    :src="sub.avatarUrl|imageAvatar" style="margin: 0 16px 0 0;"/>
                         </template>
                     </van-cell>
                 </template>
@@ -67,7 +77,7 @@
             }
         },
         computed: {
-            ...mapGetters(['userInfo']),
+            ...mapGetters(['userInfo', 'contactWarnNumStr']),
             indexList() {
                 return this.contactList.map(el => el.label);
             }
@@ -91,8 +101,15 @@
             }
         }
     }
-</script>
+</script>`
 
-<style scoped>
-
+<style scoped lang="less">
+    .pretender-image-bg {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        background-color: @green;
+        text-align: center;
+        border-radius: @border-radius-md;
+    }
 </style>

@@ -7,9 +7,9 @@ const router = require('./router-factory')('/verifyCode');
  * @param address 对方邮箱
  */
 router.post('/sendEmail', async (ctx) => {
-    const {addr} = ctx.request.emailAddress;
+    const {emailAddress} = ctx.request.body;
 
-    const res = await verifyCodeService.sendEmail(addr);
+    const res = await verifyCodeService.sendEmail(emailAddress);
     if (res.code === 0) {
         ctx.body = R.success();
     } else if (res.code === 1) {

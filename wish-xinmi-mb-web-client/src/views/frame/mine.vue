@@ -1,13 +1,14 @@
 <template>
     <basic-container>
         <van-cell-group>
-            <van-cell v-if="userInfo!==null" label="无签名"
+            <van-cell v-if="userInfo!==null"
+                      :label="'信迷号：'+ userInfo.username"
                       is-link
                       style="padding: 30px 16px;"
                       :to="{path: '/index-layout/mine-detail'}"
-                      @click="onToMineDetail"
                       center
-                      :title="userInfo.username">
+                      :title="userInfo.username"
+                      @click="onToMineDetail">
                 <template #icon>
                     <van-image
                             radius="4"

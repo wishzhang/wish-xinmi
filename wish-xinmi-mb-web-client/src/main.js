@@ -41,7 +41,8 @@ import {
     ActionSheet,
     Picker,
     Popup,
-    Checkbox
+    Checkbox,
+    Badge
 } from 'vant';
 
 Vue.config.productionTip = false
@@ -74,6 +75,7 @@ Vue.use(ActionSheet)
 Vue.use(Picker)
 Vue.use(Popup)
 Vue.use(Checkbox)
+Vue.use(Badge)
 
 
 Vue.use(website);
