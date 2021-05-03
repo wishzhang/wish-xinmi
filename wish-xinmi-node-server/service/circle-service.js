@@ -8,7 +8,7 @@ const addThought = async ({createUser, content, photoFiles = []}) => {
     });
 
     const resArr = await Promise.all(ps);
-    const links = resArr.map(res=>{
+    const links = resArr.map(res => {
         return res.link;
     });
     const photosUrl = links.join(',');
@@ -16,27 +16,21 @@ const addThought = async ({createUser, content, photoFiles = []}) => {
     return await circleDao.addThought({createUser, content, photosUrl});
 }
 
-const getPeopleList = async ({userId}) => {
-    const list = await circleDao.getPeopleList({userId});
-    return list;
-}
-
-const getMineAllList = async ({userId}) => {
-    const list = await circleDao.getMineAllList({userId});
-    list.forEach(el => {
+const getPage = async ({userId, current, size}) => {
+    const data = await circleDao.getCirclePage({userId, current, size});
+    data.records.forEach(el => {
         el.createTime = datetime.datePastLong(el.createTime);
     });
-    return list;
+    return data;
 }
 
-const getAllCirclePage = async ({current, size})=>{
-    const list = await circleDao.getAllCirclePage({current,size});
-    return list;
+const getUserThoughtPage = async ({userId, current, size}) => {
+    const data = await circleDao.getUserThoughtPage({userId, current, size});
+    return data;
 }
 
 module.exports = {
     addThought,
-    getPeopleList,
-    getMineAllList,
-    getAllCirclePage
+    getPage,
+    getUserThoughtPage
 }

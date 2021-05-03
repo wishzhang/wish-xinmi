@@ -2,26 +2,22 @@ const circleService = require('../service/circle-service');
 
 const router = require('./router-factory')('/circle');
 
-router.get('/getMineAllList', async (ctx) => {
-    const query = ctx.query;
-    const userId = query.id;
-    const list = await circleService.getMineAllList({userId});
-    ctx.body = R.success(list);
-});
-
 router.get('/getPage', async (ctx) => {
     const query = ctx.query;
-    const current = query.current || L.defaultCurrent;
-    const size = query.size || L.defaultSize;
-    const res = await circleService.getAllCirclePage({current, size});
+    const current = query.current;
+    const size = query.size;
+    const userId = query.userId;
+    const res = await circleService.getPage({userId, current, size});
     ctx.body = R.success(res);
 });
 
-router.get('/getPeopleList', async (ctx) => {
+router.get('/getUserThoughtPage', async (ctx) => {
     const query = ctx.query;
-    const userId = query.id;
-    const list = await circleService.getPeopleList({userId});
-    ctx.body = R.success(list);
+    const userId = query.userId;
+    const current = query.current;
+    const size = query.size;
+    const data = await circleService.getUserThoughtPage({userId, current, size});
+    ctx.body = R.success(data);
 });
 
 router.post('/addThought', async (ctx) => {

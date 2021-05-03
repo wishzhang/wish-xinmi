@@ -115,7 +115,7 @@ const DaoGenerator = function (ast) {
     }
 
     const getCellValue = (name, val) => {
-        if (val && typeof !canInsertValueType.includes(typeof val)) {
+        if (val && !canInsertValueType.includes(typeof val)) {
             throw TypeError();
         }
 
@@ -124,7 +124,7 @@ const DaoGenerator = function (ast) {
         if (type === columnGType.number) {
             cellValue = val || 0;
         } else if (type === columnGType.string) {
-            cellValue = val || '';
+            cellValue = `'${val}'`;
         } else if (type === columnGType.uuid) {
             cellValue = val || 'uuid()';
         } else if (type === columnGType.datetime) {
@@ -147,24 +147,16 @@ const DaoGenerator = function (ast) {
 
         data = util.isPlainObject(data) ? [data] : data;
 
-        const matrixValueArr = data.map((row) => {
-            const rowValueArr = columnNames.map(name => {
+        let valueStr = data.map((row) => {
+            let rowStr = columnNames.map(name => {
                 const cellValue = getCellValue(name, row[name]);
                 return cellValue;
-            });
-            return rowValueArr;
-        });
-
-        let columnStr = `(${columnNames.join(',')})`;
-        let valueStr = matrixValueArr.map((rowArr) => {
-            let rowStr = rowArr.map((cellValue, j) => {
-                const name = columnNames[j];
-                let sqlValueStr = getCellSqlValue(name, cellValue);
-                return sqlValueStr;
             }).join(',');
             rowStr = `(${rowStr})`;
             return rowStr;
-        }).join(',');
+        });
+
+        let columnStr = `(${columnNames.join(',')})`;
 
         res = await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
         if (res && res.length > 0) {

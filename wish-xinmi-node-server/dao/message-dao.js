@@ -4,16 +4,16 @@ const contactDao = require('./contact-dao');
 const userDao = require('./user-dao');
 const chatDao = require('./chat-dao');
 const uuid = util.uuid;
-const DaoGenerator = require('./dao-generator');
+const Daogenerator = require('./dao-generator');
 
-const baseDao = DaoGenerator({
+const baseDao = Daogenerator({
     tableName: 'xinmi_message',
     columns: [
-        {name: 'message_id', type: DaoGenerator.columnGType.uuid},
-        {name: 'origin_user'},
-        {name: 'content'},
-        {name: 'create_time', type: DaoGenerator.columnGType.datetime},
-        {name: 'chat_id'},
+        {name: 'message_id', type: Daogenerator.columnGType.uuid},
+        {name: 'origin_user', type: Daogenerator.columnGType.string},
+        {name: 'content', type: Daogenerator.columnGType.string},
+        {name: 'create_time', type: Daogenerator.columnGType.datetime},
+        {name: 'chat_id', type: Daogenerator.columnGType.string},
     ]
 })
 

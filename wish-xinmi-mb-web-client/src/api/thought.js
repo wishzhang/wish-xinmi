@@ -8,17 +8,17 @@ export const addThoughtRequest = (formData) => {
     })
 }
 
-export const fetchPeopleListRequest = (params) => {
+export const fetchPageRequest = (params)=>{
     return request({
-        url: '/circle/getPeopleList',
+        url: '/circle/getPage',
         method: 'get',
         params: params
     })
 }
 
-export const fetchMineAllListRequest = (params) => {
+export const fetchUserThoughtPageRequest = (params)=>{
     return request({
-        url: '/circle/getMineAllList',
+        url: '/circle/getUserThoughtPage',
         method: 'get',
         params: params
     })

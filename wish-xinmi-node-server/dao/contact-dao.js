@@ -3,13 +3,14 @@ const util = require('../util/index');
 const uuid = util.uuid;
 const Daogenerator = require('./dao-generator');
 const userDao = require('./user-dao');
+const contactDao = require('./contact-dao');
 
 const baseDao = Daogenerator({
     tableName: 'xinmi_contact',
     columns: [
-        {name: 'user_id'},
-        {name: 'contact_id'},
-        {name: 'contact_name'},
+        {name: 'user_id', type: Daogenerator.columnGType.string},
+        {name: 'contact_id', type: Daogenerator.columnGType.string},
+        {name: 'contact_name', type: Daogenerator.columnGType.string},
         {name: 'create_time', type: Daogenerator.columnGType.datetime},
         {name: 'update_time', type: Daogenerator.columnGType.datetime},
     ]
@@ -234,6 +235,16 @@ const deleteContact = async ({userId, contactId}) => {
     ])
 }
 
+const getContactListByUserId = async (userId) => {
+    let list = await baseDao.getList({
+        searchs: [
+            {name: 'userId', value: userId, signs: ['equal']}
+        ]
+    });
+
+    return list;
+}
+
 module.exports = {
     addContact,
     getYesContactList,
@@ -245,5 +256,6 @@ module.exports = {
     getContactNoCheckedNum,
     setAllContactChecked,
     editContact,
-    deleteContact
+    deleteContact,
+    ...baseDao
 }

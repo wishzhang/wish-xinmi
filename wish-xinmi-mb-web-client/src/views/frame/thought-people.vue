@@ -62,7 +62,7 @@
 
 <script>
     import {mapGetters} from 'vuex';
-    import {fetchPeopleListRequest} from "@/api/thought";
+    import {fetchPeopleListRequest, fetchUserThoughtPageRequest} from "@/api/thought";
     import {fetchContactDetailRequest} from "../../api/contact";
     import moment from "moment";
     import ThoughtPeoplePhotos from './thought-people-photos';
@@ -72,10 +72,16 @@
         data() {
             return {
                 list: [],
-                loading: true,
-                finished: true,
+                loading: false,
+                finished: false,
                 contactDetail: {},
-                fadeNavbar: true
+                fadeNavbar: true,
+
+                page: {
+                    total: 0,
+                    currentPage: 1,
+                    pageSize: 10
+                }
             }
         },
         components: {
@@ -114,15 +120,6 @@
                     }
                 })
             }
-
-            const params = {
-                id: this.$route.query.id
-            }
-            fetchPeopleListRequest(params).then(res => {
-                if (res.code === 0) {
-                    this.list = res.data;
-                }
-            })
         },
         mounted() {
             const el = document.getElementById('scroll-id');
@@ -148,7 +145,22 @@
                 history.back();
             },
             onLoad() {
-
+                this.loading = true;
+                const params = {
+                    userId: this.$route.query.id
+                }
+                fetchUserThoughtPageRequest(params).then(res => {
+                    if (res.code === 0) {
+                        const data = res.data;
+                        this.list.push(...data.records);
+                        this.page.total = data.total;
+                    }
+                }).finally(() => {
+                    this.loading = false;
+                    if (this.page.total <= this.list.length) {
+                        this.finished = true;
+                    }
+                })
             },
         }
     }

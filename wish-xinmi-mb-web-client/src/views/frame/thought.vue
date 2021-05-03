@@ -1,58 +1,58 @@
 <template>
     <basic-container :class="{thought: fadeNavbar}" white id="scroll-id">
-        <div style="height:auto;">
-            <van-nav-bar left-arrow
-                         fixed
-                         left-text="朋友圈"
-                         @click-left="onClickLeft">
-                <template #right>
-                    <van-icon name="photograph" size="18" @click="onSendThoughtClick"/>
-                </template>
-            </van-nav-bar>
-            <div class="bg-box">
+        <van-nav-bar left-arrow
+                     fixed
+                     left-text="朋友圈"
+                     @click-left="onClickLeft">
+            <template #right>
+                <van-icon name="photograph" size="18" @click="onSendThoughtClick"/>
+            </template>
+        </van-nav-bar>
+        <div class="bg-box">
+            <van-image
+                    width="100%"
+                    height="240"
+                    fit="cover"
+                    :src="userInfo.bgUrl||'/img/bg-default.jpg'"
+                    @click="showPicker = true"/>
+            <div class="profile">
+                <div class="username">{{userInfo.username}}</div>
                 <van-image
-                        width="100%"
-                        height="240"
+                        width="60"
+                        height="60"
                         fit="cover"
-                        :src="userInfo.bgUrl||'/img/bg-default.jpg'"
-                        @click="showPicker = true"
-                />
-                <div class="profile">
-                    <div class="username">易聪</div>
-                    <van-image
-                            width="60"
-                            height="60"
-                            fit="cover"
-                            :radius="4"
-                            :src="userInfo.avatarUrl|imageAvatar"/>
-                </div>
+                        :radius="4"
+                        :src="userInfo.avatarUrl|imageAvatar"/>
             </div>
-            <van-list
-                    v-model="loading"
-                    :finished="finished"
-                    finished-text="没有更多了"
-                    @load="onLoad">
-                <div v-for="item in list" :key="item.id">
-                    <div class="circle-item">
-                        <van-image style="margin-right:10px;" width="40" height="40"
-                                   :src="item.avatarUrl|imageAvatar"></van-image>
-                        <div class="circle-item-right">
-                            <div class="circle-item-name">{{getName(item)}}</div>
-                            <div class="circle-item-content">
-                                {{item.content}}
-                            </div>
-                            <div class="circle-item-photo">
-                                <photo-gallery :photosUrl="item.photosUrl"></photo-gallery>
-                            </div>
-                            <div class="circle-item-footer">
-                                <span class="circle-item-footer-time">{{item.createTime}}</span>
-                            </div>
+        </div>
+        <van-list
+                v-model="loading"
+                :finished="finished"
+                :offset="300"
+                finished-text="没有更多了"
+                @load="onLoad">
+            <div v-for="item in list" :key="item.id">
+                <div class="circle-item">
+                    <van-image style="margin-right:10px;" width="40" height="40"
+                               :src="item.avatarUrl|imageAvatar"></van-image>
+                    <div class="circle-item-right">
+                        <div class="circle-item-name">{{item.name}}</div>
+                        <div class="circle-item-content">
+                            {{item.content}}
+                        </div>
+                        <div class="circle-item-photo">
+                            <photo-gallery :photosUrl="item.photosUrl"></photo-gallery>
+                        </div>
+                        <div class="circle-item-footer">
+                            <span class="circle-item-footer-time">{{item.createTime}}</span>
                         </div>
                     </div>
-                    <van-divider/>
                 </div>
-            </van-list>
-        </div>
+                <van-divider/>
+            </div>
+        </van-list>
+
+        <!--背景图-->
         <van-popup v-model="showPicker" round position="bottom">
             <van-picker
                     title="更换背景图"
@@ -81,7 +81,7 @@
 
 <script>
     import {mapGetters} from 'vuex';
-    import {fetchMineAllListRequest} from "@/api/thought";
+    import {fetchPageRequest, fetchMineAllListRequest} from "@/api/thought";
     import {updateUserInfoRequest} from "@/api/user";
 
     export default {
@@ -89,8 +89,14 @@
         data() {
             return {
                 list: [],
-                loading: true,
-                finished: true,
+                loading: false,
+                finished: false,
+
+                page: {
+                    total: 0,
+                    currentPage: 1,
+                    pageSize: 10
+                },
 
                 fadeNavbar: true,
 
@@ -110,14 +116,6 @@
             ...mapGetters(['userInfo'])
         },
         created() {
-            const params = {
-                id: this.userInfo.id
-            }
-            fetchMineAllListRequest(params).then(res => {
-                if (res.code === 0) {
-                    this.list = res.data;
-                }
-            })
         },
         mounted() {
             const el = document.getElementById('scroll-id');
@@ -130,16 +128,28 @@
             })
         },
         methods: {
-            getName(item) {
-                return item.createUser === this.userInfo.id ?
-                    item.username :
-                    item.contactName;
-            },
             onClickLeft() {
                 history.back();
             },
             onLoad() {
-
+                this.loading = true;
+                const params = {
+                    userId: this.userInfo.id,
+                    current: this.page.currentPage++,
+                    size: this.page.pageSize
+                }
+                fetchPageRequest(params).then(res => {
+                    if (res.code === 0) {
+                        const data = res.data;
+                        this.list.push(...data.records);
+                        this.page.total = data.total;
+                    }
+                }).finally(() => {
+                    this.loading = false;
+                    if (this.page.total <= this.list.length) {
+                        this.finished = true;
+                    }
+                })
             },
             onSendThoughtClick() {
                 this.$router.push({path: '/index-layout/thought-send'});

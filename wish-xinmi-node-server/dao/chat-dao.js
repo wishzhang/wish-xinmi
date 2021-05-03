@@ -1,13 +1,13 @@
 const mysql = require('./mysql');
-const DaoGenerator = require('./dao-generator');
+const Daogenerator = require('./dao-generator');
 
 
-const baseDao = DaoGenerator({
+const baseDao = Daogenerator({
     tableName: 'xinmi_chat',
     columns: [
-        {name: 'chat_id', type: DaoGenerator.columnGType.uuid},
-        {name: 'user_id'},
-        {name: 'create_time', type: DaoGenerator.columnGType.datetime},
+        {name: 'chat_id', type: Daogenerator.columnGType.uuid},
+        {name: 'user_id', type: Daogenerator.columnGType.string},
+        {name: 'create_time', type: Daogenerator.columnGType.datetime},
     ]
 })
 
