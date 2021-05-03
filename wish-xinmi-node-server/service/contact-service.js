@@ -1,4 +1,3 @@
-const userDao = require('../dao/user-dao');
 const contactDao = require('../dao/contact-dao');
 const userService = require('./user-service');
 const util = require('../util/index');
@@ -38,8 +37,8 @@ const getNoContactList = async ({userId, username}) => {
 }
 
 const addContact = async ({userId, contactId, validateMsg}) => {
-    const targetDetail = await userService.getUserDetail({userId: contactId});
-    const originDetail = await userService.getUserDetail({userId: userId});
+    const targetDetail = await userService.getOneUser({userId: contactId});
+    const originDetail = await userService.getOneUser({userId: userId});
     let msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
     return await contactDao.addContact({
         userId,
@@ -56,8 +55,8 @@ const getConfirmContactList = async ({userId}) => {
 }
 
 const confirmContact = async ({userId, contactId}) => {
-    const targetDetail = await userService.getUserDetail({userId: contactId});
-    const originDetail = await userService.getUserDetail({userId: userId});
+    const targetDetail = await userService.getOneUser({userId: contactId});
+    const originDetail = await userService.getOneUser({userId: userId});
     await contactDao.confirmContact({
         userId,
         contactId,

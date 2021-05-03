@@ -2,11 +2,11 @@ const userDao = require('../dao/user-dao');
 const util = require('../util/index');
 
 const getUserList = async () => {
-    return await userDao.getUserList();
+    return await userDao.getList();
 }
 
 const insertUser = async (obj) => {
-    return await userDao.insertUser(obj);
+    return await userDao.insert(obj);
 }
 
 const updateUser = async (obj) => {
@@ -14,24 +14,8 @@ const updateUser = async (obj) => {
     return await userDao.updateUser(obj);
 }
 
-const getUserDetail = async ({userId}) => {
-    const list = await userDao.getUserDetail({userId});
-    if (list.length > 0) {
-        const user = list[0];
-        return list[0];
-    } else {
-        return null;
-    }
-}
-
-const getOneUser = async ({emailAddress, username, password}) => {
-    const list = await userDao.getUserDetail({emailAddress, username, password});
-    if (list.length > 0) {
-        const user = list[0];
-        return list[0];
-    } else {
-        return null;
-    }
+const getOneUser = async ({userId, emailAddress, username, password}) => {
+    return await userDao.getUserDetail({userId, emailAddress, username, password});
 }
 
 const getMaxXinmiId = async () => {
@@ -54,7 +38,6 @@ const editEmailAddress = async ({originEmailAddress, targetEmailAddress, passwor
 module.exports = {
     getUserList,
     insertUser,
-    getUserDetail,
     updateUser,
     getOneUser,
     getMaxXinmiId,

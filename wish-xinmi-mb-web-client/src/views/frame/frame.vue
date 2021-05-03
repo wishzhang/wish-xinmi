@@ -5,8 +5,13 @@
         </div>
         <van-tabbar route>
             <van-tabbar-item
-                    replace to="/index-layout/frame/msg"
-                    icon="chat-o">消息
+                    replace to="/index-layout/frame/msg">消息
+                <template slot="icon">
+                    <van-badge :content="unreadMessageCount===0?'':unreadMessageCount"
+                               :max="99">
+                        <van-icon name="chat-o"/>
+                    </van-badge>
+                </template>
             </van-tabbar-item>
             <van-tabbar-item
                     :badge="contactWarnNumStr"
@@ -37,7 +42,7 @@
             }
         },
         computed: {
-          ...mapGetters(['contactWarnNumStr'])
+            ...mapGetters(['contactWarnNumStr', 'unreadMessageCount'])
         },
         created() {
         },

@@ -1,6 +1,19 @@
 const mysql = require('./mysql');
 const util = require('../util/index');
 const uuid = util.uuid;
+const Daogenerator = require('./dao-generator');
+const userDao = require('./user-dao');
+
+const baseDao = Daogenerator({
+    tableName: 'xinmi_contact',
+    columns: [
+        {name: 'user_id'},
+        {name: 'contact_id'},
+        {name: 'contact_name'},
+        {name: 'create_time', type: Daogenerator.columnGType.datetime},
+        {name: 'update_time', type: Daogenerator.columnGType.datetime},
+    ]
+})
 
 /**
  * 当用户发送验证消息给联系人（不做校验），那么：
@@ -153,22 +166,19 @@ const getNoContactList = async ({userId, username}) => {
 
 // 获取联系人详情,已经是联系人
 const getContactInfoHad = async ({userId, contactId}) => {
-    return await mysql.query(`
-        SELECT
-            xu.id,
-            if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,
-            xu.avatar_url,
-            xu.bg_url,
-            xu.email_address,
-            xu.username,
-            xc.contact_name
-        FROM
-            xinmi_contact xc
-            INNER JOIN xinmi_user xu ON xc.contact_id = xu.id 
-        WHERE
-            xc.user_id = '${userId}' 
-            AND xc.contact_id = '${contactId}'
-    `)
+    let contactor = await baseDao.getOne({
+        searchs: [
+            {name: 'user_id', value: userId, signs: ['equal']},
+            {name: 'contact_id', value: contactId, signs: ['and', 'equal']},
+        ]
+    });
+
+    const contactorUserInfo = await userDao.getUserDetail({userId: contactId});
+    contactor.name = contactor.contactName || contactorUserInfo.username;
+    contactor.username = contactorUserInfo.username;
+    contactor.avatarUrl = contactorUserInfo.avatarUrl;
+
+    return contactor;
 }
 
 // 获取联系人相关的提醒数量
@@ -205,6 +215,12 @@ const editContact = async ({userId, contactId, contactName = ''}) => {
 
 const deleteContact = async ({userId, contactId}) => {
     await mysql.transaction([
+        () => {
+            return require('./message-dao').delMessageByPeople({userId, contactId});
+        },
+        () => {
+            return require('./chat-dao').delChat({originUser: userId, targetUser: contactId});
+        },
         () => {
             return `
        delete from xinmi_contact where user_id='${userId}' and contact_id='${contactId}' or user_id='${contactId}' and contact_id='${userId}'

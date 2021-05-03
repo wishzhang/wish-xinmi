@@ -1,8 +1,16 @@
 import request from '../router/axios';
 
-export const fetchContactMessageListRequest = (params) => {
+export const fetchContactMessagePageRequest = (params) => {
     return request({
-        url: '/message/getContactMessageList',
+        url: '/message/getContactMessagePage',
+        method: 'get',
+        params: params
+    })
+}
+
+export const fetchMessagePageByChatIdRequest = (params) => {
+    return request({
+        url: '/message/getMessagePageByChatId',
         method: 'get',
         params: params
     })
@@ -15,3 +23,21 @@ export const fetchMineAllChatListRequest = (params) => {
         params: params
     })
 }
+
+export const addMessageToContactRequest = (params) => {
+    return request({
+        url: '/message/addMessage',
+        method: 'post',
+        data: params
+    })
+}
+
+export const checkMessageRequest = (params) => {
+    return request({
+        url: '/message/checkMessage',
+        method: 'post',
+        data: params
+    })
+}
+
+

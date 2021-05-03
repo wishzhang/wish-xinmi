@@ -1,15 +1,20 @@
 const contactSocket = require('./contact-socket');
+const messageSocket = require('./message-socket');
+const userService = require('../service/user-service');
 
 const hashSocketId = {};
 let io = {};
 
-const emit = (emitName, targetAccount, resData) => {
-    console.log(`向${targetAccount}发送消息：` + JSON.stringify(resData));
+const emit = async (emitName, {originUserId, targetUserId, data}) => {
+    const targetUser = await userService.getOneUser({userId: targetUserId});
+    const originUser = await userService.getOneUser({userId: originUserId});
 
-    let socketId = hashSocketId[targetAccount];
+    console.log(`${originUser.username}向${targetUser.username}发送消息：` + JSON.stringify(data));
+
+    let socketId = hashSocketId[targetUser.username];
     if (socketId) {
         const s = io.to(socketId);
-        s.emit(emitName, resData);
+        s.emit(emitName, data);
     }
 }
 
@@ -38,6 +43,7 @@ module.exports = {
             })
         });
     },
-    ...contactSocket(emit)
+    ...contactSocket(emit),
+    ...messageSocket(emit),
 }
 

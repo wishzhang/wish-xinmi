@@ -75,6 +75,40 @@ function getMinioUrl(path) {
     return `/${global.config.minioBucketName}/${path}`;
 }
 
+const type = (function () {
+    const class2type = {};
+    "Boolean Number String Function Array Date RegExp Object Error".split(" ").map(function (item, index) {
+        class2type["[object " + item + "]"] = item.toLowerCase();
+    })
+    return function (obj) {
+        if (obj === null || obj === undefined) {
+            return obj + "";
+        }
+        return typeof obj === "object" || typeof obj === "function" ? class2type[Object.prototype.toString.call(obj)] || "object" : typeof obj;
+    }
+})();
+
+var hasOwn = Object.prototype.hasOwnProperty;
+var toStr = Object.prototype.toString;
+var isPlainObject = function isPlainObject(obj) {
+    if (!obj || toStr.call(obj) !== '[object Object]') {
+        return false;
+    }
+    var hasOwnConstructor = hasOwn.call(obj, 'constructor');
+    var hasIsPrototypeOf = obj.constructor && obj.constructor.prototype && hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
+    if (obj.constructor && !hasOwnConstructor && !hasIsPrototypeOf) {
+        return false;
+    }
+    var key;
+    for (key in obj) { /**/
+    }
+    return typeof key === 'undefined' || hasOwn.call(obj, key);
+};
+
+function isPromise(value) {
+    return value && Object.prototype.toString.call(value) === "[object Promise]";
+}
+
 module.exports = {
     generateRouteKey,
     uuid,
@@ -82,5 +116,8 @@ module.exports = {
     toHumpList,
     getSuffix,
     removeDomain,
-    getMinioUrl
+    getMinioUrl,
+
+    isPlainObject,
+    isPromise
 }

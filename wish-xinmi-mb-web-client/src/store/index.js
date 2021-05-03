@@ -4,6 +4,7 @@ import {getStore, setStore} from "../util/store";
 import {fetchUserInfoRequest} from "../api/user";
 import {fetchServerTimeRequest} from "@/api/common";
 import {fetchContactWarnNumRequest} from "../api/contact";
+import {fetchMineAllChatListRequest} from "@/api/message";
 
 Vue.use(Vuex)
 
@@ -23,6 +24,15 @@ export default new Vuex.Store({
         },
         contactWarnNumStr: (state) => {
             return state.common.contactWarnNum;
+        },
+        chatList: (state) => {
+            return state.common.chatList;
+        },
+        unreadMessageCount: (state, getters) => {
+            let total = getters.chatList.reduce((total, chat) => {
+                return total + chat.unreadCount;
+            }, 0);
+            return total;
         }
     },
     modules: {
@@ -52,7 +62,8 @@ export default new Vuex.Store({
                 serverTime: undefined,
                 // 登录方式
                 loginType: getStore({name: 'loginType'}) || 'email',
-                contactWarnNum: getStore({name: 'contactWarnNum'})
+                contactWarnNum: getStore({name: 'contactWarnNum'}),
+                chatList: getStore({name: 'chatList'}) || [],
             },
             mutations: {
                 SET_SERVER_TIME(state, serverTime) {
@@ -66,7 +77,11 @@ export default new Vuex.Store({
                     num = Number.parseInt(num);
                     let str = num >= 1 ? num + '' : '';
                     state.contactWarnNum = str;
-                    setStore({name: 'contactWarnNum', str})
+                    setStore({name: 'contactWarnNum', content: str})
+                },
+                SET_CHAT_LIST(state, list) {
+                    state.chatList = list;
+                    setStore({name: 'chatList', content: list});
                 }
             },
             actions: {
@@ -79,8 +94,8 @@ export default new Vuex.Store({
                         }
                     })
                 },
-                FetchSuccessLoginInitData({dispatch, state, commit, rootState}) {
-                    dispatch('FetchContactWarnNum');
+                FetchRefreshInitData({dispatch, state, commit, rootState}) {
+                    // dispatch('FetchContactWarnNum');
                 },
                 FetchContactWarnNum({dispatch, state, commit, rootState}) {
                     const params = {
@@ -89,7 +104,15 @@ export default new Vuex.Store({
                     return fetchContactWarnNumRequest(params).then(res => {
                         commit('SET_CONTACT_WARN_NUM', res.data);
                     })
-                }
+                },
+                FetchMineAllChatList({dispatch, state, commit, rootState}) {
+                    const params = {
+                        id: rootState.user.userInfo.id
+                    };
+                    return fetchMineAllChatListRequest(params).then(res => {
+                        commit('SET_CHAT_LIST', res.data);
+                    })
+                },
             },
             getters: {}
         }

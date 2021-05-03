@@ -14,19 +14,38 @@
     export default {
         name: "index-layout",
         computed: {
-            ...mapGetters(['userInfo', 'serverTime'])
+            ...mapGetters(['userInfo', 'serverTime', 'chatList'])
         },
         created() {
             const self = this;
             const socket = initSocket(this.userInfo.username);
-            if(socket){
-                socket.on('contact-add-contact', num=>{
-                    debugger
+            if (socket) {
+                socket.on('contact-add-contact', num => {
                     self.$store.commit('SET_CONTACT_WARN_NUM', num);
+                })
+
+                socket.on('message-unread-onechat', data => {
+                    if (data && data.chatId) {
+                        const chatId = data.chatId;
+                        const chatList = JSON.parse(JSON.stringify(this.chatList));
+
+                        const index = chatList.findIndex(item => {
+                            return item.chatId === chatId;
+                        });
+                        if (index !== -1) {
+                            chatList.splice(index, 1, data);
+                        } else {
+                            chatList.unshift(data);
+                        }
+
+                        this.$store.commit('SET_CHAT_LIST', chatList);
+                    }
+                    console.log('...');
+                    console.log(data);
+                    // self.$store.commit('SET_CONTACT_WARN_NUM', num);
                 })
             }
 
-            this.$store.dispatch('FetchSuccessLoginInitData', this.userInfo.id);
             this.setServerTime();
         },
         methods: {

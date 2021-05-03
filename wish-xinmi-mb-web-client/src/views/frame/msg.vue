@@ -1,7 +1,7 @@
 <template>
     <basic-container>
         <van-nav-bar
-                :left-text="'消息('+list.length+')'">
+                :left-text="'消息('+chatList.length+')'">
             <template #right>
                 <van-popover
                         v-model="showPopover"
@@ -18,26 +18,23 @@
             </template>
         </van-nav-bar>
 
-        <van-list
-                v-model="loading"
-                :finished="finished"
-                finished-text="没有更多了"
-                @load="onLoad">
-            <van-cell v-for="item in list"
-                      :key="item.chatId"
-                      :value="item.createTime"
-                      :title="item.towardsName"
-                      @click="onChatClick(item)"
-                      :label="item.content">
-                <template #icon>
+        <van-cell v-for="item in chatList"
+                  :key="item.chatId"
+                  :value="item.createTime"
+                  :title="item.name"
+                  @click="onChatClick(item)"
+                  :label="item.content">
+            <template #icon>
+                <van-badge :content="item.unreadCount===0?'':item.unreadCount"
+                           max="99">
                     <van-image
                             radius="4"
                             width="48"
                             height="48"
-                            :src="item.avatarUrl|imageAvatar" style="margin-right: 8px;"/>
-                </template>
-            </van-cell>
-        </van-list>
+                            :src="item.avatarUrl|imageAvatar" style="margin-right: 12px;"/>
+                </van-badge>
+            </template>
+        </van-cell>
     </basic-container>
 </template>
 
@@ -51,23 +48,13 @@
             return {
                 showPopover: false,
                 actions: [{text: '添加朋友', icon: 'friends'}],
-                list: [],
-                loading: false,
-                finished: true,
             }
         },
         computed: {
-            ...mapGetters(['userInfo'])
+            ...mapGetters(['userInfo', 'chatList'])
         },
         created() {
-            const params = {
-                id: this.userInfo.id
-            }
-            fetchMineAllChatListRequest(params).then(res => {
-                if (res.code === 0) {
-                    this.list = res.data;
-                }
-            })
+            this.$store.dispatch('FetchMineAllChatList');
         },
         methods: {
             onSelect(action) {
@@ -75,24 +62,8 @@
                     this.$router.push({path: '/index-layout/contact-add'})
                 }
             },
-            onLoad() {
-                const params = {
-                    id: this.userInfo.id
-                }
-                fetchMineAllChatListRequest(params).then(res => {
-                    if (res.code === 0) {
-                        this.list = res.data;
-                    }
-                })
-            },
             onChatClick(item) {
-                let id = item.originUser === this.userInfo.id ? item.targetUser
-                    : item.targetUser === this.userInfo.id ? item.originUser : undefined;
-                if (!id) {
-                    throw TypeError();
-                }
-
-                this.$router.push({path: '/index-layout/chat', query: {id: id}})
+                this.$router.push({path: '/index-layout/chat', query: {id: item.contactId}})
             }
         }
     }

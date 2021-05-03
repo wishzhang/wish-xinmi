@@ -36,7 +36,7 @@ router.get('/update', async (ctx) => {
 router.get('/detail', async (ctx) => {
     const query = ctx.request.query;
     const userId = query.id;
-    const detail = await userService.getUserDetail({userId});
+    const detail = await userService.getOneUser({userId});
     ctx.body = R.success(detail);
 })
 

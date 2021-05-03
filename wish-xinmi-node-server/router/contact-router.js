@@ -17,7 +17,7 @@ router.get('/addContact', async (ctx) => {
     const status = await contactService.addContact({userId: id, contactId, validateMsg});
 
     if (status === 1) {
-        await socket.emitContactAddContact({userId: id, contactId});
+        await socket.emitContactAddContact({originUserId: id, targetUserId: contactId});
     }
 
     ctx.body = R.success();
@@ -62,8 +62,8 @@ router.get('/getContactInfoHad', async (ctx) => {
     const query = ctx.query;
     const userId = query.userId;
     const contactId = query.contactId;
-    const list = await contactService.getContactInfoHad({userId, contactId});
-    ctx.body = R.success(list[0]);
+    const info = await contactService.getContactInfoHad({userId, contactId});
+    ctx.body = R.success(info);
 });
 
 /**
