@@ -18,6 +18,7 @@
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
     "minio": "^7.0.18",
+    "module-alias": "^2.2.2",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "nodemailer": "^6.5.0",
@@ -29,5 +30,13 @@
     "cross-env": "^7.0.3",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@dao": "src/dao",
+    "@router": "src/router",
+    "@service": "src/service",
+    "@socket": "src/socket",
+    "@util": "src/util"
   }
 }

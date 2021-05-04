@@ -1,3 +1,5 @@
+require('module-alias/register');
+
 // 加载环境配置
 const config = require('./config');
 global.config = config;

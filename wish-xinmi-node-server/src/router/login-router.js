@@ -1,8 +1,8 @@
-const generator = require('../util/generator');
+const generator = require('@util/generator');
 
-const loginService = require('../service/login-service');
-const verifyCodeService = require('../service/verify-code-service');
-const userService = require('../service/user-service');
+const loginService = require('@service/login-service');
+const verifyCodeService = require('@service/verify-code-service');
+const userService = require('@service/user-service');
 
 
 const router = require('./router-factory')('/login');
