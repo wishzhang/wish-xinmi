@@ -1,5 +1,5 @@
 const mysql = require('./mysql');
-const util = require('../util/index');
+const util = require('../util');
 const contactDao = require('./contact-dao');
 const userDao = require('./user-dao');
 const chatDao = require('./chat-dao');

@@ -1,6 +1,6 @@
 const contactService = require('../service/contact-service');
 const userService = require('../service/user-service');
-const socket = require('../socket/index');
+const socket = require('../socket');
 
 const router = require('./router-factory')('/contact');
 

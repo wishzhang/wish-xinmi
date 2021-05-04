@@ -6,10 +6,10 @@ const router = require('./router-factory')('/verifyCode');
  * 发送邮件验证码
  * @param address 对方邮箱
  */
-router.post('/sendEmail', async (ctx) => {
+router.post('/sendEmailCode', async (ctx) => {
     const {emailAddress} = ctx.request.body;
 
-    const res = await verifyCodeService.sendEmail(emailAddress);
+    const res = await verifyCodeService.sendEmailCode(emailAddress);
     if (res.code === 0) {
         ctx.body = R.success();
     } else if (res.code === 1) {

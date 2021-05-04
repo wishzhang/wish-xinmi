@@ -28,7 +28,7 @@ router.post('/loginByEmail', async (ctx) => {
     const {emailAddress, verifyCode} = ctx.request.body;
 
     // 验证码是否有效
-    const isValidCode = verifyCodeService.checkCode(emailAddress, verifyCode);
+    const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
     if (!isValidCode) {
         ctx.body = R.fail(2, '验证码错误');
         return;
@@ -60,7 +60,7 @@ router.post('/findPasswordByEmail', async (ctx) => {
     const {emailAddress, verifyCode, newPassword} = ctx.request.body;
 
     // 验证码是否有效
-    const isValidCode = verifyCodeService.checkCode(emailAddress, verifyCode);
+    const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
     if (!isValidCode) {
         ctx.body = R.fail(2, '验证码错误');
         return;

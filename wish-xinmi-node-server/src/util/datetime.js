@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('_moment@2.29.1@moment/moment');
 
 const dateFormat = (date, format) => {
     return moment(date).format(format);

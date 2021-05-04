@@ -1,4 +1,4 @@
-const Minio = require('minio');
+const Minio = require('_minio@7.0.18@minio');
 const util = require('./index');
 const fs = require('fs');
 const bucketName = global.config.minioBucketName;

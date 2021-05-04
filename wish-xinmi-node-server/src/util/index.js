@@ -1,5 +1,5 @@
-const {v4: uuidv4} = require('uuid');
-const pinyin = require('pinyin');
+const {v4: uuidv4} = require('_uuid@8.3.2@uuid');
+const pinyin = require('_pinyin@2.10.2@pinyin');
 
 // const isImage = (name) => {
 //     if (/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(name)) {

@@ -1,7 +1,7 @@
 const debug = require('debug')('xinmi-router');
 
 const routerFactory = function (prefix) {
-    const router = require('koa-router')({
+    const router = require('_koa-router@10.0.0@koa-router')({
         prefix: prefix
     });
 

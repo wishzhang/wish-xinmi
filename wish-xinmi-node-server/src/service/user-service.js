@@ -1,5 +1,5 @@
 const userDao = require('../dao/user-dao');
-const util = require('../util/index');
+const util = require('../util');
 
 const getUserList = async () => {
     return await userDao.getList();

@@ -53,7 +53,7 @@ router.post('/editEmailAddress', async (ctx) => {
     const {originEmailAddress, targetEmailAddress, verifyCode, password} = ctx.request.body;
 
     // 验证码是否有效
-    const isValidCode = verifyCodeService.checkCode(targetEmailAddress, verifyCode);
+    const isValidCode = verifyCodeService.canMatchEmailCode(targetEmailAddress, verifyCode);
     if (!isValidCode) {
         ctx.body = R.fail(2, '验证码错误');
         return;

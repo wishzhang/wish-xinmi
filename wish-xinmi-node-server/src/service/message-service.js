@@ -1,6 +1,6 @@
 const messageDao = require('../dao/message-dao');
 const chatDao = require('../dao/chat-dao');
-const util = require('../util/index');
+const util = require('../util');
 const datetime = require('../util/datetime');
 
 const addMessage = async ({originUser, targetUser, content}) => {

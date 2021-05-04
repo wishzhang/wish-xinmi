@@ -1,4 +1,4 @@
-const util = require('../util/index');
+const util = require('../util');
 
 module.exports = () => {
   return (async (ctx, next) => {

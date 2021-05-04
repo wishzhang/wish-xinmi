@@ -1,5 +1,5 @@
 const mysql = require('./mysql');
-const util = require('../util/index');
+const util = require('../util');
 const uuid = util.uuid;
 const Daogenerator = require('./dao-generator');
 const userDao = require('./user-dao');

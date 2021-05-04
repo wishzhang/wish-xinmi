@@ -2,16 +2,16 @@
 const config = require('./config');
 global.config = config;
 
-const errorHandlerMiddleware = require('./middleware/error-handler-middleware');
+const errorHandlerMiddleware = require('./src/middleware/error-handler-middleware');
 const Koa = require('koa');
 const koaBody = require('koa-body');
-const initRouter = require('./router/index');
-const socket = require('./socket/index');
-const fileUploader = require('./util/file-util');
-const beforeMiddleware = require('./middleware/before-middleware');
-const afterMiddleware = require('./middleware/after-middleware');
-const Operation = require('./util/sql-util');
-const ResUtil = require('./util/res-util');
+const initRouter = require('./src/router/index');
+const socket = require('./src/socket/index');
+const fileUploader = require('./src/util/file-util');
+const beforeMiddleware = require('./src/middleware/before-middleware');
+const afterMiddleware = require('./src/middleware/after-middleware');
+const Operation = require('./src/util/sql-util');
+const ResUtil = require('./src/util/res-util');
 
 /**
  * 赋值全局变量

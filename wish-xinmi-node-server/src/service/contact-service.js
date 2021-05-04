@@ -1,6 +1,6 @@
 const contactDao = require('../dao/contact-dao');
 const userService = require('./user-service');
-const util = require('../util/index');
+const util = require('../util');
 
 const getYesContactList = async ({userId}) => {
     const contactList = await contactDao.getYesContactList({userId});

@@ -1,7 +1,7 @@
 /**
  * 思路：没有分词的步骤，直接定义ast树，根据ast树直接生成对应的代码,
  */
-const util = require('../util/index');
+const util = require('../util');
 const mysql = require('./mysql');
 
 const columnGType = {

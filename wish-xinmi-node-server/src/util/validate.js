@@ -1,4 +1,4 @@
-export function validatenull(val) {
+function validatenull(val) {
     if (typeof val == 'boolean') {
         return false;
     }
@@ -17,9 +17,21 @@ export function validatenull(val) {
 }
 
 // 密码为6-20位数字字母组合 不能有空格
-export function validPassword(password = '') {
+function validPassword(password = '') {
     if (password.length >= 6 && password.length <= 20 || (/^[a-zA-Z0-9]*$/.test(password))) {
         return true;
     }
     return false;
+}
+
+// 验证邮箱地址格式
+function validEmailAddress(emailAddress) {
+    let reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+    return reg.test(emailAddress);
+}
+
+module.exports = {
+    validEmailAddress,
+    validatenull,
+    validPassword
 }

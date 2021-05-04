@@ -1,6 +1,6 @@
 const debug = require('debug')('xinmi-dao');
-const util = require('../util/index');
-const mysql = require('mysql');
+const util = require('../util');
+const mysql = require('_mysql@2.18.1@mysql');
 const executor = () => {
     const connection = mysql.createConnection({
         host: 'localhost',

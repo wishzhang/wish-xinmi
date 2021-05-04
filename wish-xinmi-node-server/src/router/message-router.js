@@ -1,5 +1,5 @@
 const messageService = require('../service/message-service');
-const socket = require('../socket/index');
+const socket = require('../socket');
 const router = require('./router-factory')('/message');
 
 router.get('/getContactMessagePage', async (ctx) => {
