@@ -1,5 +1,5 @@
 import nodemailer = require("nodemailer");
-import validate = require('../util/validate');
+import validate = require("../util/validate");
 import config = require("../config");
 
 
@@ -11,23 +11,25 @@ const cache: any = {};
  * @param emailAddress 对该邮箱发送验证码
  * @returns {Promise<void>}
  */
-const sendEmailCode = async (emailAddress: string) => {
-    let res = {};
+const sendEmailCode = async (emailAddress: string, emailCode?: string)
+    : Promise<{ code: number; msg: string }> => {
+
+    let res: any;
 
     if (!validate.validEmailAddress(emailAddress)) {
-        res = {code: 1, msg: '邮箱地址格式错误'};
+        res = {code: 1, msg: "邮箱地址格式错误"};
     } else {
         try {
             let emailCode, transporter, timer: any;
 
             // 初始化发送器：基于QQ邮箱的SMTP协议、已有的固定邮箱账号密码来发送
             transporter = nodemailer.createTransport({
-                service: 'QQ',
-                auth: {user: 'wishzhang.io@qq.com', pass: 'extawcywnbpngadc'},
+                service: "QQ",
+                auth: {user: "wishzhang.io@qq.com", pass: "extawcywnbpngadc"},
             });
 
             // 生成邮箱验证码
-            emailCode = createEmailCode();
+            emailCode = emailCode || createEmailCode();
 
             // 进行发送邮箱
             await transporter.sendMail({
@@ -38,7 +40,7 @@ const sendEmailCode = async (emailAddress: string) => {
             });
 
             // 到这里验证码就发送成功了
-            res = {code: 0, msg: '发送成功'};
+            res = {code: 0, msg: "发送成功"};
 
             // 然后缓存并更新「邮箱-验证码」键值对
             cache[emailAddress] = emailCode;
@@ -49,20 +51,20 @@ const sendEmailCode = async (emailAddress: string) => {
                 clearInterval(timer);
             }, 5 * 60 * 1000);
         } catch (e) {
-            res = {code: 2, msg: '邮箱验证码发送失败！'};
+            res = {code: 2, msg: "邮箱验证码发送失败！"};
         }
     }
 
     return res;
-}
+};
 
 const createEmailCode = () => {
-    let emailCode = '';
+    let emailCode = "";
     for (let i = 0; i < 6; i++) {
-        emailCode += Number.parseInt(Math.random() * 10 + '')
+        emailCode += Number.parseInt(Math.random() * 10 + "");
     }
-    return emailCode
-}
+    return emailCode;
+};
 
 /**
  * 验证邮箱和验证码是否匹配，即验证码是否发送到该邮箱
@@ -70,9 +72,9 @@ const createEmailCode = () => {
  * @param emailCode
  * @returns {*|boolean} 返回true表示匹配
  */
-const canMatchEmailCode = (emailAddress:string, emailCode:string) => {
+const canMatchEmailCode = (emailAddress: string, emailCode: string) => {
     return cache[emailAddress] && cache[emailAddress] === emailCode;
-}
+};
 
 export = {
     sendEmailCode,

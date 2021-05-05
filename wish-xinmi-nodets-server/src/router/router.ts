@@ -1,8 +1,7 @@
-const router = require('./router-factory')('/');
-import R from '../util/response';
+const router = require("./router-factory")("/");
 
-router.all('/', async (ctx: any) => {
-
-})
+// router.all("/", async (ctx: any) => {
+//
+// });
 
 export = router;

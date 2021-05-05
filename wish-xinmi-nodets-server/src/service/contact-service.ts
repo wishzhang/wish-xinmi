@@ -1,11 +1,11 @@
-import contactDao = require('../dao/contact-dao');
-import userService = require('./user-service');
-import util = require('../util');
+import contactDao = require("../dao/contact-dao");
+import userService = require("./user-service");
+import util = require("../util");
 
 const getYesContactList = async (userId: string) => {
     const contactList: any = await contactDao.getYesContactList(userId);
-    const ch = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-        'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    const ch = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
     const list = ch.map(label => {
         const obj: any = {};
         const records = contactList.filter((user: any) => {
@@ -23,7 +23,7 @@ const getYesContactList = async (userId: string) => {
         return !ch.includes(letter);
     });
     const otherObj = {
-        label: '#',
+        label: "#",
         records: otherRecords
     };
 
@@ -31,15 +31,15 @@ const getYesContactList = async (userId: string) => {
     return allList;
 };
 
-const getNoContactList = async (userId: string, username = '') => {
+const getNoContactList = async (userId: string, username = "") => {
     const list = await contactDao.getNoContactList(userId, username);
     return list;
-}
+};
 
 const addContact = async (userId: any, contactId: any, validateMsg: any) => {
     const targetDetail: any = await userService.getOneUser(contactId);
     const originDetail: any = await userService.getOneUser(userId);
-    let msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
+    const msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
     return await contactDao.addContact(
         userId,
         contactId,
@@ -47,12 +47,12 @@ const addContact = async (userId: any, contactId: any, validateMsg: any) => {
         originDetail.username,
         targetDetail.username
     );
-}
+};
 
 const getConfirmContactList = async (userId: any) => {
-    let list = await contactDao.getConfirmContactList(userId);
+    const list = await contactDao.getConfirmContactList(userId);
     return list;
-}
+};
 
 const confirmContact = async (userId: any, contactId: any) => {
     const targetDetail = await userService.getOneUser(contactId);
@@ -63,16 +63,16 @@ const confirmContact = async (userId: any, contactId: any) => {
         originName: originDetail.username,
         targetName: targetDetail.username
     });
-}
+};
 
 const getUserContactStatus = async (userId: any, contactId: any) => {
     const list = await contactDao.getUserContactStatus(userId, contactId);
     return list;
-}
+};
 
 const getContactInfoHad = async (userId: any, contactId: any) => {
     return await contactDao.getContactInfoHad(userId, contactId);
-}
+};
 
 const getContactWarnNum = async (userId: any) => {
     const list: any = await contactDao.getContactNoCheckedNum(userId);
@@ -80,19 +80,19 @@ const getContactWarnNum = async (userId: any) => {
         return list[0].num;
     }
     return 0;
-}
+};
 
 const setAllContactChecked = async (userId: any) => {
-    return await contactDao.setAllContactChecked({userId});
-}
+    return await contactDao.setAllContactChecked(userId);
+};
 
 const editContact = async (userId: any, contactId: any, contactName: any) => {
     return await contactDao.editContact(userId, contactId, contactName);
-}
+};
 
 const deleteContact = async (userId: any, contactId: any) => {
     return await contactDao.deleteContact(userId, contactId);
-}
+};
 
 export = {
     getNoContactList,

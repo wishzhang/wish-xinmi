@@ -4,12 +4,12 @@ export = () => {
             await next();
             if (!ctx.body) {
                 ctx.status = 404;
-                ctx.body = '未匹配到对应资源';
+                ctx.body = "未匹配到对应资源";
             }
         } catch (e) {
             ctx.status = 500;
             ctx.body = e;
             console.log(e);
         }
-    }
+    };
 }

@@ -1,13 +1,13 @@
-const router = require('./router');
-import R from '../util/response';
-const userRouter = require('./user-router');
-const loginRouter = require('./login-router');
-const contactRouter = require('./contact-router');
-const messageRouter = require('./message-router');
-const circleRouter = require('./circle-router');
-const fileRouter = require('./file-router');
-const commonRouter = require('./common-router');
-const verifyCodeRouter = require('./verify-code-router');
+const router = require("./router");
+import R from "../util/response";
+const userRouter = require("./user-router");
+const loginRouter = require("./login-router");
+const contactRouter = require("./contact-router");
+const messageRouter = require("./message-router");
+const circleRouter = require("./circle-router");
+const fileRouter = require("./file-router");
+const commonRouter = require("./common-router");
+const verifyCodeRouter = require("./verify-code-router");
 
 export = (app: any) => {
     app.use(router.routes());

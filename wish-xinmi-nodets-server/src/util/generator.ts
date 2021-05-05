@@ -1,4 +1,4 @@
-import stringUtil = require('./string-util');
+import stringUtil = require("./string-util");
 
 /**
      大于等于10000的数字简单计算，
@@ -15,18 +15,18 @@ import stringUtil = require('./string-util');
  * @returns {string}
  */
 const createXinmiId = (sqlMaxXinmiId: any) => {
-    if (sqlMaxXinmiId === null) return '00000';
+    if (sqlMaxXinmiId === null) return "00000";
 
-    let num = Number.parseInt(sqlMaxXinmiId);
+    const num = Number.parseInt(sqlMaxXinmiId);
     if (Number.isNaN(num)) {
-        throw Error('maxXinmiId值不符合格式要求');
+        throw Error("maxXinmiId值不符合格式要求");
     }
 
-    let str = sqlMaxXinmiId + '';
-    let finalStr = '';
+    const str = sqlMaxXinmiId + "";
+    let finalStr = "";
     if (num < 10000) {
-        let preStr = '';
-        let preMatch = str.match(/^0*(?!0)/);
+        let preStr = "";
+        const preMatch = str.match(/^0*(?!0)/);
         let lastStr = str.substr(preStr.length);
 
         if (preMatch) {
@@ -36,20 +36,20 @@ const createXinmiId = (sqlMaxXinmiId: any) => {
         if (lastStr.length > 0) {
             let lastNum = Number.parseInt(lastStr);
             lastNum++;
-            lastStr = lastNum + '';
+            lastStr = lastNum + "";
         }
 
         // 这5个00000是为了补0，并且是提供足够的0
-        finalStr = '00000' + preStr + lastStr;
-        let tmp = stringUtil.reverseString(finalStr);
+        finalStr = "00000" + preStr + lastStr;
+        const tmp = stringUtil.reverseString(finalStr);
         finalStr = tmp.substr(0, str.length);
         finalStr = stringUtil.reverseString(finalStr);
     } else {
-        finalStr = (num + 1) + '';
+        finalStr = (num + 1) + "";
     }
 
     return finalStr;
-}
+};
 
 export = {
     createXinmiId

@@ -1,8 +1,8 @@
-const reverseString = (str = '') => {
-    if (typeof str !== 'string') throw TypeError();
+const reverseString = (str = "") => {
+    if (typeof str !== "string") throw TypeError();
 
-    return str.split('').reverse().join('');
-}
+    return str.split("").reverse().join("");
+};
 
 export = {
     reverseString

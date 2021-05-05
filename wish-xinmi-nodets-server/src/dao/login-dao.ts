@@ -1,4 +1,4 @@
-import mysql = require('./mysql');
+import mysql = require("./mysql");
 
 const login = async (username:string, password:string) => {
   return await mysql.query(

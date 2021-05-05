@@ -1,53 +1,53 @@
 /**
  * 思路：没有分词的步骤，直接定义ast树，根据ast树直接生成对应的代码,
  */
-import util = require('../util');
-import mysql = require('./mysql');
+import util = require("../util");
+import mysql = require("./mysql");
 
 const columnGType = {
     string: 1,
     number: 2,
     uuid: 3,
     datetime: 4
-}
+};
 
 const fillSpace = (str: any) => {
-    return ` ${str} `
-}
+    return ` ${str} `;
+};
 
 function getCellSqlValue(name: any, cellValue: any) {
-    return typeof cellValue === 'string' ? `'${cellValue}'` : cellValue;
+    return typeof cellValue === "string" ? `'${cellValue}'` : cellValue;
 }
 
-const canInsertValueType = ['string', 'number'];
+const canInsertValueType = ["string", "number"];
 
 const searchGSign = {
-    and: 'and',
-    or: 'or',
-    equal: 'equal',
-    like: 'like',
-    desc: 'desc',
-    asc: 'asc'
-}
+    and: "and",
+    or: "or",
+    equal: "equal",
+    like: "like",
+    desc: "desc",
+    asc: "asc"
+};
 
 const createSearchString = (searchColumns: any) => {
     if (!Array.isArray(searchColumns)) throw TypeError();
 
     let searchStr = searchColumns.map(searchColumn => {
-        let fieldStr = getSearchFieldStr(searchColumn);
+        const fieldStr = getSearchFieldStr(searchColumn);
         return fieldStr;
-    }).join(' ');
+    }).join(" ");
 
     // 纠错
     searchStr = searchStr.trim();
     if (searchStr) {
         const arr = searchStr.split(/\s+/);
-        const firstWord = arr.length > 0 ? arr[0] : '';
-        if (firstWord.startsWith('order')) {
+        const firstWord = arr.length > 0 ? arr[0] : "";
+        if (firstWord.startsWith("order")) {
 
         } else {
             if (searchGSign.hasOwnProperty(firstWord)) {
-                searchStr = searchStr.replace(firstWord, '');
+                searchStr = searchStr.replace(firstWord, "");
             }
             searchStr = ` where ${searchStr}`;
         }
@@ -57,36 +57,36 @@ const createSearchString = (searchColumns: any) => {
     function getSearchFieldStr(searchColumn: any) {
         const {name, value, signs = []} = searchColumn;
 
-        let str = '';
-        let tmp = '';
+        let str = "";
+        let tmp = "";
 
-        for (let sign of signs) {
-            tmp = '';
+        for (const sign of signs) {
+            tmp = "";
             // 有些未传参的字段，不需要去查。有些需要
-            if (typeof value !== 'undefined') {
-                if (sign === 'and') {
-                    tmp = 'and';
-                } else if (sign === 'or') {
-                    tmp = 'or';
-                } else if (sign === 'equal') {
+            if (typeof value !== "undefined") {
+                if (sign === "and") {
+                    tmp = "and";
+                } else if (sign === "or") {
+                    tmp = "or";
+                } else if (sign === "equal") {
                     const val = getCellSqlValue(name, value);
                     tmp = `${name}=${val}`;
-                } else if (sign === 'unequal') {
+                } else if (sign === "unequal") {
                     const val = getCellSqlValue(name, value);
                     tmp = `${name}!=${val}`;
-                } else if (sign === 'like') {
+                } else if (sign === "like") {
                     tmp = `${name} like '%${value}%'`;
                 }
             }
 
             str += fillSpace(tmp);
 
-            tmp = '';
-            if (sign === 'desc') {
+            tmp = "";
+            if (sign === "desc") {
                 tmp = `order by ${name} desc`;
-            } else if (sign === 'asc') {
+            } else if (sign === "asc") {
                 tmp = `order by ${name} asc`;
-            } else if (sign === 'null') {
+            } else if (sign === "null") {
                 tmp = `${name} is null`;
             }
             str += fillSpace(tmp);
@@ -96,7 +96,7 @@ const createSearchString = (searchColumns: any) => {
     }
 
     return searchStr;
-}
+};
 
 const DaoGenerator = function (ast: any) {
     const {tableName, columns} = ast;
@@ -112,7 +112,7 @@ const DaoGenerator = function (ast: any) {
     const getcolumnGType = (name: any) => {
         const row = columns.find(el => el.name === name);
         return row && row.type || columnGType.string;
-    }
+    };
 
     const getCellValue = (name: any, val: any) => {
         if (val && !canInsertValueType.includes(typeof val)) {
@@ -126,19 +126,19 @@ const DaoGenerator = function (ast: any) {
         } else if (type === columnGType.string) {
             cellValue = `'${val}'`;
         } else if (type === columnGType.uuid) {
-            cellValue = val || 'uuid()';
+            cellValue = val || "uuid()";
         } else if (type === columnGType.datetime) {
-            cellValue = val || 'now()';
+            cellValue = val || "now()";
         }
         return cellValue;
-    }
+    };
 
     /**
      * 插入语句
      * @param data
      * @returns {Promise<any>}
      */
-    const insert = async (data: any[] | object) => {
+    const insert = async (data: any) => {
         let res: any;
 
         if (!Array.isArray(data) && !util.isPlainObject(data) || Array.isArray(data) && data.length === 0) {
@@ -147,16 +147,16 @@ const DaoGenerator = function (ast: any) {
 
         data = util.isPlainObject(data) ? [data] : data;
 
-        let valueStr = (data as any []).map((row: any) => {
+        const valueStr = (data as any []).map((row: any) => {
             let rowStr = columnNames.map(name => {
                 const cellValue = getCellValue(name, row[name]);
                 return cellValue;
-            }).join(',');
+            }).join(",");
             rowStr = `(${rowStr})`;
             return rowStr;
         });
 
-        let columnStr = `(${columnNames.join(',')})`;
+        const columnStr = `(${columnNames.join(",")})`;
 
         res = await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
         if (res && res.length > 0) {
@@ -164,7 +164,7 @@ const DaoGenerator = function (ast: any) {
         }
 
         return res;
-    }
+    };
 
     /**
      * 查询一个语句
@@ -173,12 +173,12 @@ const DaoGenerator = function (ast: any) {
     const getOne = async ({wheres = [], fields = []}) => {
         if (!Array.isArray(fields)) throw TypeError();
 
-        let fieldstStr = fields.join(',') || '*';
+        const fieldstStr = fields.join(",") || "*";
 
-        let searchStr = createSearchString(wheres);
+        const searchStr = createSearchString(wheres);
 
-        let sql = `select ${fieldstStr} from ${tableName} ${searchStr}`;
-        let list: any = await mysql.query(sql);
+        const sql = `select ${fieldstStr} from ${tableName} ${searchStr}`;
+        const list: any = await mysql.query(sql);
 
         if (list.length > 1) {
             throw Error();
@@ -187,7 +187,7 @@ const DaoGenerator = function (ast: any) {
         } else {
             return null;
         }
-    }
+    };
 
     /**
      * 分页查询
@@ -200,12 +200,12 @@ const DaoGenerator = function (ast: any) {
     const getPage = async ({wheres = [], fields = [], current = 1, size = 10}) => {
         if (!Array.isArray(fields)) throw TypeError();
 
-        let fieldsStr = fields.join(',') || '*';
-        let searchStr = createSearchString(wheres);
+        const fieldsStr = fields.join(",") || "*";
+        const searchStr = createSearchString(wheres);
 
-        let sql = `select ${fieldsStr} from ${tableName} ${searchStr}`;
+        const sql = `select ${fieldsStr} from ${tableName} ${searchStr}`;
         const totalSql = `select count(*) as total from (${sql}) as tmp`;
-        const pageSql = `${sql}  limit ${(current - 1) * size},${size}`
+        const pageSql = `${sql}  limit ${(current - 1) * size},${size}`;
 
         const total: any = await mysql.query(totalSql);
         const list = await mysql.query(pageSql);
@@ -215,8 +215,8 @@ const DaoGenerator = function (ast: any) {
             size,
             total: total[0].total,
             records: list
-        }
-    }
+        };
+    };
 
     /**
      * 查询一次
@@ -225,25 +225,25 @@ const DaoGenerator = function (ast: any) {
      * @param limit
      * @returns {Promise<void>}
      */
-    const getList = async (rule?: { wheres: object[], selects?: any[], limit?: number }) => {
-        let wheres = rule && rule.wheres || [];
-        let selects = rule && rule.selects || [];
-        let limit = rule && rule.limit;
+    const getList = async (rule?: { wheres: any[], selects?: any[], limit?: number }) => {
+        const wheres = rule && rule.wheres || [];
+        const selects = rule && rule.selects || [];
+        const limit = rule && rule.limit;
 
         if (!Array.isArray(selects)) throw TypeError();
 
-        let selectsStr = selects.join(',') || '*';
-        let searchStr = createSearchString(wheres);
+        const selectsStr = selects.join(",") || "*";
+        const searchStr = createSearchString(wheres);
 
         let sql = `select ${selectsStr} from ${tableName} ${searchStr}`;
-        if (typeof limit !== 'undefined') {
+        if (typeof limit !== "undefined") {
             sql += ` limit ${limit}`;
         }
 
         const list = await mysql.query(sql);
 
         return list;
-    }
+    };
 
     /**
      * 更新
@@ -251,25 +251,25 @@ const DaoGenerator = function (ast: any) {
      * @param data
      * @returns {Promise<any>}
      */
-    const update = async (rule: { wheres?: any[], set: Object }) => {
-        let wheres = rule.wheres || [];
-        let set: any = rule.set || {};
+    const update = async (rule: { wheres?: any[], set: any }) => {
+        const wheres = rule.wheres || [];
+        const set: any = rule.set || {};
 
         if (!util.isPlainObject(set)) {
             throw TypeError();
         }
 
-        let searchStr = createSearchString(wheres);
+        const searchStr = createSearchString(wheres);
 
-        let setStr = Object.keys(set).map(key => {
+        const setStr = Object.keys(set).map(key => {
             return `${key}=${getCellSqlValue(key, set[key])}`;
-        }).join(',');
+        }).join(",");
 
-        let sql = `update ${tableName} set ${setStr} ${searchStr}`;
+        const sql = `update ${tableName} set ${setStr} ${searchStr}`;
 
-        let list = await mysql.query(sql);
+        const list = await mysql.query(sql);
         return list;
-    }
+    };
 
     /**
      * 更新
@@ -277,19 +277,19 @@ const DaoGenerator = function (ast: any) {
      * @returns {Promise<void>}
      */
     const del = async (rule: { wheres: any[] }) => {
-        let wheres = rule.wheres || [];
+        const wheres = rule.wheres || [];
 
-        let searchStr = createSearchString(wheres);
+        const searchStr = createSearchString(wheres);
 
         let sql = `delete from ${tableName} ${searchStr}`;
         if (!searchStr.trim()) {
-            sql += ' 1=1';
+            sql += " 1=1";
         }
 
         const list = await mysql.query(sql);
 
         return list;
-    }
+    };
 
     /**
      * 获取数量
@@ -297,11 +297,11 @@ const DaoGenerator = function (ast: any) {
      * @returns {Promise<number|*>}
      */
     const getCount = async (rule?: { wheres?: any[] }) => {
-        let wheres = rule && rule.wheres || [];
+        const wheres = rule && rule.wheres || [];
 
-        let searchStr = createSearchString(wheres);
+        const searchStr = createSearchString(wheres);
 
-        let sql = `select count(*) as num from ${tableName} ${searchStr}`;
+        const sql = `select count(*) as num from ${tableName} ${searchStr}`;
 
         const rows: any = await mysql.query(sql);
 
@@ -310,7 +310,7 @@ const DaoGenerator = function (ast: any) {
         }
 
         return 0;
-    }
+    };
 
     return {
         insert,
@@ -320,7 +320,7 @@ const DaoGenerator = function (ast: any) {
         update,
         del,
         getCount
-    }
+    };
 };
 
 DaoGenerator.columnGType = columnGType;
