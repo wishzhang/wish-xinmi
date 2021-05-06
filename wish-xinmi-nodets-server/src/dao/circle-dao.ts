@@ -20,7 +20,7 @@ const uuid = util.uuid;
 
 // 添加一条朋友圈
 const addThought = async (createUser: string, content: string, photosUrl?: string) => {
-    await baseDao.insert({
+    await baseDao.insertOne({
         "create_user": createUser,
         "content": content,
         "photos_url": photosUrl

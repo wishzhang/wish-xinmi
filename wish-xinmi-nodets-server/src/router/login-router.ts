@@ -35,16 +35,15 @@ router.post("/loginByEmail", async (ctx: any) => {
     }
 
     // 邮箱地址是否已注册，没有注册就自动注册
-    const user = await userService.findEmailAddress(emailAddress);
+    let user = await userService.findEmailAddress(emailAddress);
     if (!user) {
         const maxId = await userService.getMaxXinmiId();
         const xinmiId = generator.createXinmiId(maxId);
-        const user = {
+        const obj = {
             username: xinmiId,
-            password: "",
             emailAddress: emailAddress
         };
-        await userService.insertUser(user);
+        user = await userService.insertUser(obj);
     }
     ctx.body = R.success(user);
 });

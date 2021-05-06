@@ -16,20 +16,20 @@ const sendEmailCode = async (emailAddress: string, emailCode?: string)
 
     let res: any;
 
+    // 如果没有给定的验证码，那么就默认来生成一个邮箱验证码
+    emailCode = emailCode || createEmailCode();
+
     if (!validate.validEmailAddress(emailAddress)) {
         res = {code: 1, msg: "邮箱地址格式错误"};
     } else {
         try {
-            let emailCode, transporter, timer: any;
+            let transporter, timer: any;
 
             // 初始化发送器：基于QQ邮箱的SMTP协议、已有的固定邮箱账号密码来发送
             transporter = nodemailer.createTransport({
                 service: "QQ",
                 auth: {user: "wishzhang.io@qq.com", pass: "extawcywnbpngadc"},
             });
-
-            // 生成邮箱验证码
-            emailCode = emailCode || createEmailCode();
 
             // 进行发送邮箱
             await transporter.sendMail({

@@ -114,19 +114,15 @@ const DaoGenerator = function (ast: any) {
         return row && row.type || columnGType.string;
     };
 
-    const getCellValue = (name: any, val: any) => {
-        if (val && !canInsertValueType.includes(typeof val)) {
-            throw TypeError();
-        }
-
+    const getCellValue = (name: string, val: any) => {
         let cellValue;
         const type = getcolumnGType(name);
         if (type === columnGType.number) {
             cellValue = val || 0;
         } else if (type === columnGType.string) {
-            cellValue = `'${val}'`;
+            cellValue = typeof val === "undefined" ? 'null' : `'${val}'`;
         } else if (type === columnGType.uuid) {
-            cellValue = val || "uuid()";
+            cellValue = val || `'${util.uuid()}'`;
         } else if (type === columnGType.datetime) {
             cellValue = val || "now()";
         }
@@ -138,32 +134,36 @@ const DaoGenerator = function (ast: any) {
      * @param data
      * @returns {Promise<any>}
      */
-    const insert = async (data: any) => {
-        let res: any;
-
-        if (!Array.isArray(data) && !util.isPlainObject(data) || Array.isArray(data) && data.length === 0) {
+    const insertOne = async (data: any): Promise<string> => {
+        if (!util.isPlainObject(data)) {
             throw TypeError();
         }
 
-        data = util.isPlainObject(data) ? [data] : data;
+        let uuid = '';
+        let valueStr = '';
+        let columnStr = '';
 
-        const valueStr = (data as any []).map((row: any) => {
-            let rowStr = columnNames.map(name => {
-                const cellValue = getCellValue(name, row[name]);
-                return cellValue;
-            }).join(",");
-            rowStr = `(${rowStr})`;
-            return rowStr;
-        });
+        valueStr = columnNames.map(name => {
+            let cellValue = ''
+            if (getcolumnGType(name) === columnGType.uuid) {
+                uuid = util.uuid();
+                cellValue = getCellValue(name, uuid);
+            } else {
+                cellValue = getCellValue(name, data[name]);
+            }
 
-        const columnStr = `(${columnNames.join(",")})`;
+            return cellValue;
+        }).join(",");
+        valueStr = `(${valueStr})`;
 
-        res = await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
+        columnStr = `(${columnNames.join(",")})`;
+
+        const res: any = await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
         if (res && res.length > 0) {
-            res = res.length > 1 ? res : res[0];
+            return uuid;
         }
 
-        return res;
+        return '';
     };
 
     /**
@@ -313,7 +313,7 @@ const DaoGenerator = function (ast: any) {
     };
 
     return {
-        insert,
+        insertOne,
         getOne,
         getPage,
         getList,

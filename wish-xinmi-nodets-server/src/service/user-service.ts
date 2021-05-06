@@ -6,7 +6,20 @@ const getUserList = async () => {
 };
 
 const insertUser = async (obj: any) => {
-    return await userDao.insert(obj);
+    let user = null;
+    const id = await userDao.insertOne({
+        'username': obj.username,
+        'password': obj.password,
+        'avatar_url': obj.avatarUrl,
+        'bg_url': obj.bgUrl,
+        'email_address': obj.emailAddress
+    });
+
+    if (id) {
+        user = await getOneUser(id);
+    }
+
+    return user;
 };
 
 const updateUser = async (obj: any) => {
