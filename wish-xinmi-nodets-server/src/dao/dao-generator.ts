@@ -298,6 +298,7 @@ const DaoGenerator = function (ast: any) {
         const searchStr = createSearchString(wheres);
 
         let sql = `delete from ${tableName} ${searchStr}`;
+
         if (!searchStr.trim()) {
             sql += "where 1=1";
         }

@@ -2,8 +2,8 @@ export = (emit:any) => {
     return {
         async emitMessageToOneContact(originUserId:string, targetUserId:string, data:any) {
             const userService = require("../service/user-service");
-            const targetUser = await userService.getOneUser({userId: targetUserId});
-            const originUser = await userService.getOneUser({userId: originUserId});
+            const targetUser = await userService.getOneUser(targetUserId);
+            const originUser = await userService.getOneUser(originUserId);
 
             emit("message-one-contact", {
                 originUserId,

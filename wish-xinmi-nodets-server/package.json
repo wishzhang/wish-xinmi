@@ -16,7 +16,8 @@
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "build": "npm run build-ts",
     "build-ts": "tsc",
-    "test": "jest --forceExit --coverage --verbose --maxConcurrency=1 --runInBand=1"
+    "test-coverage": "jest --forceExit --coverage --verbose",
+    "test-unit": "jest --forceExit --verbose"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

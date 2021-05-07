@@ -12,7 +12,10 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   testMatch: [
-    "**/test/**/*.test.(ts|js)",
+    "**/test/**/*.test.(ts|js)"
   ],
-  testEnvironment: "node"
+  testEnvironment: "node",
+  maxWorkers: 1,
+  maxConcurrency: 1,
+  testTimeout: 10000
 };

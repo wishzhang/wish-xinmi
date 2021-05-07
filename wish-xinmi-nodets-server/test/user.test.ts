@@ -1,13 +1,7 @@
 import verifyCodeService = require("../src/service/verify-code-service");
-import userService = require("../src/service/user-service");
 import server = require("../src");
 import request = require("supertest");
 import testUtil = require("./test-util");
-import circleDao = require("../src/dao/chat-dao");
-import contactDao = require("../src/dao/contact-dao");
-import contactRecordDao = require("../src/dao/contact-record-dao");
-import messageDao = require("../src/dao/message-dao");
-import userDao = require("../src/dao/user-dao");
 import mysql = require("../src/dao/mysql");
 
 
@@ -30,7 +24,7 @@ beforeAll(async (done) => {
             user = res.body.data;
             done();
         });
-},10* 1000)
+}, 10 * 1000)
 
 afterAll(async () => {
     await testUtil.clearDBTestData();
@@ -102,5 +96,4 @@ describe("用户模块", () => {
                 });
         });
     })
-
 });
