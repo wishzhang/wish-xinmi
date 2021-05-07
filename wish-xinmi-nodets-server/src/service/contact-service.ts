@@ -36,7 +36,7 @@ const getNoContactList = async (userId: string, username = "") => {
     return list;
 };
 
-const addContact = async (userId: any, contactId: any, validateMsg: any) => {
+const addContact = async (userId: string, contactId: string, validateMsg: any) => {
     const targetDetail: any = await userService.getOneUser(contactId);
     const originDetail: any = await userService.getOneUser(userId);
     const msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;

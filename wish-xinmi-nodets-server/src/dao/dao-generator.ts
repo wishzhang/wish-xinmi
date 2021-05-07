@@ -122,7 +122,7 @@ const DaoGenerator = function (ast: any) {
         } else if (type === columnGType.string) {
             cellValue = typeof val === "undefined" ? 'null' : `'${val}'`;
         } else if (type === columnGType.uuid) {
-            cellValue = val || `'${util.uuid()}'`;
+            throw Error('不支持，主键不应该调用这个函数');
         } else if (type === columnGType.datetime) {
             cellValue = val || "now()";
         }
@@ -147,7 +147,7 @@ const DaoGenerator = function (ast: any) {
             let cellValue = ''
             if (getcolumnGType(name) === columnGType.uuid) {
                 uuid = util.uuid();
-                cellValue = getCellValue(name, uuid);
+                cellValue = `'${uuid}'`;
             } else {
                 cellValue = getCellValue(name, data[name]);
             }
@@ -158,13 +158,23 @@ const DaoGenerator = function (ast: any) {
 
         columnStr = `(${columnNames.join(",")})`;
 
-        const res: any = await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
-        if (res && res.length > 0) {
-            return uuid;
-        }
+        await mysql.query(`insert into ${tableName} ${columnStr} values ${valueStr}`);
 
-        return '';
+        return uuid;
     };
+
+    const insertBatch = async (arr: any) => {
+        if (!Array.isArray(arr)) {
+            const ps = arr.map((el: any) => {
+                return function () {
+                    return insertOne(el);
+                }
+            })
+
+            return await mysql.transaction([...ps]);
+        }
+        return [];
+    }
 
     /**
      * 查询一个语句
@@ -260,10 +270,16 @@ const DaoGenerator = function (ast: any) {
         }
 
         const searchStr = createSearchString(wheres);
+        let setStr: string = '';
+        let setArr: string[] = [];
 
-        const setStr = Object.keys(set).map(key => {
-            return `${key}=${getCellSqlValue(key, set[key])}`;
-        }).join(",");
+        Object.keys(set).forEach(key => {
+            if (typeof set[key] !== 'undefined') {
+                setArr.push(`${key}=${getCellSqlValue(key, set[key])}`);
+            }
+        });
+
+        setStr = setArr.join(',');
 
         const sql = `update ${tableName} set ${setStr} ${searchStr}`;
 
@@ -283,7 +299,7 @@ const DaoGenerator = function (ast: any) {
 
         let sql = `delete from ${tableName} ${searchStr}`;
         if (!searchStr.trim()) {
-            sql += " 1=1";
+            sql += "where 1=1";
         }
 
         const list = await mysql.query(sql);
@@ -319,7 +335,8 @@ const DaoGenerator = function (ast: any) {
         getList,
         update,
         del,
-        getCount
+        getCount,
+        insertBatch
     };
 };
 

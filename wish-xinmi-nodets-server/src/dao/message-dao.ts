@@ -231,6 +231,7 @@ export = {
     getChatUnreadCount,
     getOneMessageChat,
     checkMessage,
-    delMessageByPeople
+    delMessageByPeople,
+    ...baseDao
 }
 

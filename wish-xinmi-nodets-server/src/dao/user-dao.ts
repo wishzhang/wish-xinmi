@@ -24,7 +24,7 @@ const updateUser = async (obj: any) => {
     const {id, username, password, avatarUrl, bgUrl} = obj;
 
     const searchColumns = [
-        {name: "id", value: id}
+        {name: "id", value: id, signs: ['equal']}
     ];
     const dataObj = {
         "username": username,

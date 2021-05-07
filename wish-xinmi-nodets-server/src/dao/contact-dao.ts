@@ -229,10 +229,10 @@ const editContact = async (userId: string, contactId: string, contactName: strin
 const deleteContact = async (userId: string, contactId: string) => {
     await mysql.transaction([
         () => {
-            return require("./message-dao").delMessageByPeople({userId, contactId});
+            return require('./message-dao').delMessageByPeople(userId, contactId);
         },
         () => {
-            return require("./chat-dao").delChat({originUser: userId, targetUser: contactId});
+            return require("./chat-dao").delChat(userId,contactId);
         },
         () => {
             return `

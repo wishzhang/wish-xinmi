@@ -1,13 +1,15 @@
 const debug = require("debug")("xinmi-dao");
 import util = require("../util");
-const mysql = require("mysql");
+import mysql = require("mysql");
+import config = require("../config");
+
 
 const executor = () => {
     const connection = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "123456",
-        database: "xinmi"
+        host: config.mysql.host,
+        user: config.mysql.user,
+        password: config.mysql.password,
+        database: config.mysql.database
     });
     return new Promise((resolve, reject) => {
         connection.connect();

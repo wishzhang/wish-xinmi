@@ -27,5 +27,12 @@ export = {
     minioAccessKey: "minioadmin",
     minioSecretKey: "minioadmin",
     minioUseSSL: false,
-    minioBucketName: "xinmi-minio"
+    minioBucketName: "xinmi-minio",
+    // mysql的配置
+    mysql: {
+        host: "localhost",
+        user: "root",
+        password: "123456",
+        database: "xinmi"
+    }
 };

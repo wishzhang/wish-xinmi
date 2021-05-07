@@ -9,17 +9,6 @@ router.get("/page", async (ctx: any) => {
     ctx.body = R.success(list);
 });
 
-router.get("/add", async (ctx: any) => {
-    const query = ctx.request.query;
-    const username = query.username;
-    const obj = {
-        username: query.username,
-        password: query.password,
-    };
-    await userService.insertUser(obj);
-    ctx.body = R.success();
-});
-
 router.get("/update", async (ctx: any) => {
     const query = ctx.request.query;
 
@@ -40,7 +29,6 @@ router.get("/detail", async (ctx: any) => {
     const detail = await userService.getOneUser(userId);
     ctx.body = R.success(detail);
 });
-
 
 /**
  * 修改邮箱
