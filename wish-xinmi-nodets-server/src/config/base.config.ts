@@ -20,7 +20,6 @@ export = {
     projectCName: "信迷",
     // 服务器配置, 没有实际用到，只用来打印
     serverIp: ip,
-    serverPort: 3000,
     // minio配置
     minioEndPoint: "localhost",
     minioPort: 9000,

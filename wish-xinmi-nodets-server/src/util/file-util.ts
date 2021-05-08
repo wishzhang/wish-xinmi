@@ -1,6 +1,6 @@
 const Minio = require("minio");
 import util = require("./index");
-import config = require("../config");
+import config = require("../config/index");
 
 const fs = require("fs");
 const bucketName = config.minioBucketName;

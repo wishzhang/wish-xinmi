@@ -4,7 +4,11 @@ import contactDao = require("../src/dao/contact-dao");
 import contactRecordDao = require("../src/dao/contact-record-dao");
 import messageDao = require("../src/dao/message-dao");
 import userDao = require("../src/dao/user-dao");
+import verifyCodeService = require("../src/service/verify-code-service");
 import mysql = require("../src/dao/mysql");
+import request = require("supertest");
+import server = require("../src/server");
+
 
 // 单元测试应该保持简单高效，直接操作测试数据库全部数据。
 // 测试每个模块前清库。然后重新建立数据进行测试。每个模块有before,after钩子的过程处理
@@ -34,9 +38,24 @@ const clearDBTestData = async () => {
     await userDao.del({wheres: []});
 }
 
+const prepareTest = async () => {
+    await clearDBTestData();
+    const res = await require("./login.test").registerTwoUser();
+    return {
+        user1: res.user1,
+        user2: res.user2
+    }
+}
+
+const afterTest = async () => {
+    await clearDBTestData();
+}
+
 export = {
     account1,
     account2,
     accountError,
-    clearDBTestData
+    clearDBTestData,
+    prepareTest,
+    afterTest
 }

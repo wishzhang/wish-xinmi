@@ -58,13 +58,12 @@
                 </template>
             </template>
         </van-index-bar>
-
     </basic-container>
 
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters} from "vuex";
     import {fetchYetContactListRequest} from "../../api/contact";
 
     export default {
@@ -73,11 +72,11 @@
             return {
                 contactList: [],
                 showPopover: false,
-                actions: [{text: '添加朋友', icon: 'friends'}],
-            }
+                actions: [{text: "添加朋友", icon: "friends"}],
+            };
         },
         computed: {
-            ...mapGetters(['userInfo', 'contactWarnNumStr']),
+            ...mapGetters(["userInfo", "contactWarnNumStr"]),
             indexList() {
                 return this.contactList.map(el => el.label);
             }
@@ -85,22 +84,22 @@
         created() {
             const params = {
                 id: this.userInfo.id
-            }
+            };
             fetchYetContactListRequest(params).then(res => {
-                this.contactList = res.data
-            })
+                this.contactList = res.data;
+            });
         },
         methods: {
             onSelect(action) {
-                if (action.text === '添加朋友') {
-                    this.$router.push({path: '/index-layout/contact-add'})
+                if (action.text === "添加朋友") {
+                    this.$router.push({path: "/index-layout/contact-add"});
                 }
             },
             onContactItemClick(item) {
-                this.$router.push({path: '/index-layout/contact-info-had', query: {id: item.id}})
+                this.$router.push({path: "/index-layout/contact-info-had", query: {id: item.contactId}});
             }
         }
-    }
+    };
 </script>`
 
 <style scoped lang="less">

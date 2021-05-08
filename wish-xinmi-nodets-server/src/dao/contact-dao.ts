@@ -131,12 +131,9 @@ const getUserContactStatus = async (userId: string, contactId: string) => {
 
 // 获取当前用户的已添加的联系人
 const getYesContactList = async (userId: string) => {
-
     return await mysql.query(`
-    select xu.id, if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,xu.avatar_url
-    from xinmi_user xu
-             inner join xinmi_contact xc 
-             on xu.id = xc.contact_id
+    select xc.contact_id, if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,xu.avatar_url
+    from xinmi_contact xc inner join xinmi_user xu on xu.id = xc.contact_id
     where xc.user_id = '${userId}'
   `);
 };

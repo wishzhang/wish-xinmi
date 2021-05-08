@@ -1,6 +1,6 @@
 const {v4: uuidv4} = require("uuid");
 const pinyin = require("pinyin");
-import config = require("../config");
+import config = require("../config/index");
 
 const generateRouteKey = (namespace:any) => {
     return (name:any) => {

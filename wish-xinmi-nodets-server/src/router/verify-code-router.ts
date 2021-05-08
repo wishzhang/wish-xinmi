@@ -10,7 +10,8 @@ const router = require("./router-factory")("/verifyCode");
 router.post("/sendEmailCode", async (ctx: any) => {
     const {emailAddress} = ctx.request.body;
 
-    const res:any = await verifyCodeService.sendEmailCode(emailAddress);
+    const emailCode = verifyCodeService.createEmailCode();
+    const res:any = await verifyCodeService.sendEmailCode(emailAddress,emailCode);
     if (res.code === 0) {
         ctx.body = R.success();
     } else if (res.code === 1) {

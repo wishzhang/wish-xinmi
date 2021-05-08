@@ -1,7 +1,7 @@
 const debug = require("debug")("xinmi-dao");
 import util = require("../util");
 import mysql = require("mysql");
-import config = require("../config");
+import config = require("../config/index");
 
 
 const executor = () => {
