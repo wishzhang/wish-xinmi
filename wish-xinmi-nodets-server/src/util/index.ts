@@ -92,6 +92,10 @@ function isPromise(value:any) {
     return value && Object.prototype.toString.call(value) === "[object Promise]";
 }
 
+function humpToUnderline(str: string){
+    return str.replace(/([A-Z])/g,"_$1").toLowerCase()
+}
+
 export = {
     generateRouteKey,
     uuid,
@@ -102,5 +106,6 @@ export = {
     getMinioUrl,
 
     isPlainObject,
-    isPromise
+    isPromise,
+    humpToUnderline
 }

@@ -1,6 +1,8 @@
 import mysql = require("./mysql");
 import util = require("../util");
 import Daogenerator = require("./dao-generator");
+import {Ctype, DaoCreator} from "./dao-creator";
+
 
 const baseDao = Daogenerator({
     tableName: "xinmi_user",
@@ -13,6 +15,20 @@ const baseDao = Daogenerator({
         {name: "email_address", type: Daogenerator.columnGType.string}
     ]
 });
+
+const dao = new DaoCreator({
+    tableName: 'xinmi_user',
+    columns: [
+        {name: 'id', ctype: Ctype.uuid},
+        {name: 'username', ctype: Ctype.string},
+        {name: 'password', ctype: Ctype.string},
+        {name: 'avatar_url', ctype: Ctype.string},
+        {name: 'bg_url', ctype: Ctype.string},
+        {name: 'email_address', ctype: Ctype.string}
+    ]
+})
+
+baseDao.insertOne = dao.insertOne.bind(dao);
 
 const uuid = util.uuid;
 
@@ -53,13 +69,13 @@ const getMaxXinmiId = async () => {
     );
 };
 
-const updatePasswordByEmailAddress = async (password:string, emailAddress:string) => {
+const updatePasswordByEmailAddress = async (password: string, emailAddress: string) => {
     return await mysql.query(
         `update xinmi_user set password='${password}' where email_address='${emailAddress}'`
     );
 };
 
-const editEmailAddress = async (originEmailAddress:string, targetEmailAddress:string, password:string) => {
+const editEmailAddress = async (originEmailAddress: string, targetEmailAddress: string, password: string) => {
     return await mysql.query(
         `update xinmi_user set email_address='${targetEmailAddress}' 
         where email_address='${originEmailAddress}' 
