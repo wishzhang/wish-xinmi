@@ -90,8 +90,8 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
         obj.name = info.username;
         obj.avatarUrl = info.avatarUrl;
 
-        if (obj.userId !== createUserId) {
-            const contact = await contactDao.getContactInfoHad(obj.userId, createUserId);
+        if (info.id !== createUserId) {
+            const contact = await contactDao.getContactInfoHad(info.id, createUserId);
             obj.name = contact.name;
         }
 

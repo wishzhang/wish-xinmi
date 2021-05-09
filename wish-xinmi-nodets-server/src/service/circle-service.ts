@@ -24,7 +24,7 @@ const getPage = async (userId: any, current: any, size: any) => {
     return data;
 };
 
-const getUserThoughtPage = async (userId: any, current: any, size: any) => {
+const getUserThoughtPage = async (userId: string, current?: number, size?: number) => {
     const data = await circleDao.getUserThoughtPage(userId, current, size);
     return data;
 };

@@ -61,11 +61,11 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters} from "vuex";
     import {fetchPeopleListRequest, fetchUserThoughtPageRequest} from "@/api/thought";
     import {fetchContactDetailRequest} from "../../api/contact";
     import moment from "moment";
-    import ThoughtPeoplePhotos from './thought-people-photos';
+    import ThoughtPeoplePhotos from "./thought-people-photos";
 
     export default {
         name: "thought-mine",
@@ -82,17 +82,17 @@
                     currentPage: 1,
                     pageSize: 10
                 }
-            }
+            };
         },
         components: {
             ThoughtPeoplePhotos
         },
         computed: {
-            ...mapGetters(['userInfo']),
+            ...mapGetters(["userInfo"]),
             name() {
                 return this.userInfo.id === this.$route.query.id ?
                     this.userInfo.username :
-                    this.contactDetail.contactName
+                    this.contactDetail.contactName;
             },
             group() {
                 const group = {};
@@ -113,28 +113,28 @@
                 const params1 = {
                     userId: this.userInfo.id,
                     contactId: this.$route.query.id
-                }
+                };
                 fetchContactDetailRequest(params1).then(res => {
                     if (res.code === 0) {
                         this.contactDetail = res.data;
                     }
-                })
+                });
             }
         },
         mounted() {
-            const el = document.getElementById('scroll-id');
-            el.addEventListener('scroll', (e) => {
+            const el = document.getElementById("scroll-id");
+            el.addEventListener("scroll", (e) => {
                 if (e.target.scrollTop > 220) {
                     this.fadeNavbar = false;
                 } else {
                     this.fadeNavbar = true;
                 }
-            })
+            });
         },
         methods: {
             getPhotosLen(photosUrl) {
                 if (!photosUrl) return 0;
-                return photosUrl.split(',').length;
+                return photosUrl.split(",").length;
             },
             getName(item) {
                 return item.createUser === this.userInfo.id ?
@@ -147,8 +147,10 @@
             onLoad() {
                 this.loading = true;
                 const params = {
-                    userId: this.$route.query.id
-                }
+                    userId: this.$route.query.id,
+                    current: this.page.currentPage++,
+                    size: this.page.pageSize
+                };
                 fetchUserThoughtPageRequest(params).then(res => {
                     if (res.code === 0) {
                         const data = res.data;
@@ -160,10 +162,10 @@
                     if (this.page.total <= this.list.length) {
                         this.finished = true;
                     }
-                })
+                });
             },
         }
-    }
+    };
 </script>
 
 <style scoped lang="less">
