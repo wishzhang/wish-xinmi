@@ -10,7 +10,8 @@ const sequelize: any = new Sequelize(config.mysql.database, config.mysql.user, c
         createdAt: 'created_at',
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
-        underscored: true
+        underscored: true,
+        charset: 'utf8'
     },
     query: {
         raw: true

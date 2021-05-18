@@ -37,7 +37,7 @@ const getChatAndUnreadCount = async (originUser: any, targetUser: any) => {
 const getOneMessageChat = async (originUser: string, targetUser: string) => {
     const chatId = await chatDao.findChatId(originUser, targetUser);
     const messageChat: any = await messageDao.getOneMessageChat(targetUser, chatId);
-    messageChat.createTime = datetime.dateFromNow(messageChat.createTime);
+    messageChat.createdAt = datetime.dateFromNow(messageChat.createdAt);
     return {
         originUser,
         targetUser,

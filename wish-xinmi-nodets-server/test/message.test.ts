@@ -36,7 +36,6 @@ afterAll(async () => {
     await testUtil.afterTest();
 })
 
-
 describe("消息模块", () => {
 
     describe('获取小窗的分页列表', () => {
@@ -54,7 +53,7 @@ describe("消息模块", () => {
         });
     })
 
-    describe.only('获取会话消息列表', () => {
+    describe('获取会话消息列表', () => {
         test("/message/getMineAllChatList", async (done) => {
             const res = await request(server)
                 .get("/message/getMineAllChatList")

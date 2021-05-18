@@ -16,8 +16,9 @@ module.exports = {
     // "**/test/**/login.test.(ts|js)",
     // "**/test/**/user.test.(ts|js)"
     // "**/test/**/contact.test.(ts|js)",
-    "**/test/**/message.test.(ts|js)",
+    // "**/test/**/message.test.(ts|js)",
     // "**/test/**/database.test.(ts|js)"
+    "**/test/**/circle.test.(ts|js)"
   ],
   testEnvironment: "node",
   maxWorkers: 1,

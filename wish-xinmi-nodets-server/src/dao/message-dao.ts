@@ -73,11 +73,11 @@ const getMineAllChatList = async (userId: string) => {
     const list = [];
     let myAllChatList: any[];
 
-    try{
+    try {
         myAllChatList = await ChatMember.findAll({
             where: {userId: userId}
         })
-    }catch (e) {
+    } catch (e) {
         console.log(e);
     }
 
@@ -91,14 +91,20 @@ const getMineAllChatList = async (userId: string) => {
 
 const getOneMessageChat = async (userId: string, chatId: string) => {
     let obj = {};
-    const message: any = await Message.findOne({
-        where: {
-            chatId: chatId
-        },
-        order: [
-            ['createTime', 'DESC']
-        ]
-    })
+    let message: any;
+    try {
+        message = await Message.findOne({
+            where: {
+                chatId: chatId
+            },
+            order: [
+                ['created_at', 'DESC']
+            ]
+        })
+    } catch (e) {
+        console.log(e);
+    }
+
 
     if (message) {
         const contactId = await findTargetUserId(chatId, userId);
@@ -108,7 +114,7 @@ const getOneMessageChat = async (userId: string, chatId: string) => {
         obj = {
             messageId: message.messageId,
             chatId: message.chatId,
-            createTime: message.createTime,
+            createdAt: message.createdAt,
             avatarUrl: contactInfo.avatarUrl,
             name: contactInfo.name,
             content: message.content,
@@ -122,13 +128,15 @@ const getOneMessageChat = async (userId: string, chatId: string) => {
 };
 
 const findTargetUserId = async (chatId: string, originUser: string) => {
-    const list: any = await query(`
-      select * from xinmi_chat where chat_id='${chatId}' and user_id!='${originUser}'
-    `);
-    if (list.length > 0) {
-        return list[0].userId;
-    }
-    return null;
+    const row = await ChatMember.findOne({
+        where: {
+            chatId: chatId,
+            userId: {
+                [Op.ne]: originUser
+            }
+        }
+    })
+    return row && row.userId;
 };
 
 
@@ -147,21 +155,27 @@ const addMessage = async (originUser: string, targetUser: string, content: strin
             chatId: chatId,
             originUser: originUser
         })
-        await msg.save();
     } else {
-        await sequelize.transaction(async (t:any) => {
-            const chatId = uuid();
-            const chat = await Chat.create({chatId: chatId, user1: originUser, user2: targetUser},
-                {transaction: t});
-            await chat.save();
+        try {
+            await sequelize.transaction(async (t: any) => {
+                const chatId = uuid();
+                const chat = await Chat.create({chatId: chatId},
+                    {transaction: t});
 
-            const msg = await Message.create({
-                chatId: chatId,
-                content: content,
-                originUser: originUser
-            }, {transaction: t});
-            await msg.save();
-        })
+                await ChatMember.bulkCreate([
+                    {chatId: chatId, userId: originUser},
+                    {chatId: chatId, userId: targetUser}
+                ], {transaction: t})
+
+                const msg = await Message.create({
+                    chatId: chatId,
+                    content: content,
+                    originUser: originUser
+                }, {transaction: t});
+            })
+        } catch (e) {
+            console.log(e);
+        }
     }
 };
 
@@ -207,7 +221,7 @@ const checkMessage = async (userId: string, contactId: string) => {
     })
 };
 
-const delMessageByPeople = async (userId: string, contactId: string, options?:any) => {
+const delMessageByPeople = async (userId: string, contactId: string, options?: any) => {
     const chatId = await chatDao.findChatId(userId, contactId);
     await query(`
         delete from xinmi_message xm where chat_id='${chatId}' and origin_user='${userId}'
