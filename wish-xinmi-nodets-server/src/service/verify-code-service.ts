@@ -1,6 +1,6 @@
-import nodemailer = require("nodemailer");
-import validate = require("../util/validate");
-import config = require("../config/index");
+import nodemailer from "nodemailer";
+import validate from "../util/validate";
+import config from "../config/index";
 
 
 // 存储「邮箱-验证码」键值对
@@ -79,7 +79,7 @@ const canMatchEmailCode = (emailAddress: string, emailCode: string) => {
     return cache[emailAddress] && cache[emailAddress] === emailCode;
 };
 
-export = {
+export default {
     sendEmailCode,
     canMatchEmailCode,
     createEmailCode

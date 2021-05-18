@@ -1,4 +1,4 @@
-import contactService = require("../service/contact-service");
+import contactService from "../service/contact-service";
 
 export = (emit: any) => {
     return {

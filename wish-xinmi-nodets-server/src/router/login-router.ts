@@ -1,11 +1,11 @@
-import generator = require("../util/generator");
 import R from "../util/response";
-import loginService = require("../service/login-service");
-import verifyCodeService = require("../service/verify-code-service");
-import userService = require("../service/user-service");
+import loginService from "../service/login-service";
+import verifyCodeService from "../service/verify-code-service";
+import userService from "../service/user-service";
+import {routerFactory} from "./router-factory";
+import generator from '../util/generator';
 
-
-const router = require("./router-factory")("/login");
+const router = routerFactory("/login");
 
 router.post("/loginByPassword", async (ctx: any) => {
     const {username, password} = ctx.request.body;
@@ -35,7 +35,7 @@ router.post("/loginByEmail", async (ctx: any) => {
     }
 
     // 邮箱地址是否已注册，没有注册就自动注册
-    let user = await userService.findEmailAddress(emailAddress);
+    let user:any = await userService.findEmailAddress(emailAddress);
     if (!user) {
         const maxId = await userService.getMaxXinmiId();
         const xinmiId = generator.createXinmiId(maxId);
@@ -45,6 +45,7 @@ router.post("/loginByEmail", async (ctx: any) => {
         };
         user = await userService.insertUser(obj);
     }
+
     ctx.body = R.success(user);
 });
 

@@ -1,62 +1,58 @@
-import userDao = require("../dao/user-dao");
-import util = require("../util");
+import util from "../util";
+import userDao from '../dao/user-dao';
 
 const getUserList = async () => {
-    return await userDao.getList();
+    return await userDao.findAll()
 };
 
 const insertUser = async (obj: any) => {
-    let user = null;
-    const id = await userDao.insertOne({
-        'username': obj.username,
-        'password': obj.password,
-        'avatar_url': obj.avatarUrl,
-        'bg_url': obj.bgUrl,
-        'email_address': obj.emailAddress
-    });
-
-    if (id) {
-        user = await getOneUser(id);
-    }
-
-    return user;
+    return await userDao.insertOne(obj);
 };
 
 const updateUser = async (obj: any) => {
     obj.avatarUrl = util.removeDomain(obj.avatarUrl);
-    return await userDao.updateUser(obj);
+    return await userDao.update(obj, {where: {userId: obj.userId}})
 };
 
 const getOneUser = async (userId?: string) => {
-    return await userDao.getUserDetail(userId);
+    return await userDao.findByPk(userId);
 };
 
 const findEmailAddress = async (emailAddress: string) => {
-    return await userDao.getUserDetail(undefined, emailAddress);
+    return await userDao.findOne({
+        where: {
+            emailAddress
+        }
+    })
 };
 
 const getMaxXinmiId = async () => {
-    const list: any = await userDao.getMaxXinmiId();
-    if (list.length > 0) {
-        return list[0].xmId;
-    } else {
-        return null;
-    }
+    return await userDao.max('username');
 };
 
 const updatePasswordByEmailAddress = async (password: string, emailAddress: string) => {
-    return userDao.updatePasswordByEmailAddress(password, emailAddress);
+    return await userDao.update({password, emailAddress}, {
+        where: {
+            emailAddress
+        },
+        fields: ['password']
+    })
 };
 
 const editEmailAddress = async (originEmailAddress: string, targetEmailAddress: string, password: string) => {
-    return userDao.editEmailAddress(originEmailAddress, targetEmailAddress, password);
+    return await userDao.update({emailAddress: targetEmailAddress}, {
+        where: {
+            emailAddress: originEmailAddress,
+            password: password
+        }
+    })
 };
 
 const findOne = async (obj: any) => {
     return await userDao.findOne(obj);
 };
 
-export = {
+export default {
     getUserList,
     insertUser,
     updateUser,

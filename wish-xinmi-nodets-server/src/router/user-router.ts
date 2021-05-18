@@ -1,8 +1,9 @@
-import userService = require("../service/user-service");
-import verifyCodeService = require("../service/verify-code-service");
+import userService from "../service/user-service";
+import verifyCodeService from "../service/verify-code-service";
 import R from "../util/response";
+import {routerFactory} from "./router-factory";
 
-const router = require("./router-factory")("/user");
+const router = routerFactory("/user");
 
 router.get("/page", async (ctx: any) => {
     const list = await userService.getUserList();
@@ -17,7 +18,7 @@ router.get("/update", async (ctx: any) => {
         password: query.password,
         avatarUrl: query.avatarUrl,
         bgUrl: query.bgUrl,
-        id: query.id
+        userId: query.userId
     };
     await userService.updateUser(obj);
     ctx.body = R.success();
@@ -25,7 +26,7 @@ router.get("/update", async (ctx: any) => {
 
 router.get("/detail", async (ctx: any) => {
     const query = ctx.request.query;
-    const userId = query.id;
+    const userId = query.userId;
     const detail = await userService.getOneUser(userId);
     ctx.body = R.success(detail);
 });
@@ -60,4 +61,4 @@ router.post("/editEmailAddress", async (ctx: any) => {
     ctx.body = R.success();
 });
 
-export = router;
+export default router;

@@ -1,15 +1,21 @@
 import errorHandlerMiddleware from "./middleware/error-handler-middleware";
-import Koa = require("koa");
-import socket = require("./socket/index");
+import Koa from "koa";
+import socket from "./socket/index";
+import {setupModel} from "./dao/model";
 
-import koaBody = require("koa-body");
+import koaBody from "koa-body";
 
-import initRouter = require("./router/index");
+import initRouter from "./router/index";
 
-import beforeMiddleware = require("./middleware/before-middleware");
-import afterMiddleware = require("./middleware/after-middleware");
+import beforeMiddleware from "./middleware/before-middleware";
+import afterMiddleware from "./middleware/after-middleware";
 
 const app = new Koa();
+
+(async ()=>{
+    await setupModel();
+})();
+
 
 app.use(beforeMiddleware());
 
@@ -30,4 +36,4 @@ app.use(afterMiddleware());
 const server = require("http").createServer(app.callback());
 socket.init(server);
 
-export = server;
+export default server;

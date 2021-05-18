@@ -1,16 +1,15 @@
-import verifyCodeService = require("../src/service/verify-code-service");
-import server = require("../src/server");
+import verifyCodeService from "../src/service/verify-code-service";
+import server from "../src/server";
 import request = require("supertest");
-import testUtil = require("./test-util");
-import mysql = require("../src/dao/mysql");
+import testUtil from "./test-util";
 
 let userId1 = '';
 let userId2 = '';
 
 beforeAll(async (done) => {
     const res = await testUtil.prepareTest();
-    userId1 = res.user1.id;
-    userId2 = res.user2.id;
+    userId1 = res.user1.userId;
+    userId2 = res.user2.userId;
     done();
 });
 
@@ -25,7 +24,7 @@ describe("联系人模块", () => {
             const res = await request(server)
                 .get("/contact/getNoContactList")
                 .query({
-                    id: userId1
+                    userId: userId1
                 });
             expect(res.body.code).toBe(0);
             done();
@@ -37,7 +36,7 @@ describe("联系人模块", () => {
             const res = await request(server)
                 .get("/contact/addContact")
                 .query({
-                    id: userId1,
+                    userId: userId1,
                     contactId: userId2,
                     validateMsg: 'who am i'
                 })
@@ -51,7 +50,7 @@ describe("联系人模块", () => {
             const res = await request(server)
                 .get("/contact/getConfirmContactList")
                 .query({
-                    id: userId1
+                    userId: userId1
                 })
             expect(res.body.code).toBe(0);
             done();
@@ -80,83 +79,83 @@ describe("联系人模块", () => {
             expect(res.body.code).toBe(0);
             done();
         })
+    })
 
-        describe('确认联系人', () => {
-            test("/contact/confirmContact", async (done) => {
-                const res = await request(server)
-                    .get("/contact/confirmContact")
-                    .query({
-                        id: userId2,
-                        contactId: userId1
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('确认联系人', () => {
+        test("/contact/confirmContact", async (done) => {
+            const res = await request(server)
+                .get("/contact/confirmContact")
+                .query({
+                    userId: userId2,
+                    contactId: userId1
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
+    })
 
-        describe('获取已添加的联系人', () => {
-            test("/contact/getYesContactList", async (done) => {
-                const res = await request(server)
-                    .get("/contact/getYesContactList")
-                    .query({
-                        id: userId1
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('获取已添加的联系人', () => {
+        test("/contact/getYesContactList", async (done) => {
+            const res = await request(server)
+                .get("/contact/getYesContactList")
+                .query({
+                    userId: userId1
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
+    })
 
-        describe('获取用户和联系人的握手状态', () => {
-            test("/contact/getUserContactStatus", async (done) => {
-                const res = await request(server)
-                    .get("/contact/getUserContactStatus")
-                    .query({
-                        id: userId1,
-                        contactId: userId2
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('获取用户和联系人的握手状态', () => {
+        test("/contact/getUserContactStatus", async (done) => {
+            const res = await request(server)
+                .get("/contact/getUserContactStatus")
+                .query({
+                    userId: userId1,
+                    contactId: userId2
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
+    })
 
-        describe('获取联系人详情', () => {
-            test("/contact/getContactInfoHad", async (done) => {
-                const res = await request(server)
-                    .get("/contact/getContactInfoHad")
-                    .query({
-                        userId: userId1,
-                        contactId: userId2
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('获取联系人详情', () => {
+        test("/contact/getContactInfoHad", async (done) => {
+            const res = await request(server)
+                .get("/contact/getContactInfoHad")
+                .query({
+                    userId: userId1,
+                    contactId: userId2
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
+    })
 
-        describe('编辑联系人的备注名', () => {
-            test("/contact/editContact", async (done) => {
-                const res = await request(server)
-                    .post("/contact/editContact")
-                    .send({
-                        userId: userId1,
-                        contactId: userId2,
-                        contactName: 'hihi'
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('编辑联系人的备注名', () => {
+        test("/contact/editContact", async (done) => {
+            const res = await request(server)
+                .post("/contact/editContact")
+                .send({
+                    userId: userId1,
+                    contactId: userId2,
+                    contactName: 'hihi'
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
+    })
 
-        describe('删除联系人', () => {
-            test("/contact/deleteContact", async (done) => {
-                const res = await request(server)
-                    .post("/contact/deleteContact")
-                    .send({
-                        userId: userId1,
-                        contactId: userId2,
-                    })
-                expect(res.body.code).toBe(0);
-                done();
-            });
-        })
+    describe('删除联系人', () => {
+        test("/contact/deleteContact", async (done) => {
+            const res = await request(server)
+                .post("/contact/deleteContact")
+                .send({
+                    userId: userId1,
+                    contactId: userId2,
+                })
+            expect(res.body.code).toBe(0);
+            done();
+        });
     })
 })

@@ -30,7 +30,7 @@ function validEmailAddress(emailAddress: any) {
     return reg.test(emailAddress);
 }
 
-export = {
+export default {
     validEmailAddress,
     validatenull,
     validPassword

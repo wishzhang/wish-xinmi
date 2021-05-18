@@ -1,20 +1,10 @@
-import mysql = require("./mysql");
-import util = require("../util");
-import contactDao = require("./contact-dao");
-import userDao = require("./user-dao");
-import chatDao = require("./chat-dao");
-import Daogenerator = require("./dao-generator");
+import util from "../util";
+import chatDao from "./chat-dao";
+import {Op, query, sequelize, queryPage} from "./sequelize";
+import {Chat, ChatMember, Message} from "./model";
+import contactDao from "./contact-dao";
+import userDao from "./user-dao";
 
-const baseDao = Daogenerator({
-    tableName: "xinmi_message",
-    columns: [
-        {name: "message_id", type: Daogenerator.columnGType.uuid},
-        {name: "origin_user", type: Daogenerator.columnGType.string},
-        {name: "content", type: Daogenerator.columnGType.string},
-        {name: "create_time", type: Daogenerator.columnGType.datetime},
-        {name: "chat_id", type: Daogenerator.columnGType.string},
-    ]
-});
 
 const uuid = util.uuid;
 
@@ -40,15 +30,10 @@ const getMessagePage = async (originUser: string, targetUser: string, current?: 
 /*
  根据chatid查询聊天信息
 */
-const getMessagePageByChatId = async (chatId: string, current?: number, size?: number) => {
-    const resData = await baseDao.getPage({
-        wheres: [
-            {name: "chat_id", value: chatId, signs: ["equal"]},
-            {name: "create_time", signs: ["desc"]}
-        ],
-        current: current,
-        size: size
-    });
+async function getMessagePageByChatId(chatId: string, current?: number, size?: number) {
+    const resData = await queryPage(`
+        select * from xinmi_message where chat_id='${chatId}' order by created_at desc
+    `, current, size);
 
     const records = [];
     for (const [k, v] of Object.entries(resData.records)) {
@@ -65,7 +50,7 @@ const getMessageDetail = async (message: any) => {
     const chatId = message.chatId;
     const targetUserId = await findTargetUserId(chatId, originUserId);
 
-    const originUser = await userDao.getUserDetail(originUserId);
+    const originUser: any = await userDao.getUserDetail(originUserId);
     message.originName = originUser.username;
     message.originAvatarUrl = originUser.avatarUrl;
 
@@ -86,12 +71,15 @@ const getMessageDetail = async (message: any) => {
  */
 const getMineAllChatList = async (userId: string) => {
     const list = [];
+    let myAllChatList: any[];
 
-    const myAllChatList: any = await chatDao.getList({
-        wheres: [
-            {name: "user_id", value: userId, signs: ["equal"]}
-        ]
-    });
+    try{
+        myAllChatList = await ChatMember.findAll({
+            where: {userId: userId}
+        })
+    }catch (e) {
+        console.log(e);
+    }
 
     for (const chat of myAllChatList) {
         const tmp = await getOneMessageChat(userId, chat.chatId);
@@ -103,19 +91,18 @@ const getMineAllChatList = async (userId: string) => {
 
 const getOneMessageChat = async (userId: string, chatId: string) => {
     let obj = {};
-    const messageMaxRow: any = await baseDao.getPage({
-        wheres: [
-            {name: "chat_id", value: chatId, signs: ["equal"]},
-            {name: "create_time", signs: ["desc"]},
-        ],
-        current: 1,
-        size: 1
-    });
-    if (messageMaxRow.records.length > 0) {
-        const message = messageMaxRow.records[0];
+    const message: any = await Message.findOne({
+        where: {
+            chatId: chatId
+        },
+        order: [
+            ['createTime', 'DESC']
+        ]
+    })
 
+    if (message) {
         const contactId = await findTargetUserId(chatId, userId);
-        const contactInfo = await contactDao.getContactInfoHad(userId, contactId);
+        const contactInfo: any = await contactDao.getContactInfoHad(userId, contactId);
         const chatUnreadMessageCount = await getChatUnreadCount(chatId, contactId);
 
         obj = {
@@ -135,7 +122,7 @@ const getOneMessageChat = async (userId: string, chatId: string) => {
 };
 
 const findTargetUserId = async (chatId: string, originUser: string) => {
-    const list: any = await mysql.query(`
+    const list: any = await query(`
       select * from xinmi_chat where chat_id='${chatId}' and user_id!='${originUser}'
     `);
     if (list.length > 0) {
@@ -155,75 +142,80 @@ const findTargetUserId = async (chatId: string, originUser: string) => {
 const addMessage = async (originUser: string, targetUser: string, content: string) => {
     let chatId = await chatDao.findChatId(originUser, targetUser);
     if (chatId) {
-        return await mysql.query(`
-        insert into xinmi_message (message_id, content, chat_id, create_time, origin_user) values 
-        (uuid(), '${content}', '${chatId}', now(), '${originUser}')
-      `);
+        const msg = await Message.create({
+            content: content,
+            chatId: chatId,
+            originUser: originUser
+        })
+        await msg.save();
     } else {
-        chatId = uuid();
-        return await mysql.transaction([
-            () => {
-                return `
-                insert into xinmi_chat (chat_id, user_id, create_time) values 
-                ('${chatId}', '${originUser}', now()),
-                ('${chatId}', '${targetUser}', now())
-              `;
-            },
-            () => {
-                return `
-                insert into xinmi_message 
-                (message_id, content, chat_id, create_time, origin_user) values 
-                (uuid(), '${content}', '${chatId}', now(), '${originUser}')
-                 `;
-            }
-        ]);
+        await sequelize.transaction(async (t:any) => {
+            const chatId = uuid();
+            const chat = await Chat.create({chatId: chatId, user1: originUser, user2: targetUser},
+                {transaction: t});
+            await chat.save();
+
+            const msg = await Message.create({
+                chatId: chatId,
+                content: content,
+                originUser: originUser
+            }, {transaction: t});
+            await msg.save();
+        })
     }
 };
 
-const getChatUnreadCount = async (chatId: string, contactId: string) => {
-    const count = await baseDao.getCount({
-        wheres: [
-            {name: "chat_id", value: chatId, signs: ["equal"]},
-            {name: "is_checked", value: 1, signs: ["and", "unequal"]},
-            {name: "origin_user", value: contactId, signs: ["and", "equal"]},
-
-            {name: "chat_id", value: chatId, signs: ["or", "equal"]},
-            {name: "is_checked", value: 1, signs: ["and", "null"]},
-            {name: "origin_user", value: contactId, signs: ["and", "equal"]},
-        ]
+async function getChatUnreadCount(chatId: string, contactId: string) {
+    const count1 = await Message.count({
+        where: {
+            [Op.and]: [
+                {chatId: chatId},
+                {originUser: contactId},
+            ],
+            isChecked: {
+                [Op.ne]: 1
+            }
+        }
     });
+    const count2 = await Message.count({
+        where: {
+            [Op.and]: [
+                {chatId: chatId},
+                {originUser: contactId},
+            ],
+            isChecked: {
+                [Op.not]: null
+            }
+        }
+    });
+    const count = count1 + count2;
+
     return count;
 };
 
 const checkMessage = async (userId: string, contactId: string) => {
     const chatId = await chatDao.findChatId(userId, contactId);
-    if (chatId) {
-        await baseDao.update({
-            wheres: [
-                {name: "chat_id", value: chatId, signs: ["equal"]},
-                {name: "origin_user", value: contactId, signs: ["and", "equal"]},
-            ],
-            set: {
-                "is_checked": 1
-            }
-        });
-    }
+    await Message.update({
+        isChecked: 1
+    }, {
+        where: {
+            [Op.and]: [
+                {chatId: chatId},
+                {originUser: contactId},
+            ]
+        }
+    })
 };
 
-const delMessageByPeople = async (userId: string, contactId: string) => {
+const delMessageByPeople = async (userId: string, contactId: string, options?:any) => {
     const chatId = await chatDao.findChatId(userId, contactId);
-    await baseDao.del({
-        wheres: [
-            {name: "chat_id", value: chatId, signs: ["equal"]},
-            {name: "origin_user", value: userId, signs: ["and", "equal"]},
-
-            {name: "chat_id", value: chatId, signs: ["or", "equal"]},
-            {name: "origin_user", value: contactId, signs: ["and", "equal"]},
-        ]
-    });
+    await query(`
+        delete from xinmi_message xm where chat_id='${chatId}' and origin_user='${userId}'
+        or chat_id='${chatId}' and origin_user='${contactId}'
+    `, options)
 };
 
-export = {
+export default {
     addMessage,
     getContactMessagePage,
     getMineAllChatList,
@@ -232,6 +224,5 @@ export = {
     getOneMessageChat,
     checkMessage,
     delMessageByPeople,
-    ...baseDao
 }
 

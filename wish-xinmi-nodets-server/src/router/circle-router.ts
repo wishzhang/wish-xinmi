@@ -1,7 +1,9 @@
-import circleService = require("../service/circle-service");
+import circleService from "../service/circle-service";
 import R from "../util/response";
 
-const router: any = require("./router-factory")("/circle");
+import {routerFactory} from "./router-factory";
+
+const router: any = routerFactory("/circle");
 
 router.get("/getPage", async (ctx: any) => {
     const query = ctx.query;
@@ -35,4 +37,4 @@ router.post("/addThought", async (ctx: any) => {
     ctx.body = R.success();
 });
 
-export = router;
+export default router;

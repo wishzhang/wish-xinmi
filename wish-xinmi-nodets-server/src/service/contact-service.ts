@@ -1,6 +1,6 @@
-import contactDao = require("../dao/contact-dao");
-import userService = require("./user-service");
-import util = require("../util");
+import contactDao from "../dao/contact-dao";
+import userService from "./user-service";
+import util from "../util";
 
 const getYesContactList = async (userId: string) => {
     const contactList: any = await contactDao.getYesContactList(userId);
@@ -43,9 +43,9 @@ const addContact = async (userId: string, contactId: string, validateMsg: any) =
     return await contactDao.addContact(
         userId,
         contactId,
-        msg,
         originDetail.username,
-        targetDetail.username
+        targetDetail.username,
+        msg,
     );
 };
 
@@ -55,19 +55,16 @@ const getConfirmContactList = async (userId: any) => {
 };
 
 const confirmContact = async (userId: any, contactId: any) => {
-    const targetDetail = await userService.getOneUser(contactId);
-    const originDetail = await userService.getOneUser(userId);
-    await contactDao.confirmContact({
-        userId,
+    const targetDetail: any = await userService.getOneUser(contactId);
+    const originDetail: any = await userService.getOneUser(userId);
+    await contactDao.confirmContact(userId,
         contactId,
-        originName: originDetail.username,
-        targetName: targetDetail.username
-    });
+        originDetail.username,
+        targetDetail.username);
 };
 
 const getUserContactStatus = async (userId: any, contactId: any) => {
-    const list = await contactDao.getUserContactStatus(userId, contactId);
-    return list;
+    return await contactDao.getUserContactStatus(userId, contactId);
 };
 
 const getContactInfoHad = async (userId: any, contactId: any) => {
@@ -94,7 +91,7 @@ const deleteContact = async (userId: any, contactId: any) => {
     return await contactDao.deleteContact(userId, contactId);
 };
 
-export = {
+export default {
     getNoContactList,
     getYesContactList,
     addContact,

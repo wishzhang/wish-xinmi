@@ -1,5 +1,6 @@
-const debug = require("../util/debug")("router");
+import d from "../util/debug";
 
+const debug = d('router');
 
 const routerFactory = function (prefix: any) {
     const router = require("_koa-router@10.0.0@koa-router")({
@@ -34,4 +35,6 @@ const routerFactory = function (prefix: any) {
     };
 };
 
-export = routerFactory;
+export {
+    routerFactory
+};

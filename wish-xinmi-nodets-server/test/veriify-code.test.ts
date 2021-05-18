@@ -1,8 +1,7 @@
-import verifyCodeService = require("../src/service/verify-code-service");
-import server = require("../src/server");
+import verifyCodeService from "../src/service/verify-code-service";
+import server from "../src/server";
 import request = require("supertest");
-import testUtil = require("./test-util");
-import mysql = require("../src/dao/mysql");
+import testUtil from "./test-util";
 
 beforeAll(async () => {
     await testUtil.clearDBTestData();

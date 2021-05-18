@@ -1,3 +1,3 @@
-export = function (namespace: string) {
+export default function (namespace: string) {
     return require("debug")(`xinmi-${namespace}`);
 };

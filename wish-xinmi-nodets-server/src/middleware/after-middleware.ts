@@ -1,4 +1,4 @@
-import util = require("../util");
+import util from "../util";
 
 const convert:any = {
     "avatarUrl": function (oval: any) {
@@ -33,7 +33,7 @@ function convertFields(arr:any) {
     }
 }
 
-export = () => {
+export default () => {
     return (async (ctx:any, next:any) => {
         if (ctx.body && ctx.body.data) {
             const data = ctx.body.data;

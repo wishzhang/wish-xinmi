@@ -1,13 +1,8 @@
-import chatDao = require("../src/dao/chat-dao");
-import circleDao = require("../src/dao/circle-dao");
-import contactDao = require("../src/dao/contact-dao");
-import contactRecordDao = require("../src/dao/contact-record-dao");
-import messageDao = require("../src/dao/message-dao");
-import userDao = require("../src/dao/user-dao");
-import verifyCodeService = require("../src/service/verify-code-service");
-import mysql = require("../src/dao/mysql");
-import request = require("supertest");
-import server = require("../src/server");
+import {query} from "../src/dao/sequelize";
+
+const request = require("supertest");
+import {QueryTypes} from '../src/dao/sequelize';
+import {registerTwoUser} from "./common.test";
 
 
 // 单元测试应该保持简单高效，直接操作测试数据库全部数据。
@@ -30,28 +25,26 @@ const accountError = {
 }
 
 const clearDBTestData = async () => {
-    await circleDao.del({wheres: []});
-    await messageDao.del({wheres: []});
-    await chatDao.del({wheres: []});
-    await contactDao.del({wheres: []});
-    await contactRecordDao.del({wheres: []});
-    await userDao.del({wheres: []});
+    await query(`delete from xinmi_thought`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_message`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_chat_member`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_chat`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_contact`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_contact_record`, {type: QueryTypes.DELETE});
+    await query(`delete from xinmi_user`, {type: QueryTypes.DELETE});
 }
 
 const prepareTest = async () => {
     await clearDBTestData();
-    const res = await require("./login.test").registerTwoUser();
-    return {
-        user1: res.user1,
-        user2: res.user2
-    }
+    const res = await registerTwoUser();
+    return res;
 }
 
 const afterTest = async () => {
     await clearDBTestData();
 }
 
-export = {
+export default {
     account1,
     account2,
     accountError,

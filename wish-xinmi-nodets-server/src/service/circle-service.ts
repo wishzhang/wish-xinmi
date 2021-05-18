@@ -1,6 +1,6 @@
-import circleDao = require("../dao/circle-dao");
-import datetime = require("../util/datetime");
-import fileUtil = require("../util/file-util");
+import circleDao from "../dao/circle-dao";
+import datetime from "../util/datetime";
+import fileUtil from "../util/file-util";
 
 const addThought = async (createUser: any, content: any, photoFiles: any = []) => {
     const ps = photoFiles.map((photoFile: any) => {
@@ -29,7 +29,7 @@ const getUserThoughtPage = async (userId: string, current?: number, size?: numbe
     return data;
 };
 
-export = {
+export default {
     addThought,
     getPage,
     getUserThoughtPage

@@ -1,43 +1,25 @@
-import mysql from "./mysql";
-
-import util = require("../util");
-import userDao = require("./user-dao");
-import contactDao = require("./contact-dao");
-import Daogenerator = require("./dao-generator");
-
-const baseDao = Daogenerator({
-    tableName: "xinmi_thought",
-    columns: [
-        {name: "thought_id", type: Daogenerator.columnGType.uuid},
-        {name: "content", type: Daogenerator.columnGType.string},
-        {name: "create_time", type: Daogenerator.columnGType.datetime},
-        {name: "create_user", type: Daogenerator.columnGType.string},
-        {name: "photos_url", type: Daogenerator.columnGType.string},
-    ]
-});
+import util from "../util";
+import {query, queryPage} from "./sequelize";
+import {User, Contact, Thought} from "./model";
+import userDao from "./user-dao";
+import contactDao from "./contact-dao";
 
 const uuid = util.uuid;
 
 // 添加一条朋友圈
 const addThought = async (createUser: string, content: string, photosUrl?: string) => {
-    await baseDao.insertOne({
-        "create_user": createUser,
-        "content": content,
-        "photos_url": photosUrl
+    const thought = await Thought.create({
+        createUser: createUser,
+        content: content,
+        photosUrl: photosUrl
     });
+    await thought.save();
 };
 
 const getOneCircleDetail = async (thoughtId: string) => {
-    const thought = await baseDao.getOne({
-        wheres: [
-            {name: "thought_id", value: thoughtId, signs: ["equal"]}
-        ]
-    });
-    const user = await userDao.getOne({
-        wheres: [
-            {name: "id", value: thought.createUser, signs: ["equal"]}
-        ]
-    });
+    const thought: any = await Thought.findByPk(thoughtId);
+    const user: any = await User.findByPk(thought.createUser);
+
     return {
         username: user.username,
         avatarUrl: user.avatarUrl,
@@ -63,21 +45,21 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
     const thoughtList = [];
     let contactList: any = [];
 
-    contactList = await contactDao.getList({
-        wheres: [
-            {name: "user_id", value: userId, signs: ["equal"]}
-        ]
-    });
+    contactList = await Contact.findAll({
+        where: {
+            userId: userId
+        }
+    })
 
     createUserIdList = contactList.map((el: any) => el.contactId);
     createUserIdList = [userId, ...createUserIdList];
 
     for (const id of createUserIdList) {
-        const arr: any = await baseDao.getList({
-            wheres: [{
-                name: "create_user", value: id, signs: ["equal"]
-            }]
-        });
+        const arr: any = await Thought.findAll({
+            where: {
+                createUser: id
+            }
+        })
         thoughtList.push(...arr);
     }
 
@@ -90,8 +72,8 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
         obj.name = info.username;
         obj.avatarUrl = info.avatarUrl;
 
-        if (info.id !== createUserId) {
-            const contact = await contactDao.getContactInfoHad(info.id, createUserId);
+        if (info.userId !== createUserId) {
+            const contact = await contactDao.getContactInfoHad(info.userId, createUserId);
             obj.name = contact.name;
         }
 
@@ -116,14 +98,9 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
 };
 
 const getUserThoughtPage = async (userId: string, current?: number, size?: number) => {
-    const data: any = await baseDao.getPage({
-        wheres: [
-            {name: "create_user", value: userId, signs: ["equal"]},
-            {name: "create_time", signs: ["desc"]},
-        ],
-        current: current,
-        size: size
-    });
+    const data: any = await queryPage(`
+        select * from xinmi_thought where create_user='${userId}' order by create_time desc
+    `, current, size);
 
     const records = [];
     for (const item of data.records) {
@@ -139,9 +116,8 @@ const getUserThoughtPage = async (userId: string, current?: number, size?: numbe
     return data;
 };
 
-export = {
+export default {
     addThought,
-    ...baseDao,
     getCirclePage,
     getUserThoughtPage
 }

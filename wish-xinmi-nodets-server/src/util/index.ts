@@ -1,16 +1,17 @@
-const {v4: uuidv4} = require("uuid");
+import {v1} from "uuid";
+
 const pinyin = require("pinyin");
 import config = require("../config/index");
 
-const generateRouteKey = (namespace:any) => {
-    return (name:any) => {
+const generateRouteKey = (namespace: any) => {
+    return (name: any) => {
         return namespace + name;
     };
 };
 
 
 const uuid = () => {
-    return uuidv4();
+    return v1();
 };
 
 const getFirstUpperLetter = (str = "") => {
@@ -22,14 +23,14 @@ const getFirstUpperLetter = (str = "") => {
     return letter;
 };
 
-const _toHump = (name:any) => {
-    return name.replace(/\_(\w)/g, function (all:any, letter:any) {
+const _toHump = (name: any) => {
+    return name.replace(/\_(\w)/g, function (all: any, letter: any) {
         return letter.toUpperCase();
     });
 };
 
-const toHumpList = (list:any = []) => {
-    return list.map((el:any) => {
+const toHumpList = (list: any = []) => {
+    return list.map((el: any) => {
         Object.keys(el).forEach(key => {
             const humpKey = _toHump(key);
             if (humpKey !== key) {
@@ -42,27 +43,27 @@ const toHumpList = (list:any = []) => {
 };
 
 // 获取文件名的后缀名
-function getSuffix(filename:any) {
+function getSuffix(filename: any) {
     return /\.[^\.]+$/.exec(filename);
 }
 
-function removeDomain(url:any) {
+function removeDomain(url: any) {
     if (!url) return "";
     url = "/" + url.split("/").slice(3).join("/");
     return url;
 }
 
-function getMinioUrl(path:any) {
+function getMinioUrl(path: any) {
     return `/${config.minioBucketName}/${path}`;
 }
 
 const type = (function () {
-    const class2type:any = {};
+    const class2type: any = {};
     "Boolean Number String Function Array Date RegExp Object Error".split(" ")
         .map(function (item, index) {
-        class2type["[object " + item + "]"] = item.toLowerCase();
-    });
-    return function (obj:any) {
+            class2type["[object " + item + "]"] = item.toLowerCase();
+        });
+    return function (obj: any) {
         if (obj === null || obj === undefined) {
             return obj + "";
         }
@@ -73,7 +74,7 @@ const type = (function () {
 
 const hasOwn = Object.prototype.hasOwnProperty;
 const toStr = Object.prototype.toString;
-const isPlainObject = function isPlainObject(obj:any) {
+const isPlainObject = function isPlainObject(obj: any) {
     if (!obj || toStr.call(obj) !== "[object Object]") {
         return false;
     }
@@ -88,15 +89,15 @@ const isPlainObject = function isPlainObject(obj:any) {
     return typeof key === "undefined" || hasOwn.call(obj, key);
 };
 
-function isPromise(value:any) {
+function isPromise(value: any) {
     return value && Object.prototype.toString.call(value) === "[object Promise]";
 }
 
-function humpToUnderline(str: string){
-    return str.replace(/([A-Z])/g,"_$1").toLowerCase()
+function humpToUnderline(str: string) {
+    return str.replace(/([A-Z])/g, "_$1").toLowerCase()
 }
 
-export = {
+export default {
     generateRouteKey,
     uuid,
     getFirstUpperLetter,

@@ -1,7 +1,8 @@
-import fileUtil = require("../util/file-util");
+import fileUtil from "../util/file-util";
 import R from "../util/response";
+import {routerFactory} from "./router-factory";
 
-const router = require("./router-factory")("/file");
+const router = routerFactory("/file");
 
 router.post("/put", async (ctx: any) => {
     const file = ctx.request.files["file"];
@@ -9,4 +10,4 @@ router.post("/put", async (ctx: any) => {
     ctx.body = R.success(resData);
 });
 
-module.exports = router;
+export default router;

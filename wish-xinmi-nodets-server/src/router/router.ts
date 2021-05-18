@@ -1,7 +1,9 @@
-const router = require("./router-factory")("/");
+import {routerFactory} from "./router-factory";
+
+const router = routerFactory("/");
 
 // router.all("/", async (ctx: any) => {
 //
 // });
 
-export = router;
+export default router;

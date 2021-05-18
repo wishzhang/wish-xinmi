@@ -1,8 +1,7 @@
-import verifyCodeService = require("../src/service/verify-code-service");
-import server = require("../src/server");
-import request = require("supertest");
-import testUtil = require("./test-util");
-import mysql = require("../src/dao/mysql");
+import verifyCodeService from "../src/service/verify-code-service";
+import server from "../src/server";
+const request=require("supertest");
+import testUtil from "./test-util";
 
 let user1: any;
 let user2: any;

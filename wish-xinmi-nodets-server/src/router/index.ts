@@ -1,15 +1,15 @@
-const router = require("./router");
+import router from "./router";
 import R from "../util/response";
-const userRouter = require("./user-router");
-const loginRouter = require("./login-router");
-const contactRouter = require("./contact-router");
-const messageRouter = require("./message-router");
-const circleRouter = require("./circle-router");
-const fileRouter = require("./file-router");
-const commonRouter = require("./common-router");
-const verifyCodeRouter = require("./verify-code-router");
+import userRouter from "./user-router";
+import loginRouter from "./login-router";
+import contactRouter from "./contact-router";
+import messageRouter from "./message-router";
+import circleRouter from "./circle-router";
+import fileRouter from "./file-router";
+import commonRouter from "./common-router";
+import verifyCodeRouter from "./verify-code-router";
 
-export = (app: any) => {
+export default (app: any) => {
     app.use(router.routes());
     app.use(userRouter.routes());
     app.use(loginRouter.routes());

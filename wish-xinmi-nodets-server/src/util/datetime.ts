@@ -1,4 +1,4 @@
-import moment = require("moment");
+import moment from "moment";
 
 const dateFormat = (date:any, format:any) => {
     return moment(date).format(format);
@@ -71,7 +71,7 @@ const datePastLong = (date: any) => {
     }
 };
 
-export = {
+export default {
     dateFromNow,
     datePastLong
 }

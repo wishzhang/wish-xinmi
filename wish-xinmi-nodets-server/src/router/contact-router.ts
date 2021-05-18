@@ -1,24 +1,25 @@
-import contactService = require("../service/contact-service");
+import contactService from "../service/contact-service";
 import R from "../util/response";
-import userService = require("../service/user-service");
-import socket = require("../socket");
+import userService from "../service/user-service";
+import socket from "../socket";
+import {routerFactory} from "./router-factory";
 
-const router = require("./router-factory")("/contact");
+const router = routerFactory("/contact");
 
 router.get("/getYesContactList", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.id;
+    const userId = query.userId;
     const list = await contactService.getYesContactList(userId);
     ctx.body = R.success(list);
 });
 
 router.get("/addContact", async (ctx: any) => {
-    const {id, contactId, validateMsg} = ctx.query;
+    const {userId, contactId, validateMsg} = ctx.query;
 
-    const status = await contactService.addContact(id, contactId, validateMsg);
+    const status: any = await contactService.addContact(userId, contactId, validateMsg);
 
     if (status === 1) {
-        await socket.emitContactAddContact(id, contactId);
+        await socket.emitContactAddContact(userId, contactId);
     }
 
     ctx.body = R.success();
@@ -26,7 +27,7 @@ router.get("/addContact", async (ctx: any) => {
 
 router.get("/getNoContactList", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.id;
+    const userId = query.userId;
     const username = query.username || "";
     const list = await contactService.getNoContactList(userId, username);
     ctx.body = R.success(list);
@@ -34,14 +35,14 @@ router.get("/getNoContactList", async (ctx: any) => {
 
 router.get("/getConfirmContactList", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.id;
+    const userId = query.userId;
     const list = await contactService.getConfirmContactList(userId);
     ctx.body = R.success(list);
 });
 
 router.get("/confirmContact", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.id;
+    const userId = query.userId;
     const contactId = query.contactId;
     await contactService.confirmContact(userId, contactId);
     ctx.body = R.success();
@@ -49,14 +50,10 @@ router.get("/confirmContact", async (ctx: any) => {
 
 router.get("/getUserContactStatus", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.id;
+    const userId = query.userId;
     const contactId = query.contactId;
-    const list:any = await contactService.getUserContactStatus(userId, contactId);
-    if (list.length > 0) {
-        ctx.body = R.success(list[0].status);
-    } else {
-        ctx.body = R.fail(1, "这两个用户之间的状态：无!");
-    }
+    const status = await contactService.getUserContactStatus(userId, contactId);
+    ctx.body = R.success(status);
 });
 
 router.get("/getContactInfoHad", async (ctx: any) => {
@@ -81,7 +78,7 @@ router.get("/getContactWarnNum", async (ctx: any) => {
  */
 router.post("/setAllContactChecked", async (ctx: any) => {
     const {userId} = ctx.request.body;
-    await contactService.setAllContactChecked({userId});
+    await contactService.setAllContactChecked(userId);
     ctx.body = R.success();
 });
 
@@ -103,4 +100,4 @@ router.post("/deleteContact", async (ctx: any) => {
     ctx.body = R.success();
 });
 
-export = router;
+export default router;

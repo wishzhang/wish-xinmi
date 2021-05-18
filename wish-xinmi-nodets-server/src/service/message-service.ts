@@ -1,7 +1,7 @@
-import messageDao = require("../dao/message-dao");
-import chatDao = require("../dao/chat-dao");
-import util = require("../util");
-import datetime = require("../util/datetime");
+import messageDao from "../dao/message-dao";
+import chatDao from "../dao/chat-dao";
+import util from "../util";
+import datetime from '../util/datetime';
 
 const addMessage = async (originUser: string, targetUser: string, content: string) => {
     return await messageDao.addMessage(originUser, targetUser, content);
@@ -18,7 +18,7 @@ const getMessagePageByChatId = async (obj: any) => {
 const getMineAllChatList = async (userId: string) => {
     const list = await messageDao.getMineAllChatList(userId);
     list.forEach((el: any) => {
-        el.createTime = datetime.dateFromNow(el.createTime);
+        el.createdAt = datetime.dateFromNow(el.createdAt);
     });
     return list;
 };
@@ -36,7 +36,7 @@ const getChatAndUnreadCount = async (originUser: any, targetUser: any) => {
 
 const getOneMessageChat = async (originUser: string, targetUser: string) => {
     const chatId = await chatDao.findChatId(originUser, targetUser);
-    const messageChat:any = await messageDao.getOneMessageChat(targetUser, chatId);
+    const messageChat: any = await messageDao.getOneMessageChat(targetUser, chatId);
     messageChat.createTime = datetime.dateFromNow(messageChat.createTime);
     return {
         originUser,
@@ -49,7 +49,7 @@ const checkMessage = async (userId: any, contactId: any) => {
     return await messageDao.checkMessage(userId, contactId);
 };
 
-export = {
+export default {
     addMessage,
     getContactMessagePage,
     getMineAllChatList,

@@ -1,107 +1,46 @@
-import mysql = require("./mysql");
-import util = require("../util");
-import Daogenerator = require("./dao-generator");
-import {Ctype, DaoCreator} from "./dao-creator";
+import {User} from './model';
+import {Op} from './sequelize';
 
+async function insertOne(obj: any) {
+    const user: any = await User.create(obj);
+    return user;
+}
 
-const baseDao = Daogenerator({
-    tableName: "xinmi_user",
-    columns: [
-        {name: "id", type: Daogenerator.columnGType.uuid},
-        {name: "username", type: Daogenerator.columnGType.string},
-        {name: "password", type: Daogenerator.columnGType.string},
-        {name: "avatar_url", type: Daogenerator.columnGType.string},
-        {name: "bg_url", type: Daogenerator.columnGType.string},
-        {name: "email_address", type: Daogenerator.columnGType.string}
-    ]
-});
+async function update(obj:any, option:any) {
+    await User.update(obj, option);
+}
 
-const dao = new DaoCreator({
-    tableName: 'xinmi_user',
-    columns: [
-        {name: 'id', ctype: Ctype.uuid},
-        {name: 'username', ctype: Ctype.string},
-        {name: 'password', ctype: Ctype.string},
-        {name: 'avatar_url', ctype: Ctype.string},
-        {name: 'bg_url', ctype: Ctype.string},
-        {name: 'email_address', ctype: Ctype.string}
-    ]
-})
+async function getUserDetail(obj: any) {
+    return await User.findOne({where: obj});
+}
 
-baseDao.insertOne = dao.insertOne.bind(dao);
-
-const uuid = util.uuid;
-
-const getUserList = async () => {
-    return await mysql.query("select * from xinmi_user");
+async function getMaxXinmiId() {
+    return await User.max('username');
 };
 
-const updateUser = async (obj: any) => {
-    const {id, username, password, avatarUrl, bgUrl} = obj;
+async function findAll() {
+    return await User.findAll()
+}
 
-    const searchColumns = [
-        {name: "id", value: id, signs: ['equal']}
-    ];
-    const dataObj = {
-        "username": username,
-        "password": password,
-        "avatar_url": avatarUrl,
-        "bg_url": bgUrl
-    };
-    return await baseDao.update({
-        wheres: searchColumns,
-        set: dataObj
-    });
-};
+async function findByPk(userId: string) {
+    return await User.findByPk(userId)
+}
 
-const getUserDetail = async (userId?: string, emailAddress?: string) => {
-    return await baseDao.getOne({
-        wheres: [
-            {name: "id", value: userId, signs: ["equal"]},
-            {name: "email_address", value: emailAddress, signs: ["and", "equal"]},
-        ]
-    });
-};
+async function findOne(obj: any) {
+    return await User.findOne(obj);
+}
 
-const getMaxXinmiId = async () => {
-    return await mysql.query(
-        "SELECT max(username) as xm_id FROM xinmi_user"
-    );
-};
+async function max(name: string) {
+    return await User.max(name);
+}
 
-const updatePasswordByEmailAddress = async (password: string, emailAddress: string) => {
-    return await mysql.query(
-        `update xinmi_user set password='${password}' where email_address='${emailAddress}'`
-    );
-};
-
-const editEmailAddress = async (originEmailAddress: string, targetEmailAddress: string, password: string) => {
-    return await mysql.query(
-        `update xinmi_user set email_address='${targetEmailAddress}' 
-        where email_address='${originEmailAddress}' 
-        and password='${password}'`
-    );
-};
-
-const findOne = async (obj: any) => {
-    const {userId, username, emailAddress, password} = obj;
-    return await baseDao.getOne({
-        wheres: [
-            {name: "id", value: userId, signs: ["equal"]},
-            {name: "username", value: username, signs: ["and", "like"]},
-            {name: "email_address", value: emailAddress, signs: ["and", "equal"]},
-            {name: "password", value: password, signs: ["and", "equal"]},
-        ]
-    });
-};
-
-export = {
-    getUserList,
+export default {
+    insertOne,
     getUserDetail,
-    updateUser,
     getMaxXinmiId,
-    updatePasswordByEmailAddress,
-    editEmailAddress,
+    update,
+    findAll,
+    findByPk,
     findOne,
-    ...baseDao
+    max
 }

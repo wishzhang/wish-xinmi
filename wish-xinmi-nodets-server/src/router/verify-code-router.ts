@@ -1,7 +1,8 @@
-import verifyCodeService = require("../service/verify-code-service");
+import verifyCodeService from "../service/verify-code-service";
 import R from "../util/response";
+import {routerFactory} from "./router-factory";
 
-const router = require("./router-factory")("/verifyCode");
+const router = routerFactory("/verifyCode");
 
 /**
  * 发送邮件验证码
@@ -11,7 +12,7 @@ router.post("/sendEmailCode", async (ctx: any) => {
     const {emailAddress} = ctx.request.body;
 
     const emailCode = verifyCodeService.createEmailCode();
-    const res:any = await verifyCodeService.sendEmailCode(emailAddress,emailCode);
+    const res: any = await verifyCodeService.sendEmailCode(emailAddress, emailCode);
     if (res.code === 0) {
         ctx.body = R.success();
     } else if (res.code === 1) {
@@ -19,4 +20,4 @@ router.post("/sendEmailCode", async (ctx: any) => {
     }
 });
 
-export = router;
+export default router;

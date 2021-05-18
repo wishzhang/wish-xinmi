@@ -1,9 +1,7 @@
-import verifyCodeService = require("../src/service/verify-code-service");
-import server = require("../src/server");
+import verifyCodeService from "../src/service/verify-code-service";
+import server from "../src/server";
 import request = require("supertest");
-import testUtil = require("./test-util");
-import mysql = require("../src/dao/mysql");
-
+import testUtil from "./test-util";
 
 let user: any = null;
 
@@ -33,7 +31,7 @@ describe("用户模块", () => {
             const res = await request(server)
                 .get("/user/update")
                 .query({
-                    id: user.id,
+                    userId: user.userId,
                     username: user.username,
                     password: testUtil.account1.password
                 })
@@ -47,7 +45,7 @@ describe("用户模块", () => {
             const res = await request(server)
                 .get("/user/detail")
                 .query({
-                    id: user.id
+                    userId: user.userId
                 })
             expect(res.body.code).toBe(0);
             done();

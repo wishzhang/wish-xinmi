@@ -1,11 +1,12 @@
 const Minio = require("minio");
-import util = require("./index");
-import config = require("../config/index");
+import util from "./index";
+import config from "../config/index";
 
-const fs = require("fs");
+import fs from "fs";
+
 const bucketName = config.minioBucketName;
 
-const minioClient = new Minio.Client({
+const minioClient: any = new Minio.Client({
     endPoint: config.minioEndPoint,
     port: config.minioPort,
     useSSL: config.minioUseSSL,
@@ -32,6 +33,6 @@ const putFile = async (file: any) => {
     };
 };
 
-export = {
+export default {
     putFile
 }

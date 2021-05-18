@@ -1,6 +1,6 @@
-import contactSocket = require("./contact-socket");
-import messageSocket = require("./message-socket");
-import userService = require("../service/user-service");
+import contactSocket from "./contact-socket";
+import messageSocket from "./message-socket";
+import userService from "../service/user-service";
 
 const hashSocketId: any = {};
 let io: any = {};
@@ -9,8 +9,8 @@ const emit = async (
     emitName: string,
     obj: { originUserId: string, targetUserId: string, data: any }
 ) => {
-    const targetUser = await userService.getOneUser(obj.targetUserId);
-    const originUser = await userService.getOneUser(obj.originUserId);
+    const targetUser: any = await userService.getOneUser(obj.targetUserId);
+    const originUser: any = await userService.getOneUser(obj.originUserId);
 
     console.log(`${originUser.username}向${targetUser.username}发送消息：` + JSON.stringify(obj.data));
 
