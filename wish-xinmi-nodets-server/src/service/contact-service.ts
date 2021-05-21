@@ -91,6 +91,10 @@ const deleteContact = async (userId: any, contactId: any) => {
     return await contactDao.deleteContact(userId, contactId);
 };
 
+async function isContact(userId: string, contactId: string) {
+    return await contactDao.isContact(userId, contactId);
+}
+
 export default {
     getNoContactList,
     getYesContactList,
@@ -102,5 +106,6 @@ export default {
     getContactWarnNum,
     setAllContactChecked,
     editContact,
-    deleteContact
+    deleteContact,
+    isContact
 }

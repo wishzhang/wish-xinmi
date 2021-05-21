@@ -4,11 +4,22 @@ import verifyCodeService from "../service/verify-code-service";
 import userService from "../service/user-service";
 import {routerFactory} from "./router-factory";
 import generator from '../util/generator';
+import Joi from 'joi';
 
 const router = routerFactory("/login");
 
 router.post("/loginByPassword", async (ctx: any) => {
     const {username, password} = ctx.request.body;
+
+    const schema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    })
+    try {
+        await schema.validateAsync({username, password});
+    } catch (e) {
+        throw e.message;
+    }
 
     const user = await userService.findOne({username, password});
     if (user) {
@@ -27,6 +38,17 @@ router.post("/loginByPassword", async (ctx: any) => {
 router.post("/loginByEmail", async (ctx: any) => {
     const {emailAddress, verifyCode} = ctx.request.body;
 
+    const schema = Joi.object({
+        emailAddress: Joi.string().email().required(),
+        verifyCode: Joi.required()
+    })
+
+    try {
+        await schema.validateAsync({emailAddress, verifyCode});
+    } catch (err) {
+        throw err.message;
+    }
+
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
     if (!isValidCode) {
@@ -35,7 +57,7 @@ router.post("/loginByEmail", async (ctx: any) => {
     }
 
     // 邮箱地址是否已注册，没有注册就自动注册
-    let user:any = await userService.findEmailAddress(emailAddress);
+    let user: any = await userService.findEmailAddress(emailAddress);
     if (!user) {
         const maxId = await userService.getMaxXinmiId();
         const xinmiId = generator.createXinmiId(maxId);
@@ -58,6 +80,16 @@ router.post("/loginByEmail", async (ctx: any) => {
  */
 router.post("/findPasswordByEmail", async (ctx: any) => {
     const {emailAddress, verifyCode, newPassword} = ctx.request.body;
+    const schema = Joi.object({
+        emailAddress: Joi.string().email().required(),
+        verifyCode: Joi.string().required(),
+        newPassword: Joi.string().required()
+    })
+    try {
+        await schema.validateAsync({emailAddress, verifyCode, newPassword});
+    } catch (e) {
+        throw e.message;
+    }
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);

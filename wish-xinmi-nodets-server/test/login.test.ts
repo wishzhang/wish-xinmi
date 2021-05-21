@@ -2,7 +2,6 @@ import verifyCodeService from "../src/service/verify-code-service";
 import server from "../src/server";
 import request = require("supertest");
 import testUtil from "./test-util";
-import {registerTwoUser} from "./common.test";
 
 describe("登录模块", () => {
     beforeAll(async () => {
@@ -20,7 +19,7 @@ describe("登录模块", () => {
         })
 
         test('注册两个用户', async (done) => {
-            const res = await registerTwoUser();
+            const res = await testUtil.registerTwoUser();
             done();
         })
     })
@@ -88,7 +87,3 @@ describe("登录模块", () => {
     })
 
 })
-
-export {
-    registerTwoUser
-}

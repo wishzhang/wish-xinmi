@@ -29,7 +29,7 @@ async function confirmContact(userId: string, contactId: string, originName: str
         const result = await sequelize.transaction(async (t: any) => {
             const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
             if (row && row.status === 2) {
-                try{
+                try {
                     await ContactRecord.update({status: 3}, {
                         where: {
                             [Op.and]: [
@@ -53,7 +53,7 @@ async function confirmContact(userId: string, contactId: string, originName: str
                         {userId: userId, contactId: contactId, contactName: targetName},
                         {contactId: userId, userId: contactId, contactName: originName}
                     ], {transaction: t})
-                }catch (e) {
+                } catch (e) {
                     throw e;
                 }
 
@@ -122,8 +122,22 @@ const getNoContactList = async (userId: string, username = "") => {
     `);
 };
 
+async function isContact(userId: string, contactId: string) {
+    const contactor: any = await Contact.findOne({
+        where: {
+            userId: userId,
+            contactId: contactId
+        }
+    });
+    return !!contactor;
+}
+
 // 获取联系人详情,已经是联系人
 async function getContactInfoHad(userId: string, contactId: string) {
+    if (!isContact(userId, contactId)) {
+        throw Error(`${userId}没有对应的联系人${contactId}`);
+    }
+
     const contactor: any = await Contact.findOne({
         where: {
             userId: userId,
@@ -210,5 +224,6 @@ export default {
     setAllContactChecked,
     editContact,
     deleteContact,
-    getContactListByUserId
+    getContactListByUserId,
+    isContact
 }

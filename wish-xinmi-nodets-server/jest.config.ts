@@ -12,14 +12,13 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   testMatch: [
-    // "**/test/**/*.test.(ts|js)"
-    "**/test/**/database.test.(ts|js)",
-    "**/test/**/common.test.(ts|js)",
-    "**/test/**/login.test.(ts|js)",
-    "**/test/**/user.test.(ts|js)",
-    "**/test/**/contact.test.(ts|js)",
-    "**/test/**/message.test.(ts|js)",
-    "**/test/**/circle.test.(ts|js)"
+    "**/test/**/*.test.(ts|js)"
+    // "**/test/**/database.test.(ts|js)",
+    // "**/test/**/login.test.(ts|js)",
+    // "**/test/**/user.test.(ts|js)",
+    // "**/test/**/contact.test.(ts|js)",
+    // "**/test/**/message.test.(ts|js)",
+    // "**/test/**/circle.test.(ts|js)"
   ],
   testEnvironment: "node",
   maxWorkers: 1,

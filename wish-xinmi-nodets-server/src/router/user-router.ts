@@ -2,6 +2,7 @@ import userService from "../service/user-service";
 import verifyCodeService from "../service/verify-code-service";
 import R from "../util/response";
 import {routerFactory} from "./router-factory";
+import Joi from 'joi';
 
 const router = routerFactory("/user");
 
@@ -12,21 +13,30 @@ router.get("/page", async (ctx: any) => {
 
 router.get("/update", async (ctx: any) => {
     const query = ctx.request.query;
+    const {username, password, avatarUrl, bgUrl, userId} = query;
+
+    if (!userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
 
     const obj = {
-        username: query.username,
-        password: query.password,
-        avatarUrl: query.avatarUrl,
-        bgUrl: query.bgUrl,
-        userId: query.userId
+        username: username,
+        password: password,
+        avatarUrl: avatarUrl,
+        bgUrl: bgUrl,
+        userId: userId
     };
+
     await userService.updateUser(obj);
     ctx.body = R.success();
 });
 
 router.get("/detail", async (ctx: any) => {
-    const query = ctx.request.query;
-    const userId = query.userId;
+    const {userId} = ctx.request.query;
+    if (!userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const detail = await userService.getOneUser(userId);
     ctx.body = R.success(detail);
 });
@@ -41,6 +51,19 @@ router.get("/detail", async (ctx: any) => {
  */
 router.post("/editEmailAddress", async (ctx: any) => {
     const {originEmailAddress, targetEmailAddress, verifyCode, password} = ctx.request.body;
+
+    const schema = Joi.object({
+        originEmailAddress: Joi.string().email().required(),
+        targetEmailAddress: Joi.string().email().required(),
+        verifyCode: Joi.required(),
+        password: Joi.required()
+    });
+
+    try {
+        await schema.validateAsync({originEmailAddress, targetEmailAddress, verifyCode, password});
+    } catch (e) {
+        throw Error(e.message);
+    }
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(targetEmailAddress, verifyCode);

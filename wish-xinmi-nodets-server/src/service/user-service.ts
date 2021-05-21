@@ -52,6 +52,11 @@ const findOne = async (obj: any) => {
     return await userDao.findOne(obj);
 };
 
+const hasUser = async (userId: string) => {
+    const user = await userDao.findByPk(userId);
+    return !!user;
+}
+
 export default {
     getUserList,
     insertUser,
@@ -61,5 +66,6 @@ export default {
     updatePasswordByEmailAddress,
     editEmailAddress,
     findEmailAddress,
-    findOne
+    findOne,
+    hasUser
 }

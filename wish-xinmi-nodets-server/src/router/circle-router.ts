@@ -1,24 +1,52 @@
 import circleService from "../service/circle-service";
 import R from "../util/response";
+import Joi from 'joi';
 
 import {routerFactory} from "./router-factory";
+import userService from '../service/user-service';
 
 const router: any = routerFactory("/circle");
 
 router.get("/getPage", async (ctx: any) => {
     const query = ctx.query;
-    const current = query.current;
-    const size = query.size;
-    const userId = query.userId;
+    const {current, size, userId} = query;
+
+    const schema = Joi.object({
+        current: Joi.number(),
+        size: Joi.number()
+    })
+    try {
+        await schema.validateAsync({current, size});
+    } catch (e) {
+        throw e.message;
+    }
+
+    if (!userService.hasUser(userId)) {
+        throw '找不到用户';
+    }
+
     const res = await circleService.getPage(userId, current, size);
     ctx.body = R.success(res);
 });
 
 router.get("/getUserThoughtPage", async (ctx: any) => {
     const query = ctx.query;
-    const userId = query.userId;
-    const current = query.current;
-    const size = query.size;
+    const {userId, current, size} = query;
+
+    const schema = Joi.object({
+        current: Joi.number(),
+        size: Joi.number()
+    })
+    try {
+        await schema.validateAsync({current, size});
+    } catch (e) {
+        throw e.message;
+    }
+
+    if (!userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const data = await circleService.getUserThoughtPage(userId, current, size);
     ctx.body = R.success(data);
 });
@@ -31,8 +59,11 @@ router.post("/addThought", async (ctx: any) => {
         photoFiles = [photoFiles];
     }
 
-    const createUser = query.createUser;
-    const content = query.content;
+    const {createUser, content} = query;
+    if (!userService.hasUser(createUser)) {
+        throw Error('找不到用户');
+    }
+
     await circleService.addThought(createUser, content, photoFiles);
     ctx.body = R.success();
 });
