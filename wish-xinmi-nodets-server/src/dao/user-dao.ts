@@ -6,12 +6,16 @@ async function insertOne(obj: any) {
     return user;
 }
 
-async function update(obj:any, option:any) {
+async function update(obj: any, option: any) {
     await User.update(obj, option);
 }
 
-async function getUserDetail(obj: any) {
-    return await User.findOne({where: obj});
+async function getUserDetail(userId: string) {
+    return await User.findOne({
+        where:{
+            userId: userId
+        }
+    });
 }
 
 async function getMaxXinmiId() {

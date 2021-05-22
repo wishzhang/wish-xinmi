@@ -90,10 +90,10 @@
             ...mapGetters(['userInfo']),
         },
         created() {
-            this.targetId = this.$route.query.id;
+            this.targetId = this.$route.query.userId;
 
             const params1 = {
-                id: this.targetId
+                userId: this.targetId
             }
             fetchUserInfoRequest(params1).then(res => {
                 if (res.code === 0) {
@@ -102,7 +102,7 @@
             });
 
             const params2 = {
-                originUser: this.userInfo.id,
+                originUser: this.userInfo.userId,
                 targetUser: this.targetId,
                 current: this.page.currentPage++,
                 size: 20
@@ -128,7 +128,7 @@
         },
         beforeDestroy() {
             const params3 = {
-                userId: this.userInfo.id,
+                userId: this.userInfo.userId,
                 contactId: this.targetId
             };
             checkMessageRequest(params3).then(() => {
@@ -140,13 +140,13 @@
         methods: {
             convertList(list = []) {
                 const arr = list.map(el => {
-                    if (el.originUser === this.userInfo.id) {
+                    if (el.originUser === this.userInfo.userId) {
                         return {
                             type: 'right',
                             content: el.content,
                             avatarUrl: el.originAvatarUrl
                         }
-                    } else if (el.targetUser === this.userInfo.id) {
+                    } else if (el.targetUser === this.userInfo.userId) {
                         return {
                             type: 'left',
                             content: el.content,
@@ -157,13 +157,13 @@
                 return arr;
             },
             pushMessage({originUser, targetUser, content, originAvatarUrl, targetAvatarUrl}) {
-                if (originUser === this.userInfo.id) {
+                if (originUser === this.userInfo.userId) {
                     this.list.push({
                         type: 'right',
                         content: content,
                         avatarUrl: originAvatarUrl
                     })
-                } else if (targetUser === this.userInfo.id) {
+                } else if (targetUser === this.userInfo.userId) {
                     this.list.push({
                         type: 'left',
                         content: content,
@@ -189,8 +189,8 @@
                 }
 
                 const params = {
-                    originUser: this.userInfo.id,
-                    targetUser: this.$route.query.id,
+                    originUser: this.userInfo.userId,
+                    targetUser: this.$route.query.userId,
                     content: this.message,
                 };
 
@@ -217,7 +217,7 @@
             },
             fetchList() {
                 const params2 = {
-                    originUser: this.userInfo.id,
+                    originUser: this.userInfo.userId,
                     targetUser: this.targetId,
                     current: this.page.currentPage++,
                     size: 10

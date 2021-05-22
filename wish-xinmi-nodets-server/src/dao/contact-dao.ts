@@ -3,6 +3,7 @@ import {ContactRecord} from "./model";
 import {sequelize, Op, query, QueryTypes} from './sequelize';
 import chatDao from "./chat-dao";
 import messageDao from "./message-dao";
+import contactRecordDao from './contact-record-dao';
 
 async function addContact(
     userId: string,
@@ -15,7 +16,7 @@ async function addContact(
     if (row && row.status === 2) {
         await confirmContact(userId, contactId, originName, targetName);
     } else {
-        const result = await sequelize.transaction(async (t: any) => {
+        await sequelize.transaction(async (t: any) => {
             await ContactRecord.bulkCreate([
                 {userId: userId, contactId: contactId, status: 1, validateMsg: validateMsg},
                 {userId: contactId, contactId: userId, status: 2, validateMsg: validateMsg}
@@ -25,45 +26,38 @@ async function addContact(
 }
 
 async function confirmContact(userId: string, contactId: string, originName: string, targetName: string) {
-    try {
-        const result = await sequelize.transaction(async (t: any) => {
-            const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
-            if (row && row.status === 2) {
-                try {
-                    await ContactRecord.update({status: 3}, {
-                        where: {
-                            [Op.and]: [
-                                {userId: userId},
-                                {contactId: contactId}
-                            ]
-                        },
-                        transaction: t
-                    })
-                    await ContactRecord.update({status: 3}, {
-                        where: {
-                            [Op.and]: [
-                                {userId: contactId},
-                                {contactId: userId}
-                            ]
-                        },
-                        transaction: t
-                    })
+    const result = await sequelize.transaction(async (t: any) => {
+        const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
+        if (row && row.status === 2) {
+            await ContactRecord.update({status: 3}, {
+                where: {
+                    [Op.or]: [
+                        {userId: userId, contactId: contactId},
+                        {userId: contactId, contactId: userId},
+                    ]
+                },
+                transaction: t
+            })
 
-                    await Contact.bulkCreate([
-                        {userId: userId, contactId: contactId, contactName: targetName},
-                        {contactId: userId, userId: contactId, contactName: originName}
-                    ], {transaction: t})
-                } catch (e) {
-                    throw e;
-                }
-
+            const is = await isContact(userId, contactId, true);
+            if (!is) {
+                await Contact.bulkCreate([
+                    {userId: userId, contactId: contactId, contactName: targetName},
+                    {contactId: userId, userId: contactId, contactName: originName}
+                ], {transaction: t})
             } else {
-                throw Error();
+                await Contact.restore({
+                    where: {
+                        [Op.or]: [
+                            {userId: userId, contactId: contactId},
+                            {userId: contactId, contactId: userId},
+                        ]
+                    },
+                    transaction: t
+                })
             }
-        });
-    } catch (error) {
-        throw error;
-    }
+        }
+    })
 }
 
 // 获取当前人和联系人的状态
@@ -84,7 +78,8 @@ async function getYesContactList(userId: string) {
             xc.contact_id, if(isnull(xc.contact_name), xu.username, xc.contact_name) as name,xu.avatar_url
         from xinmi_contact xc inner join xinmi_user xu 
             on xu.user_id = xc.contact_id
-        where xc.user_id = '${userId}'`);
+        where xc.user_id = '${userId}' and xc.deleted_at is null`
+    );
     return records;
 }
 
@@ -102,7 +97,7 @@ const getConfirmContactList = async (userId: string) => {
                      on xcr.contact_id = xu.user_id
                      left join xinmi_contact xc
                      on xcr.user_id = xc.user_id and xcr.contact_id = xc.contact_id
-            where xcr.user_id = '${userId}';
+            where xcr.user_id = '${userId}' and xcr.deleted_at is null;
   `);
 };
 
@@ -116,25 +111,28 @@ const getNoContactList = async (userId: string, username = "") => {
     FROM
         xinmi_user xu
     WHERE
-        xu.user_id NOT IN ( SELECT xc.contact_id FROM xinmi_contact xc WHERE xc.user_id = '${userId}' )
+        xu.user_id NOT IN ( SELECT xc.contact_id FROM xinmi_contact xc WHERE xc.user_id = '${userId}' and xc.deleted_at is null)
         AND xu.username LIKE '%${username}%'
         AND xu.user_id != '${userId}'
+        and xu.deleted_at is null
     `);
 };
 
-async function isContact(userId: string, contactId: string) {
+async function isContact(userId: string, contactId: string, isAll = false) {
     const contactor: any = await Contact.findOne({
         where: {
             userId: userId,
             contactId: contactId
-        }
+        },
+        paranoid: !isAll
     });
-    return !!contactor;
+    return contactor !== null;
 }
 
 // 获取联系人详情,已经是联系人
 async function getContactInfoHad(userId: string, contactId: string) {
-    if (!isContact(userId, contactId)) {
+    const is = await isContact(userId, contactId);
+    if (!is) {
         throw Error(`${userId}没有对应的联系人${contactId}`);
     }
 
@@ -160,12 +158,14 @@ async function getContactNoCheckedNum(userId: string) {
         where xcr.user_id='${userId}'
         and xcr.status=2
         and (xcr.is_checked!=1 or xcr.is_checked is null)
+        and xcr.deleted_at is null
     `);
 };
 
 async function setAllContactChecked(userId: string) {
     return await query(`
         update xinmi_contact_record as xcr set xcr.is_checked=1 WHERE xcr.user_id='${userId}'
+        and xcr.deleted_at is null
     `, {type: QueryTypes.UPDATE});
 };
 
@@ -185,21 +185,29 @@ async function editContact(userId: string, contactId: string, contactName: strin
 };
 
 async function deleteContact(userId: string, contactId: string) {
-    try {
-        const result = await sequelize.transaction(async (t: any) => {
-            await messageDao.delMessageByPeople(userId, contactId);
-            await chatDao.delChat(userId, contactId, {transaction: t});
-            await query(`
-               delete from xinmi_contact where user_id='${userId}' and contact_id='${contactId}' or user_id='${contactId}'
-               and contact_id='${userId}'
-            `, {transaction: t});
-            await query(`
-               delete from xinmi_contact_record where user_id='${userId}' and contact_id='${contactId}' or user_id='${contactId}'
-               and contact_id='${userId}'
-            `, {transaction: t})
+    const result = await sequelize.transaction(async (t: any) => {
+        await messageDao.delMessageByPeople(userId, contactId, {transaction: t});
+        await chatDao.delChat(userId, contactId, {transaction: t});
+        await Contact.destroy({
+            where: {
+                [Op.or]: [
+                    {userId: userId, contactId: contactId},
+                    {userId: contactId, contactId: userId}
+                ]
+            },
+            transaction: t
         });
-    } catch (error) {
-    }
+        await ContactRecord.destroy({
+            where: {
+                [Op.or]: [
+                    {userId: userId, contactId: contactId},
+                    {userId: contactId, contactId: userId}
+                ]
+            },
+            force: true,
+            transaction: t
+        });
+    });
 };
 
 async function getContactListByUserId(userId: string) {

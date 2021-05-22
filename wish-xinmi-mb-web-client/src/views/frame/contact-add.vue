@@ -26,7 +26,7 @@
                     @load="onLoad">
                 <van-cell
                         v-for="item in list"
-                        :key="item.id"
+                        :key="item.userId"
                         center
                         :title="item.username"
                         @click="onItemClick(item)">
@@ -74,14 +74,14 @@
                 history.back()
             },
             onItemClick(item) {
-                this.$router.push({path: '/index-layout/contact-info-yet', query: {id: item.id}})
+                this.$router.push({path: '/index-layout/contact-info-yet', query: {userId: item.userId}})
             },
             onLoad() {
                 this.loading = false
                 this.finished = true
 
                 const params = {
-                    id: this.userInfo.id,
+                    userId: this.userInfo.userId,
                     username: this.username
                 }
                 fetchNoContactListRequest(params).then(res => {

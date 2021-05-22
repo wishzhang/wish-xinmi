@@ -1,3 +1,7 @@
+import debug from '../util/debug';
+
+const log = debug('error-handler');
+
 export = () => {
     return async (ctx: any, next: any) => {
         try {
@@ -9,7 +13,7 @@ export = () => {
         } catch (e) {
             ctx.status = 500;
             ctx.body = e;
-            console.log(e);
+            log(e);
         }
     };
 }

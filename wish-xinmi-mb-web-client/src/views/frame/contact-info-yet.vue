@@ -15,7 +15,7 @@
 
         <van-cell value="朋友圈"
                   is-link
-                  :to="{path: '/index-layout/thought-people', query: {id: $route.query.id}}">
+                  :to="{path: '/index-layout/thought-people', query: {userId: $route.query.userId}}">
         </van-cell>
 
         <van-button
@@ -60,7 +60,7 @@
         },
         created() {
             const params1 = {
-                id: this.$route.query.id
+                userId: this.$route.query.userId
             }
             fetchUserInfoRequest(params1).then(res => {
                 if (res.code === 0) {
@@ -69,9 +69,10 @@
             })
 
             const params2 = {
-                id: this.userInfo.id,
-                contactId: this.$route.query.id
+                userId: this.userInfo.userId,
+                contactId: this.$route.query.userId
             }
+
             fetchUserContactStatusRequest(params2).then(res => {
                 if (res.code === 0) {
                     this.userContactStatus = res.data;
@@ -85,8 +86,8 @@
             onClickAdd() {
                 this.loadingAdd = true;
                 const params = {
-                    id: this.userInfo.id,
-                    contactId: this.$route.query.id
+                    userId: this.userInfo.userId,
+                    contactId: this.$route.query.userId
                 };
                 addContactRequest(params).then(res => {
                     this.$toast.success('已发送验证信息');
@@ -98,7 +99,7 @@
                 })
             },
             onChat() {
-                this.$router.push({path: '/index-layout/chat', query: {id: this.$route.query.id}})
+                this.$router.push({path: '/index-layout/chat', query: {userId: this.$route.query.userId}})
             }
         }
     }

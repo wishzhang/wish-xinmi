@@ -67,7 +67,7 @@
                         this.$store.commit('SET_USER_INFO', userInfo);
 
                         const params = {
-                            id: this.userInfo.id,
+                            userId: this.userInfo.userId,
                             avatarUrl: userInfo.avatarUrl
                         }
                         updateUserInfoRequest(params).then(() => {

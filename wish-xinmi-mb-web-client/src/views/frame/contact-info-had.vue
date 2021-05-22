@@ -34,13 +34,13 @@
         <van-cell title="备注名"
                   is-link
                   value=""
-                  :to="{path: '/index-layout/contact-info-edit', query: {contactId: $route.query.id}}">
+                  :to="{path: '/index-layout/contact-info-edit', query: {contactId: $route.query.userId}}">
         </van-cell>
 
         <van-cell value="朋友圈"
                   is-link
                   style="margin-top: 16px;"
-                  :to="{path: '/index-layout/thought-people', query: {id: $route.query.id}}">
+                  :to="{path: '/index-layout/thought-people', query: {userId: $route.query.userId}}">
         </van-cell>
 
         <div style="margin-top: 32px;">
@@ -103,8 +103,8 @@
         },
         created() {
             const params1 = {
-                userId: this.userInfo.id,
-                contactId: this.$route.query.id
+                userId: this.userInfo.userId,
+                contactId: this.$route.query.userId
             }
             fetchContactDetailRequest(params1).then(res => {
                 if (res.code === 0) {
@@ -113,8 +113,8 @@
             })
 
             const params2 = {
-                id: this.userInfo.id,
-                contactId: this.$route.query.id
+                userId: this.userInfo.userId,
+                contactId: this.$route.query.userId
             }
             fetchUserContactStatusRequest(params2).then(res => {
                 if (res.code === 0) {
@@ -129,8 +129,8 @@
             onClickAdd() {
                 this.loadingAdd = true;
                 const params = {
-                    id: this.userInfo.id,
-                    contactId: this.$route.query.id
+                    userId: this.userInfo.userId,
+                    contactId: this.$route.query.userId
                 };
                 addContactRequest(params).then(res => {
                     this.$toast.success('已发送验证信息');
@@ -142,7 +142,7 @@
                 })
             },
             onChat() {
-                this.$router.push({path: '/index-layout/chat', query: {id: this.$route.query.id}})
+                this.$router.push({path: '/index-layout/chat', query: {userId: this.$route.query.userId}})
             },
             onSelect(action) {
                 if (action.text === '删除联系人') {
@@ -151,8 +151,8 @@
                         beforeClose: (action, done) => {
                             if (action === 'confirm') {
                                 const params = {
-                                    userId: this.userInfo.id,
-                                    contactId: this.$route.query.id
+                                    userId: this.userInfo.userId,
+                                    contactId: this.$route.query.userId
                                 };
                                 deleteContactRequest(params).then(res => {
                                     this.$toast.success('删除成功！');

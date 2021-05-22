@@ -90,7 +90,7 @@
         computed: {
             ...mapGetters(["userInfo"]),
             name() {
-                return this.userInfo.id === this.$route.query.id ?
+                return this.userInfo.userId === this.$route.query.userId ?
                     this.userInfo.username :
                     this.contactDetail.contactName;
             },
@@ -109,10 +109,10 @@
             }
         },
         created() {
-            if (this.userInfo.id !== this.$route.query.id) {
+            if (this.userInfo.userId !== this.$route.query.userId) {
                 const params1 = {
-                    userId: this.userInfo.id,
-                    contactId: this.$route.query.id
+                    userId: this.userInfo.userId,
+                    contactId: this.$route.query.userId
                 };
                 fetchContactDetailRequest(params1).then(res => {
                     if (res.code === 0) {
@@ -137,7 +137,7 @@
                 return photosUrl.split(",").length;
             },
             getName(item) {
-                return item.createUser === this.userInfo.id ?
+                return item.createUser === this.userInfo.userId ?
                     item.username :
                     item.contactName;
             },
@@ -147,7 +147,7 @@
             onLoad() {
                 this.loading = true;
                 const params = {
-                    userId: this.$route.query.id,
+                    userId: this.$route.query.userId,
                     current: this.page.currentPage++,
                     size: this.page.pageSize
                 };

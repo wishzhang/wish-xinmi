@@ -61,7 +61,7 @@
             },
             onSubmit() {
                 const formData = new FormData();
-                formData.set('createUser', this.userInfo.id);
+                formData.set('createUser', this.userInfo.userId);
                 formData.set('content', this.thought);
 
                 this.fileList.forEach(file => {

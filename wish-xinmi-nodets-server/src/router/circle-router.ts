@@ -21,7 +21,7 @@ router.get("/getPage", async (ctx: any) => {
         throw e.message;
     }
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw '找不到用户';
     }
 
@@ -43,7 +43,7 @@ router.get("/getUserThoughtPage", async (ctx: any) => {
         throw e.message;
     }
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -60,7 +60,7 @@ router.post("/addThought", async (ctx: any) => {
     }
 
     const {createUser, content} = query;
-    if (!userService.hasUser(createUser)) {
+    if (!await userService.hasUser(createUser)) {
         throw Error('找不到用户');
     }
 

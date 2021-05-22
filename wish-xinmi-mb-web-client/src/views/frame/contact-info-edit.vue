@@ -31,7 +31,7 @@
         },
         created() {
             const params = {
-                userId: this.userInfo.id,
+                userId: this.userInfo.userId,
                 contactId: this.$route.query.contactId
             }
             fetchContactDetailRequest(params).then(res => {
@@ -43,7 +43,7 @@
         methods: {
             onSubmit() {
                 const params = {
-                    userId: this.userInfo.id,
+                    userId: this.userInfo.userId,
                     contactId: this.$route.query.contactId,
                     contactName: this.contactData.contactName
                 }

@@ -25,7 +25,7 @@
         </van-cell>
         <van-cell value="我发的朋友圈"
                   is-link
-                  :to="{path: '/index-layout/thought-people', query: {id: userInfo.id}}">
+                  :to="{path: '/index-layout/thought-people', query: {userId: userInfo.userId}}">
         </van-cell>
     </basic-container>
 </template>

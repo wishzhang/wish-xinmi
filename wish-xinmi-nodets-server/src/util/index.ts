@@ -31,13 +31,17 @@ const _toHump = (name: any) => {
 
 const toHumpList = (list: any = []) => {
     return list.map((el: any) => {
-        Object.keys(el).forEach(key => {
-            const humpKey = _toHump(key);
-            if (humpKey !== key) {
-                el[humpKey] = el[key];
-                delete el[key];
-            }
-        });
+        if (typeof el === 'object') {
+            Object.keys(el).forEach(key => {
+                if (typeof key !== 'undefined') {
+                    const humpKey = _toHump(key);
+                    if (humpKey !== key) {
+                        el[humpKey] = el[key];
+                        delete el[key];
+                    }
+                }
+            });
+        }
         return el;
     });
 };

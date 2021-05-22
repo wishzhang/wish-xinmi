@@ -31,7 +31,7 @@
                 :offset="300"
                 finished-text="没有更多了"
                 @load="onLoad">
-            <div v-for="item in list" :key="item.id">
+            <div v-for="item in list" :key="item.userId">
                 <div class="circle-item">
                     <van-image style="margin-right:10px;" width="40" height="40"
                                :src="item.avatarUrl|imageAvatar"></van-image>
@@ -134,7 +134,7 @@
             onLoad() {
                 this.loading = true;
                 const params = {
-                    userId: this.userInfo.id,
+                    userId: this.userInfo.userId,
                     current: this.page.currentPage++,
                     size: this.page.pageSize
                 }
@@ -156,7 +156,7 @@
             },
             onConfirm(value) {
                 const params = {
-                    id: this.userInfo.id,
+                    userId: this.userInfo.userId,
                     bgUrl: value
                 }
                 updateUserInfoRequest(params).then(res => {

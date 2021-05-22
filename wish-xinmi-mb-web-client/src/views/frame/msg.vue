@@ -63,7 +63,7 @@
                 }
             },
             onChatClick(item) {
-                this.$router.push({path: '/index-layout/chat', query: {id: item.contactId}})
+                this.$router.push({path: '/index-layout/chat', query: {userId: item.contactId}})
             }
         }
     }

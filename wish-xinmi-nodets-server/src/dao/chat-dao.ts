@@ -13,6 +13,7 @@ async function findChatId(user1: string, user2: string) {
                 xcm2.user_id = '${user2}' OR
                 xcm1.user_id = '${user2}' AND
                 xcm2.user_id = '${user1}'
+                and xcm1.deleted_at is null
                 GROUP BY
                 xcm1.chat_id
             `
@@ -27,10 +28,16 @@ async function findChatId(user1: string, user2: string) {
 }
 
 async function delChat(user1: string, user2: string, options = {}) {
+    const chatId = await findChatId(user1, user2);
+    await ChatMember.destroy({
+        where: {
+            chatId: chatId
+        },
+        ...options
+    })
     await Chat.destroy({
         where: {
-            user1: user1,
-            user2: user2
+            chatId: chatId
         },
         ...options
     })

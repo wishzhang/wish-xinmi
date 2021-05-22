@@ -99,7 +99,7 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
 
 const getUserThoughtPage = async (userId: string, current?: number, size?: number) => {
     const data: any = await queryPage(`
-        select * from xinmi_thought where create_user='${userId}' order by created_at desc
+        select * from xinmi_thought where create_user='${userId}' and deleted_at is null order by created_at desc
     `, current, size);
 
     const records = [];

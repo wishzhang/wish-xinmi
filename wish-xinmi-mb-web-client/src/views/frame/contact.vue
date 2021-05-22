@@ -83,7 +83,7 @@
         },
         created() {
             const params = {
-                id: this.userInfo.id
+                userId: this.userInfo.userId
             };
             fetchYetContactListRequest(params).then(res => {
                 this.contactList = res.data;
@@ -96,7 +96,7 @@
                 }
             },
             onContactItemClick(item) {
-                this.$router.push({path: "/index-layout/contact-info-had", query: {id: item.contactId}});
+                this.$router.push({path: "/index-layout/contact-info-had", query: {userId: item.contactId}});
             }
         }
     };

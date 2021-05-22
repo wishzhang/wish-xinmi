@@ -42,7 +42,7 @@
         fetchConfirmContactListRequest,
         setAllContactCheckedRequest
     } from "../../api/contact";
-    import {mapGetters} from 'vuex';
+    import {mapGetters} from "vuex";
 
     export default {
         name: "contact-wait",
@@ -55,48 +55,48 @@
             };
         },
         computed: {
-            ...mapGetters(['userInfo'])
+            ...mapGetters(["userInfo"])
         },
         created() {
             const params = {
-                userId: this.userInfo.id
-            }
+                userId: this.userInfo.userId
+            };
             setAllContactCheckedRequest(params).then(() => {
-                this.$store.dispatch('FetchContactWarnNum');
-            })
+                this.$store.dispatch("FetchContactWarnNum");
+            });
         },
         methods: {
             onLoad() {
                 this.finished = true;
                 this.loading = false;
                 const params = {
-                    id: this.userInfo.id
-                }
+                    userId: this.userInfo.userId
+                };
                 fetchConfirmContactListRequest(params).then(res => {
                     this.list = res.data;
-                })
+                });
             },
             onClickLeft() {
                 history.back();
             },
             onConfirm(item) {
                 const params = {
-                    id: this.userInfo.id,
+                    userId: this.userInfo.userId,
                     contactId: item.contactId
-                }
+                };
                 this.loadingConfirm = true;
                 confirmContactRequest(params).then(res => {
                     if (res.code === 0) {
                         this.onLoad();
                     } else {
-                        this.$toast.fail('操作失败');
+                        this.$toast.fail("操作失败");
                     }
                 }).finally(() => {
                     this.loadingConfirm = false;
-                })
+                });
             }
         }
-    }
+    };
 </script>
 
 <style scoped>

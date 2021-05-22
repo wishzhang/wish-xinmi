@@ -15,7 +15,7 @@ router.get("/update", async (ctx: any) => {
     const query = ctx.request.query;
     const {username, password, avatarUrl, bgUrl, userId} = query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -33,7 +33,7 @@ router.get("/update", async (ctx: any) => {
 
 router.get("/detail", async (ctx: any) => {
     const {userId} = ctx.request.query;
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 

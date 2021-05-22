@@ -32,7 +32,7 @@ const getMessagePage = async (originUser: string, targetUser: string, current?: 
 */
 async function getMessagePageByChatId(chatId: string, current?: number, size?: number) {
     const resData = await queryPage(`
-        select * from xinmi_message where chat_id='${chatId}' order by created_at desc
+        select * from xinmi_message where chat_id='${chatId}' and deleted_at is null order by created_at desc
     `, current, size);
 
     const records = [];
@@ -223,10 +223,15 @@ const checkMessage = async (userId: string, contactId: string) => {
 
 const delMessageByPeople = async (userId: string, contactId: string, options?: any) => {
     const chatId = await chatDao.findChatId(userId, contactId);
-    await query(`
-        delete from xinmi_message xm where chat_id='${chatId}' and origin_user='${userId}'
-        or chat_id='${chatId}' and origin_user='${contactId}'
-    `, options)
+    await Message.destroy({
+        where: {
+            [Op.or]: [
+                {chatId: chatId, originUser: userId},
+                {chatId: chatId, originUser: contactId},
+            ]
+        },
+        ...options
+    });
 };
 
 export default {

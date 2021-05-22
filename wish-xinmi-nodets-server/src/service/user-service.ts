@@ -54,7 +54,7 @@ const findOne = async (obj: any) => {
 
 const hasUser = async (userId: string) => {
     const user = await userDao.findByPk(userId);
-    return !!user;
+    return user !== null;
 }
 
 export default {

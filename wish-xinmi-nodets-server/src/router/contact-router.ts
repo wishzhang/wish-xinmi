@@ -11,7 +11,7 @@ router.get("/getYesContactList", async (ctx: any) => {
     const query = ctx.query;
     const {userId} = query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -22,11 +22,11 @@ router.get("/getYesContactList", async (ctx: any) => {
 router.get("/addContact", async (ctx: any) => {
     const {userId, contactId, validateMsg} = ctx.query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error(`找不到${userId}`);
     }
 
-    if (!userService.hasUser(contactId)) {
+    if (!await userService.hasUser(contactId)) {
         throw Error(`找不到${contactId}`);
     }
 
@@ -43,7 +43,7 @@ router.get("/getNoContactList", async (ctx: any) => {
     const query = ctx.query;
     const {userId, username = ''} = query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -55,7 +55,7 @@ router.get("/getConfirmContactList", async (ctx: any) => {
     const query = ctx.query;
     const userId = query.userId;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -67,11 +67,11 @@ router.get("/confirmContact", async (ctx: any) => {
     const query = ctx.query;
     const {userId, contactId} = query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
     }
 
@@ -82,11 +82,11 @@ router.get("/confirmContact", async (ctx: any) => {
 router.get("/getUserContactStatus", async (ctx: any) => {
     const query = ctx.query;
     const {userId, contactId} = query;
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
-    if (!userService.hasUser(contactId)) {
+    if (!await userService.hasUser(contactId)) {
         throw Error('找不到用户' + contactId);
     }
 
@@ -97,11 +97,11 @@ router.get("/getUserContactStatus", async (ctx: any) => {
 router.get("/getContactInfoHad", async (ctx: any) => {
     const query = ctx.query;
     const {userId, contactId} = query;
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
-    if (!userService.hasUser(contactId)) {
+    if (!await userService.hasUser(contactId)) {
         throw Error('找不到用户' + contactId);
     }
 
@@ -115,7 +115,7 @@ router.get("/getContactInfoHad", async (ctx: any) => {
 router.get("/getContactWarnNum", async (ctx: any) => {
     const {userId} = ctx.query;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
@@ -129,7 +129,7 @@ router.get("/getContactWarnNum", async (ctx: any) => {
 router.post("/setAllContactChecked", async (ctx: any) => {
     const {userId} = ctx.request.body;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
@@ -143,11 +143,11 @@ router.post("/setAllContactChecked", async (ctx: any) => {
 router.post("/editContact", async (ctx: any) => {
     const {userId, contactId, contactName} = ctx.request.body;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
-    if (!userService.hasUser(contactId)) {
+    if (!await userService.hasUser(contactId)) {
         throw Error('找不到用户' + contactId);
     }
 
@@ -161,15 +161,16 @@ router.post("/editContact", async (ctx: any) => {
  */
 router.post("/deleteContact", async (ctx: any) => {
     const {userId, contactId} = ctx.request.body;
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
 
-    if (!userService.hasUser(contactId)) {
+    if (!await userService.hasUser(contactId)) {
         throw Error('找不到用户' + contactId);
     }
 
-    if (!contactService.isContact(userId, contactId)) {
+    const is = await contactService.isContact(userId, contactId);
+    if (!is) {
         throw Error(`${userId}没有联系人${contactId}`);
     }
 

@@ -24,7 +24,7 @@ router.get("/getMineAllChatList", async (ctx: any) => {
     const query = ctx.query;
     const userId = query.userId;
 
-    if (!userService.hasUser(userId)) {
+    if (!await userService.hasUser(userId)) {
         throw Error('没有找到这个用户' + userId);
     }
 
@@ -44,7 +44,7 @@ router.post("/addMessage", async (ctx: any) => {
         throw e.message;
     }
 
-    if (!contactService.isContact(originUser, targetUser)) {
+    if (!await contactService.isContact(originUser, targetUser)) {
         throw Error(`${originUser}没有联系人${targetUser}`);
     }
 
@@ -58,7 +58,7 @@ router.post("/addMessage", async (ctx: any) => {
 
 router.post("/checkMessage", async (ctx: any) => {
     const {userId, contactId} = ctx.request.body;
-    if (!contactService.isContact(userId, contactId)) {
+    if (!await contactService.isContact(userId, contactId)) {
         throw Error(`${userId}没有联系人${contactId}`);
     }
 

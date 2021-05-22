@@ -99,7 +99,7 @@ export default new Vuex.Store({
                 },
                 FetchContactWarnNum({dispatch, state, commit, rootState}) {
                     const params = {
-                        userId: rootState.user.userInfo.id
+                        userId: rootState.user.userInfo.userId
                     };
                     return fetchContactWarnNumRequest(params).then(res => {
                         commit('SET_CONTACT_WARN_NUM', res.data);
@@ -107,7 +107,7 @@ export default new Vuex.Store({
                 },
                 FetchMineAllChatList({dispatch, state, commit, rootState}) {
                     const params = {
-                        id: rootState.user.userInfo.id
+                        userId: rootState.user.userInfo.userId
                     };
                     return fetchMineAllChatListRequest(params).then(res => {
                         commit('SET_CHAT_LIST', res.data);
