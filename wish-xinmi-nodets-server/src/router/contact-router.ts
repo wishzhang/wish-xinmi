@@ -119,7 +119,7 @@ router.get("/getContactWarnNum", async (ctx: any) => {
         throw Error('找不到用户' + userId);
     }
 
-    const num = await contactService.getContactWarnNum({userId});
+    const num = await contactService.getContactWarnNum(userId);
     ctx.body = R.success(num);
 });
 

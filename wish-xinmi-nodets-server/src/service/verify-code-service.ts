@@ -2,7 +2,6 @@ import nodemailer from "nodemailer";
 import validate from "../util/validate";
 import config from "../config/index";
 
-
 // 存储「邮箱-验证码」键值对
 const cache: any = {};
 
@@ -11,13 +10,12 @@ const cache: any = {};
  * @param emailAddress 对该邮箱发送验证码
  * @returns {Promise<void>}
  */
-const sendEmailCode = async (emailAddress: string, emailCode: string, sendReally = true)
-    : Promise<{ code: number; msg: string }> => {
+async function sendEmailCode(emailAddress: string, emailCode: string, sendReally = true): Promise<{ code: number; msg: string }> {
 
     let res: any;
 
     // 如果没有给定的验证码，那么就默认来生成一个邮箱验证码
-    emailCode = emailCode || createEmailCode();
+    let innerEmailCode = emailCode || createEmailCode();
 
     if (!validate.validEmailAddress(emailAddress)) {
         res = {code: 1, msg: "邮箱地址格式错误"};
@@ -38,7 +36,7 @@ const sendEmailCode = async (emailAddress: string, emailCode: string, sendReally
                     from: `${config.projectCName}<wishzhang.io@qq.com>`,
                     to: emailAddress,
                     subject: `${config.projectCName}邮箱验证`,
-                    text: `尊敬的${config.projectCName}用户，您的验证码是：${emailCode}。`,
+                    text: `尊敬的${config.projectCName}用户，您的验证码是：${innerEmailCode}。`,
                 });
             }
 
@@ -46,7 +44,7 @@ const sendEmailCode = async (emailAddress: string, emailCode: string, sendReally
             res = {code: 0, msg: "发送成功"};
 
             // 然后缓存并更新「邮箱-验证码」键值对
-            cache[emailAddress] = emailCode;
+            cache[emailAddress] = innerEmailCode;
 
             // 5分钟后验证码失效
             timer = setTimeout(() => {
@@ -61,7 +59,7 @@ const sendEmailCode = async (emailAddress: string, emailCode: string, sendReally
     return res;
 };
 
-const createEmailCode = () => {
+function createEmailCode(): string{
     let emailCode = "";
     for (let i = 0; i < 6; i++) {
         emailCode += Number.parseInt(Math.random() * 10 + "");
@@ -75,7 +73,7 @@ const createEmailCode = () => {
  * @param emailCode
  * @returns {*|boolean} 返回true表示匹配
  */
-const canMatchEmailCode = (emailAddress: string, emailCode: string) => {
+function canMatchEmailCode(emailAddress: string, emailCode: string) {
     return cache[emailAddress] && cache[emailAddress] === emailCode;
 };
 

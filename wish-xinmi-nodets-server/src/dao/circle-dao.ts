@@ -7,7 +7,7 @@ import contactDao from "./contact-dao";
 const uuid = util.uuid;
 
 // 添加一条朋友圈
-const addThought = async (createUser: string, content: string, photosUrl?: string) => {
+async function addThought(createUser: string, content: string, photosUrl?: string) {
     const thought = await Thought.create({
         createUser: createUser,
         content: content,
@@ -16,7 +16,7 @@ const addThought = async (createUser: string, content: string, photosUrl?: strin
     await thought.save();
 };
 
-const getOneCircleDetail = async (thoughtId: string) => {
+async function getOneCircleDetail(thoughtId: string) {
     const thought: any = await Thought.findOne({
         where: {thoughtId: thoughtId}
     });
@@ -42,7 +42,7 @@ const getOneCircleDetail = async (thoughtId: string) => {
  * @param size
  * @returns {Promise<{current: number, total: *, size: number, records}>}
  */
-const getCirclePage = async (userId: number, current?: number, size?: number) => {
+async function getCirclePage(userId: string, current?: number, size?: number) {
     let data = {};
     const list = [];
     let createUserIdList = [];
@@ -101,7 +101,7 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
     return data;
 };
 
-const getUserThoughtPage = async (userId: string, current?: number, size?: number) => {
+async function getUserThoughtPage(userId: string, current?: number, size?: number) {
     const data: any = await queryPage(`
         select * from xinmi_thought where create_user='${userId}' and deleted_at is null order by created_at desc
     `, current, size);

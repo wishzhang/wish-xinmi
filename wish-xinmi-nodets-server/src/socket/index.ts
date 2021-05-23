@@ -5,10 +5,8 @@ import userService from "../service/user-service";
 const hashSocketId: any = {};
 let io: any = {};
 
-const emit = async (
-    emitName: string,
-    obj: { originUserId: string, targetUserId: string, data: any }
-) => {
+async function emit(emitName: string, obj: { originUserId: string, targetUserId: string, data: any }
+) {
     const targetUser: any = await userService.getOneUser(obj.targetUserId);
     const originUser: any = await userService.getOneUser(obj.originUserId);
 
@@ -21,7 +19,7 @@ const emit = async (
     }
 };
 
-export = {
+export default {
     init: (server: any) => {
         const options = {
             cors: {

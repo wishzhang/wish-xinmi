@@ -1,24 +1,24 @@
 import util from "../util";
 import userDao from '../dao/user-dao';
 
-const getUserList = async () => {
+async function getUserList() {
     return await userDao.findAll()
 };
 
-const insertUser = async (obj: any) => {
+async function insertUser(obj: any) {
     return await userDao.insertOne(obj);
 };
 
-const updateUser = async (obj: any) => {
+async function updateUser(obj: any) {
     obj.avatarUrl = util.removeDomain(obj.avatarUrl);
     return await userDao.update(obj, {where: {userId: obj.userId}})
 };
 
-const getOneUser = async (userId?: string) => {
+async function getOneUser(userId: string) {
     return await userDao.findByPk(userId);
 };
 
-const findEmailAddress = async (emailAddress: string) => {
+async function findEmailAddress(emailAddress: string) {
     return await userDao.findOne({
         where: {
             emailAddress
@@ -26,11 +26,11 @@ const findEmailAddress = async (emailAddress: string) => {
     })
 };
 
-const getMaxXinmiId = async () => {
+async function getMaxXinmiId() {
     return await userDao.max('username');
 };
 
-const updatePasswordByEmailAddress = async (password: string, emailAddress: string) => {
+async function updatePasswordByEmailAddress(password: string, emailAddress: string) {
     return await userDao.update({password, emailAddress}, {
         where: {
             emailAddress
@@ -39,7 +39,7 @@ const updatePasswordByEmailAddress = async (password: string, emailAddress: stri
     })
 };
 
-const editEmailAddress = async (originEmailAddress: string, targetEmailAddress: string, password: string) => {
+async function editEmailAddress(originEmailAddress: string, targetEmailAddress: string, password: string) {
     return await userDao.update({emailAddress: targetEmailAddress}, {
         where: {
             emailAddress: originEmailAddress,
@@ -48,11 +48,11 @@ const editEmailAddress = async (originEmailAddress: string, targetEmailAddress: 
     })
 };
 
-const findOne = async (obj: any) => {
+async function findOne(obj: any) {
     return await userDao.findOne(obj);
 };
 
-const hasUser = async (userId: string) => {
+async function hasUser(userId: string) {
     const user = await userDao.findByPk(userId);
     return user !== null;
 }

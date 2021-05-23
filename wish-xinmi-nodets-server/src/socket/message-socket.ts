@@ -1,6 +1,6 @@
 import userService from '../service/user-service';
 
-export = (emit:any) => {
+export default (emit:any) => {
     return {
         async emitMessageToOneContact(originUserId:string, targetUserId:string, data:any) {
             const targetUser = await userService.getOneUser(targetUserId);

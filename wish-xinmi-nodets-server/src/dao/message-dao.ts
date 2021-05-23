@@ -14,12 +14,12 @@ const uuid = util.uuid;
  * @param targetUser
  * @returns
  */
-const getContactMessagePage = async (originUser: string, targetUser: string, current?: number, size?: number) => {
+async function getContactMessagePage(originUser: string, targetUser: string, current?: number, size?: number) {
     const resData = await getMessagePage(originUser, targetUser, current, size);
     return resData;
 };
 
-const getMessagePage = async (originUser: string, targetUser: string, current?: number, size?: number) => {
+async function getMessagePage(originUser: string, targetUser: string, current?: number, size?: number) {
     const chatId = await chatDao.findChatId(originUser, targetUser);
 
     const list = await getMessagePageByChatId(chatId, current, size);
@@ -45,7 +45,7 @@ async function getMessagePageByChatId(chatId: string, current?: number, size?: n
 };
 
 // 获取一条消息的详情
-const getMessageDetail = async (message: any) => {
+async function getMessageDetail(message: any) {
     const originUserId = message.originUser;
     const chatId = message.chatId;
     const targetUserId = await findTargetUserId(chatId, originUserId);
@@ -69,7 +69,7 @@ const getMessageDetail = async (message: any) => {
  * @param userId
  * @returns {Promise<any>}
  */
-const getMineAllChatList = async (userId: string) => {
+async function getMineAllChatList(userId: string) {
     const list = [];
     let myAllChatList: any[];
 
@@ -89,7 +89,7 @@ const getMineAllChatList = async (userId: string) => {
     return list;
 };
 
-const getOneMessageChat = async (userId: string, chatId: string) => {
+async function getOneMessageChat(userId: string, chatId: string) {
     let obj = {};
     let message: any;
     try {
@@ -127,7 +127,7 @@ const getOneMessageChat = async (userId: string, chatId: string) => {
     return null;
 };
 
-const findTargetUserId = async (chatId: string, originUser: string) => {
+async function findTargetUserId(chatId: string, originUser: string) {
     const row = await ChatMember.findOne({
         where: {
             chatId: chatId,
@@ -147,7 +147,7 @@ const findTargetUserId = async (chatId: string, originUser: string) => {
  * @param content
  * @returns
  */
-const addMessage = async (originUser: string, targetUser: string, content: string) => {
+async function addMessage(originUser: string, targetUser: string, content: string) {
     let chatId = await chatDao.findChatId(originUser, targetUser);
     if (chatId) {
         const msg = await Message.create({
@@ -204,7 +204,7 @@ async function getChatUnreadCount(chatId: string, contactId: string) {
     return count;
 };
 
-const checkMessage = async (userId: string, contactId: string) => {
+async function checkMessage(userId: string, contactId: string) {
     const chatId = await chatDao.findChatId(userId, contactId);
     await Message.update({
         isChecked: 1
@@ -218,7 +218,7 @@ const checkMessage = async (userId: string, contactId: string) => {
     })
 };
 
-const delMessageByPeople = async (userId: string, contactId: string, options?: any) => {
+async function delMessageByPeople(userId: string, contactId: string, options?: any) {
     const chatId = await chatDao.findChatId(userId, contactId);
     await Message.destroy({
         where: {

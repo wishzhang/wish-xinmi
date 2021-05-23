@@ -1,6 +1,6 @@
 import loginDao from "../dao/login-dao";
 
-const login = async (username: string, password: string) => {
+async function login(username: string, password: string) {
     return await loginDao.login(username, password);
 };
 

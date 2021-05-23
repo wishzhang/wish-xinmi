@@ -2,7 +2,7 @@ import circleDao from "../dao/circle-dao";
 import datetime from "../util/datetime";
 import fileUtil from "../util/file-util";
 
-const addThought = async (createUser: any, content: any, photoFiles: any = []) => {
+async function addThought(createUser: string, content: string, photoFiles: Array<string> = []) {
     const ps = photoFiles.map((photoFile: any) => {
         return fileUtil.putFile(photoFile);
     });
@@ -16,7 +16,7 @@ const addThought = async (createUser: any, content: any, photoFiles: any = []) =
     return await circleDao.addThought(createUser, content, photosUrl);
 };
 
-const getPage = async (userId: any, current: any, size: any) => {
+async function getPage(userId: string, current?: number, size?: number) {
     const data: any = await circleDao.getCirclePage(userId, current, size);
     data.records.forEach((el: any) => {
         el.createdAt = datetime.datePastLong(el.createdAt);
@@ -24,7 +24,7 @@ const getPage = async (userId: any, current: any, size: any) => {
     return data;
 };
 
-const getUserThoughtPage = async (userId: string, current?: number, size?: number) => {
+async function getUserThoughtPage(userId: string, current?: number, size?: number) {
     const data = await circleDao.getUserThoughtPage(userId, current, size);
     return data;
 };

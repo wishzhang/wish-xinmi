@@ -2,7 +2,7 @@ import contactDao from "../dao/contact-dao";
 import userService from "./user-service";
 import util from "../util";
 
-const getYesContactList = async (userId: string) => {
+async function getYesContactList(userId: string) {
     const contactList: any = await contactDao.getYesContactList(userId);
     const ch = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
         "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
@@ -29,14 +29,14 @@ const getYesContactList = async (userId: string) => {
 
     const allList = [...list, otherObj];
     return allList;
-};
+}
 
-const getNoContactList = async (userId: string, username = "") => {
+async function getNoContactList(userId: string, username = "") {
     const list = await contactDao.getNoContactList(userId, username);
     return list;
-};
+}
 
-const addContact = async (userId: string, contactId: string, validateMsg: any) => {
+async function addContact(userId: string, contactId: string, validateMsg: string) {
     const targetDetail: any = await userService.getOneUser(contactId);
     const originDetail: any = await userService.getOneUser(userId);
     const msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
@@ -47,31 +47,31 @@ const addContact = async (userId: string, contactId: string, validateMsg: any) =
         targetDetail.username,
         msg,
     );
-};
+}
 
-const getConfirmContactList = async (userId: any) => {
+async function getConfirmContactList(userId: string) {
     const list = await contactDao.getConfirmContactList(userId);
     return list;
-};
+}
 
-const confirmContact = async (userId: any, contactId: any) => {
+async function confirmContact(userId: string, contactId: string) {
     const targetDetail: any = await userService.getOneUser(contactId);
     const originDetail: any = await userService.getOneUser(userId);
     await contactDao.confirmContact(userId,
         contactId,
         originDetail.username,
         targetDetail.username);
-};
+}
 
-const getUserContactStatus = async (userId: any, contactId: any) => {
+async function getUserContactStatus(userId: string, contactId: string) {
     return await contactDao.getUserContactStatus(userId, contactId);
-};
+}
 
-const getContactInfoHad = async (userId: any, contactId: any) => {
+async function getContactInfoHad(userId: string, contactId: string) {
     return await contactDao.getContactInfoHad(userId, contactId);
 };
 
-const getContactWarnNum = async (userId: any) => {
+async function getContactWarnNum(userId: string) {
     const list: any = await contactDao.getContactNoCheckedNum(userId);
     if (list.length > 0) {
         return list[0].num;
@@ -79,15 +79,15 @@ const getContactWarnNum = async (userId: any) => {
     return 0;
 };
 
-const setAllContactChecked = async (userId: any) => {
+async function setAllContactChecked(userId: string) {
     return await contactDao.setAllContactChecked(userId);
 };
 
-const editContact = async (userId: any, contactId: any, contactName: any) => {
+async function editContact(userId: string, contactId: string, contactName: string) {
     return await contactDao.editContact(userId, contactId, contactName);
 };
 
-const deleteContact = async (userId: any, contactId: any) => {
+async function deleteContact(userId: string, contactId: string) {
     return await contactDao.deleteContact(userId, contactId);
 };
 

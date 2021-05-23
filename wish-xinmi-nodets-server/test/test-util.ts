@@ -1,9 +1,8 @@
 const request = require("supertest");
-import {QueryTypes} from '../src/dao/sequelize';
-import {query} from "../src/dao/sequelize";
 import testUtil from "./test-util";
 import verifyCodeService from "../src/service/verify-code-service";
 import server from "../src/server";
+import {deleteAllTable} from "../src/dao/model";
 
 
 // 单元测试应该保持简单高效，直接操作测试数据库全部数据。
@@ -25,24 +24,18 @@ const accountError = {
     password: 'wwwwww'
 }
 
-const clearDBTestData = async () => {
-    await query(`delete from xinmi_thought`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_message`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_chat_member`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_chat`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_contact`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_contact_record`, {type: QueryTypes.DELETE});
-    await query(`delete from xinmi_user`, {type: QueryTypes.DELETE});
+async function clearDBTestData() {
+    await deleteAllTable();
 }
 
-const prepareTest = async () => {
-    await clearDBTestData();
+async function prepareTest() {
+    await deleteAllTable();
     const res = await registerTwoUser();
     return res;
 }
 
-const afterTest = async () => {
-    await clearDBTestData();
+async function afterTest() {
+    await deleteAllTable();
 }
 
 // 注册两个用户

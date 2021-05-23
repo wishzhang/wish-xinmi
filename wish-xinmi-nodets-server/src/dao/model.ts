@@ -1,5 +1,5 @@
 import {DataTypes} from 'sequelize';
-import {sequelize, Sequelize} from './sequelize';
+import {query, sequelize, Sequelize} from './sequelize';
 import mysql from 'mysql2/promise';
 import config from '../config';
 import debug from '../util/debug';
@@ -190,6 +190,53 @@ export async function setupDatabase() {
     // 初次创建数据库表的时候，这里加不了主外键关联，要去数据库设置xinmi_message表
     await Message.sync()
     await Thought.sync()
+}
+
+// 删除数据库
+export async function teardownDatabase() {
+    const connection = await mysql.createConnection({
+        host: config.mysql.host,
+        port: config.mysql.port,
+        user: config.mysql.user,
+        password: config.mysql.password
+    });
+
+    let sql = `DROP DATABASE \`${config.mysql.database}\`;`;
+    log(sql);
+    await connection.query(sql);
+}
+
+
+// 删除所有表数据
+export async function deleteAllTable() {
+    await Thought.destroy({
+        where: {},
+        force: true
+    });
+    await Message.destroy({
+        where: {},
+        force: true
+    });
+    await ChatMember.destroy({
+        where: {},
+        force: true
+    });
+    await Chat.destroy({
+        where: {},
+        force: true
+    });
+    await ContactRecord.destroy({
+        where: {},
+        force: true
+    });
+    await Contact.destroy({
+        where: {},
+        force: true
+    });
+    await User.destroy({
+        where: {},
+        force: true
+    });
 }
 
 
