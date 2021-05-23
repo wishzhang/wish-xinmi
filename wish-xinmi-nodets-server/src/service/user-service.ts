@@ -21,7 +21,7 @@ async function getOneUser(userId: string) {
 async function findEmailAddress(emailAddress: string) {
     return await userDao.findOne({
         where: {
-            emailAddress
+            emailAddress: emailAddress
         }
     })
 };
@@ -49,7 +49,9 @@ async function editEmailAddress(originEmailAddress: string, targetEmailAddress: 
 };
 
 async function findOne(obj: any) {
-    return await userDao.findOne(obj);
+    return await userDao.findOne({
+        where: obj
+    });
 };
 
 async function hasUser(userId: string) {

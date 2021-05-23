@@ -31,9 +31,7 @@ async function findByPk(userId: string) {
 }
 
 async function findOne(obj: any) {
-    return await User.findOne({
-        where: obj
-    });
+    return await User.findOne(obj);
 }
 
 async function max(name: string) {

@@ -49,10 +49,10 @@ router.post("/addMessage", async (ctx: any) => {
     }
 
     await messageService.addMessage(originUser, targetUser, content);
-    socket.emitMessageToOneContact(originUser, targetUser, content);
+    await socket.emitMessageToOneContact(originUser, targetUser, content);
 
     const messageChat = await messageService.getOneMessageChat(originUser, targetUser);
-    socket.emitUnread(originUser, targetUser, messageChat);
+    await socket.emitUnread(originUser, targetUser, messageChat);
     ctx.body = R.success();
 });
 

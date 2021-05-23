@@ -30,9 +30,9 @@ router.get("/addContact", async (ctx: any) => {
         throw Error(`找不到${contactId}`);
     }
 
-    const status: any = await contactService.addContact(userId, contactId, validateMsg);
+    const r = await contactService.addContact(userId, contactId, validateMsg);
 
-    if (status === 1) {
+    if (r) {
         await socket.emitContactAddContact(userId, contactId);
     }
 

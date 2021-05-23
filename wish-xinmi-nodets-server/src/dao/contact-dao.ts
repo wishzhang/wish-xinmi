@@ -4,72 +4,9 @@ import {sequelize, Op, query, QueryTypes} from './sequelize';
 import chatDao from "./chat-dao";
 import messageDao from "./message-dao";
 import contactRecordDao from './contact-record-dao';
+import debug from '../util/debug';
 
-async function addContact(
-    userId: string,
-    contactId: string,
-    originName: string,
-    targetName: string,
-    validateMsg?: string
-) {
-    const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
-    if (row && row.status === 2) {
-        await confirmContact(userId, contactId, originName, targetName);
-    } else {
-        await sequelize.transaction(async (t: any) => {
-            await ContactRecord.bulkCreate([
-                {userId: userId, contactId: contactId, status: 1, validateMsg: validateMsg},
-                {userId: contactId, contactId: userId, status: 2, validateMsg: validateMsg}
-            ], {transaction: t})
-        });
-    }
-}
-
-async function confirmContact(userId: string, contactId: string, originName: string, targetName: string) {
-    const result = await sequelize.transaction(async (t: any) => {
-        const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
-        if (row && row.status === 2) {
-            await ContactRecord.update({status: 3}, {
-                where: {
-                    [Op.or]: [
-                        {userId: userId, contactId: contactId},
-                        {userId: contactId, contactId: userId},
-                    ]
-                },
-                transaction: t
-            })
-
-            const is = await isContact(userId, contactId, true);
-            if (!is) {
-                await Contact.bulkCreate([
-                    {userId: userId, contactId: contactId, contactName: targetName},
-                    {contactId: userId, userId: contactId, contactName: originName}
-                ], {transaction: t})
-            } else {
-                await Contact.restore({
-                    where: {
-                        [Op.or]: [
-                            {userId: userId, contactId: contactId},
-                            {userId: contactId, contactId: userId},
-                        ]
-                    },
-                    transaction: t
-                })
-            }
-        }
-    })
-}
-
-// 获取当前人和联系人的状态
-async function getUserContactStatus(userId: string, contactId: string) {
-    const row: any = await ContactRecord.findOne({
-        where: {
-            userId: userId,
-            contactId: contactId
-        }
-    });
-    return row && row.status;
-}
+const log = debug('contact-dao');
 
 // 获取当前用户的已添加的联系人
 async function getYesContactList(userId: string) {
@@ -169,69 +106,22 @@ async function setAllContactChecked(userId: string) {
     `, {type: QueryTypes.UPDATE});
 };
 
-/**
- * 编辑联系人信息
- *
- */
-async function editContact(userId: string, contactId: string, contactName: string) {
-    return await Contact.update({
-        contactName
-    }, {
-        where: {
-            userId: userId,
-            contactId: contactId
-        }
-    })
-};
-
-async function deleteContact(userId: string, contactId: string) {
-    const result = await sequelize.transaction(async (t: any) => {
-        await messageDao.delMessageByPeople(userId, contactId, {transaction: t});
-        await chatDao.delChat(userId, contactId, {transaction: t});
-        await Contact.destroy({
-            where: {
-                [Op.or]: [
-                    {userId: userId, contactId: contactId},
-                    {userId: contactId, contactId: userId}
-                ]
-            },
-            transaction: t
-        });
-        await ContactRecord.destroy({
-            where: {
-                [Op.or]: [
-                    {userId: userId, contactId: contactId},
-                    {userId: contactId, contactId: userId}
-                ]
-            },
-            force: true,
-            transaction: t
-        });
-    });
-};
-
 async function getContactListByUserId(userId: string) {
     const list = await Contact.findAll({
         where: {
             userId: userId
         }
     })
-
     return list;
 };
 
 export default {
-    addContact,
-    confirmContact,
-    getUserContactStatus,
     getYesContactList,
     getConfirmContactList,
     getNoContactList,
     getContactInfoHad,
     getContactNoCheckedNum,
     setAllContactChecked,
-    editContact,
-    deleteContact,
     getContactListByUserId,
     isContact
 }

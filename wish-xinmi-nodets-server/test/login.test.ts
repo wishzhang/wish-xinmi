@@ -63,8 +63,7 @@ describe("登录模块", () => {
             const emailCode = verifyCodeService.createEmailCode();
             await verifyCodeService.sendEmailCode(testUtil.account1.email, emailCode, false);
 
-            const res = await request(server)
-                .post("/login/loginByEmail")
+            const res = await request(server).post("/login/loginByEmail")
                 .send({
                     emailAddress: testUtil.account1.email,
                     verifyCode: emailCode
@@ -74,13 +73,23 @@ describe("登录模块", () => {
             done();
         })
 
-        test("账号密码简单登录", async (done) => {
+        test("当输入正确的密码", async (done) => {
             const res = await request(server).post("/login/loginByPassword")
                 .send({
                     username: user.username,
                     password: user.password
                 })
             expect(res.body.code).toBe(0);
+            done();
+        });
+
+        test("当输入错误的密码", async (done) => {
+            const res = await request(server).post("/login/loginByPassword")
+                .send({
+                    username: user.username,
+                    password: user.password + 'err'
+                })
+            expect(res.body.code).not.toBe(0);
             done();
         });
     })
