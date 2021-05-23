@@ -5,8 +5,8 @@
  * isSerialize是否开启form表单提交
  * isToken是否需要token
  */
-import axios from 'axios';
-import {Toast} from 'vant';
+import axios from "axios";
+import {Toast} from "vant";
 
 axios.defaults.baseURL = process.env.VUE_APP_BASE_API;
 
@@ -19,9 +19,9 @@ axios.defaults.validateStatus = function (status) {
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(config => {
-    return config
+    return config;
 }, error => {
-    return Promise.reject(error)
+    return Promise.reject(error);
 });
 
 axios.interceptors.response.use(res => {
@@ -30,11 +30,11 @@ axios.interceptors.response.use(res => {
     } else if (res.status === 404) {
         return Promise.reject(res.data);
     } else if (res.status >= 500) {
-        Toast.fail('服务器出错了');
+        Toast.fail(res.data);
         return Promise.reject(res.data);
     }
 }, error => {
-    Toast.fail('服务器出错了');
+    Toast.fail(res.data);
     return Promise.reject(new Error(error));
 });
 

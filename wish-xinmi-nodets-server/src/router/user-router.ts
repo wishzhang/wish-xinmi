@@ -3,6 +3,7 @@ import verifyCodeService from "../service/verify-code-service";
 import R from "../util/response";
 import {routerFactory} from "./router-factory";
 import Joi from 'joi';
+import validate from '../util/validate';
 
 const router = routerFactory("/user");
 
@@ -14,6 +15,22 @@ router.get("/page", async (ctx: any) => {
 router.get("/update", async (ctx: any) => {
     const query = ctx.request.query;
     const {username, password, avatarUrl, bgUrl, userId} = query;
+
+    const schema = Joi.object({
+        password: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
+    })
+
+    try {
+        await schema.validateAsync({
+            password: password
+        })
+    } catch (e) {
+        throw e.message;
+    }
 
     if (!await userService.hasUser(userId)) {
         throw Error('找不到用户');
@@ -56,7 +73,11 @@ router.post("/editEmailAddress", async (ctx: any) => {
         originEmailAddress: Joi.string().email().required(),
         targetEmailAddress: Joi.string().email().required(),
         verifyCode: Joi.required(),
-        password: Joi.required()
+        password: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
     });
 
     try {

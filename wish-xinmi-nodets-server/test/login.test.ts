@@ -57,7 +57,7 @@ describe("登录模块", () => {
         });
     })
 
-    describe('账号密码登录', () => {
+    describe('/login/loginByPassword', () => {
         let user: any = null;
         beforeAll(async (done) => {
             const emailCode = verifyCodeService.createEmailCode();
@@ -74,9 +74,8 @@ describe("登录模块", () => {
             done();
         })
 
-        test("/login/loginByPassword", async (done) => {
-            const res = await request(server)
-                .post("/login/loginByPassword")
+        test("账号密码简单登录", async (done) => {
+            const res = await request(server).post("/login/loginByPassword")
                 .send({
                     username: user.username,
                     password: user.password
@@ -85,5 +84,4 @@ describe("登录模块", () => {
             done();
         });
     })
-
 })

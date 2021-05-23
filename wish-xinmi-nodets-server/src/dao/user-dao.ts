@@ -12,7 +12,7 @@ async function update(obj: any, option: any) {
 
 async function getUserDetail(userId: string) {
     return await User.findOne({
-        where:{
+        where: {
             userId: userId
         }
     });
@@ -31,7 +31,9 @@ async function findByPk(userId: string) {
 }
 
 async function findOne(obj: any) {
-    return await User.findOne(obj);
+    return await User.findOne({
+        where: obj
+    });
 }
 
 async function max(name: string) {

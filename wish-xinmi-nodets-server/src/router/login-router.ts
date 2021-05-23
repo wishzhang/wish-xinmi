@@ -5,6 +5,7 @@ import userService from "../service/user-service";
 import {routerFactory} from "./router-factory";
 import generator from '../util/generator';
 import Joi from 'joi';
+import validate from "../util/validate";
 
 const router = routerFactory("/login");
 
@@ -13,7 +14,11 @@ router.post("/loginByPassword", async (ctx: any) => {
 
     const schema = Joi.object({
         username: Joi.string().required(),
-        password: Joi.string().required()
+        password: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
     })
     try {
         await schema.validateAsync({username, password});
@@ -83,7 +88,11 @@ router.post("/findPasswordByEmail", async (ctx: any) => {
     const schema = Joi.object({
         emailAddress: Joi.string().email().required(),
         verifyCode: Joi.string().required(),
-        newPassword: Joi.string().required()
+        newPassword: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
     })
     try {
         await schema.validateAsync({emailAddress, verifyCode, newPassword});

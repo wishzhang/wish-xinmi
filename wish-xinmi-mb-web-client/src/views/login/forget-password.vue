@@ -59,10 +59,10 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters} from "vuex";
     import {validEmail, validPassword} from "@/util/validate";
     import {findPasswordByEmailRequest} from "@/api/login";
-    import VerifyCodeButton from '@/components/verify-code-button';
+    import VerifyCodeButton from "@/components/verify-code-button";
 
     export default {
         name: "register",
@@ -71,33 +71,33 @@
         },
         data() {
             return {
-                emailAddress: '',
-                verifyCode: '',
-                password: '',
+                emailAddress: "",
+                verifyCode: "",
+                password: "",
                 canSeePassword: false
             };
         },
         computed: {
-            ...mapGetters(['userInfo']),
+            ...mapGetters(["userInfo"]),
             passwordInputType() {
-                return this.canSeePassword ? 'text' : 'password';
+                return this.canSeePassword ? "text" : "password";
             },
             emailAddressRules() {
                 return [{
-                    message: '邮箱格式不正确',
+                    message: "邮箱格式不正确",
                     validator(val) {
                         return validEmail(val);
                     },
-                    trigger: 'none'
+                    trigger: "none"
                 }];
             },
             passwordRules() {
                 return [{
-                    message: '密码为6-20位数字字母组合 不能有空格',
+                    message: "密码为6-20位数字字母组合且不能有空格",
                     validator(val) {
                         return validPassword(val);
                     },
-                    trigger: 'none'
+                    trigger: "none"
                 }];
             },
             canGetVerifyCode() {
@@ -110,25 +110,25 @@
             },
             async onSubmit() {
                 try {
-                    await this.$refs.form.validate('emailAddress');
-                    await this.$refs.form.validate('verifyCode');
-                    await this.$refs.form.validate('password');
+                    await this.$refs.form.validate("emailAddress");
+                    await this.$refs.form.validate("verifyCode");
+                    await this.$refs.form.validate("password");
 
                     const params = {
                         emailAddress: this.emailAddress,
                         verifyCode: this.verifyCode,
                         newPassword: this.password
-                    }
+                    };
                     findPasswordByEmailRequest(params).then(res => {
                         if (res.code === 0) {
-                            this.$toast.fail('提交成功！');
+                            this.$toast.fail("提交成功！");
                             history.back();
                         } else if (res.code === 1) {
-                            this.$toast.fail('邮箱未注册');
+                            this.$toast.fail("邮箱未注册");
                         } else if (res.code === 2) {
-                            this.$toast.fail('验证码错误');
+                            this.$toast.fail("验证码错误");
                         }
-                    })
+                    });
                 } catch (e) {
 
                 }
@@ -140,7 +140,7 @@
                 this.canSeePassword = !this.canSeePassword;
             },
         },
-    }
+    };
 </script>
 
 <style scoped lang="less">

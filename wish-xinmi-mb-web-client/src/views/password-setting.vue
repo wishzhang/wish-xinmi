@@ -69,10 +69,10 @@
 </template>
 
 <script>
-    import ForwardContainer from '@/components/forward-container';
-    import {mapGetters} from 'vuex';
+    import ForwardContainer from "@/components/forward-container";
+    import {mapGetters} from "vuex";
     import {validEmail, validPassword} from "@/util/validate";
-    import VerifyCodeButton from '@/components/verify-code-button';
+    import VerifyCodeButton from "@/components/verify-code-button";
     import {findPasswordByEmailRequest} from "@/api/login";
 
     export default {
@@ -83,40 +83,40 @@
         },
         data() {
             return {
-                verifyCode: '',
-                password: '',
-                rePassword: '',
+                verifyCode: "",
+                password: "",
+                rePassword: "",
                 canSeePassword: false,
                 reCanSeePassword: false
             };
         },
         computed: {
-            ...mapGetters(['userInfo']),
+            ...mapGetters(["userInfo"]),
             passwordInputType() {
-                return this.canSeePassword ? 'text' : 'password';
+                return this.canSeePassword ? "text" : "password";
             },
             rePasswordInputType() {
-                return this.reCanSeePassword ? 'text' : 'password';
+                return this.reCanSeePassword ? "text" : "password";
             },
             passwordRules() {
                 return [{
-                    message: '密码为6-20位数字字母组合 不能有空格',
+                    message: "密码为6-20位数字字母组合且不能有空格",
                     validator(val) {
                         return validPassword(val);
                     },
-                    trigger: 'none'
+                    trigger: "none"
                 }];
             },
             rePasswordRules() {
                 return [{
-                    message: '密码不一致',
+                    message: "密码不一致",
                     validator: (val) => {
                         if (val !== this.password) {
                             return false;
                         }
                         return true;
                     },
-                    trigger: 'none'
+                    trigger: "none"
                 }];
             },
             canGetVerifyCode() {
@@ -125,7 +125,7 @@
         },
         watch: {
             password() {
-                this.rePassword = '';
+                this.rePassword = "";
             }
         },
         created() {
@@ -139,12 +139,12 @@
             },
             async onSubmit() {
                 try {
-                    await this.$refs.form.validate('verifyCode');
-                    await this.$refs.form.validate('password');
-                    await this.$refs.form.validate('rePassword');
+                    await this.$refs.form.validate("verifyCode");
+                    await this.$refs.form.validate("password");
+                    await this.$refs.form.validate("rePassword");
 
                     if (this.password !== this.rePassword) {
-                        this.$toast.fail('密码不一致');
+                        this.$toast.fail("密码不一致");
                         return;
                     }
 
@@ -155,10 +155,10 @@
                     };
                     findPasswordByEmailRequest(params).then(res => {
                         if (res.code === 0) {
-                            this.$toast.success('密码修改成功!');
+                            this.$toast.success("密码修改成功!");
                             history.back();
                         } else if (res.code === 2) {
-                            this.$toast.fail('该邮箱未注册!');
+                            this.$toast.fail("该邮箱未注册!");
                         }
                     });
                 } catch (e) {
@@ -166,7 +166,7 @@
                 }
             }
         },
-    }
+    };
 </script>
 
 <style scoped lang="less">

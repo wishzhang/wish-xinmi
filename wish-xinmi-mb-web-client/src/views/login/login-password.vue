@@ -7,8 +7,7 @@
                 placeholder="请输入账号"
                 autofocus
                 clearable
-                autocomplete="off"
-                :rules="usernameRules"/>
+                autocomplete="off"/>
         <van-field
                 v-model="password"
                 :type="passwordInputType"
@@ -18,7 +17,7 @@
                 placeholder="请输入密码"
                 clearable
                 autocomplete="off"
-                :rules="[{ required: true, message: '请输入密码', trigger: 'none' }]">
+                :rules="passwordRules">
             <template #button>
                 <div style="display: flex;align-items: center;">
                     <van-icon size="18px" v-if="canSeePassword" name="eye-o"
@@ -38,32 +37,32 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
-    import {validAccount} from "@/util/validate";
+    import {mapGetters} from "vuex";
+    import {validPassword} from "@/util/validate";
     import {loginByPasswordRequest} from "@/api/login";
 
     export default {
         name: "login-password",
-        inject: ['login'],
+        inject: ["login"],
         data() {
             return {
-                username: '',
-                password: '',
+                username: "",
+                password: "",
                 canSeePassword: false
             };
         },
         computed: {
-            ...mapGetters(['userInfo']),
+            ...mapGetters(["userInfo"]),
             passwordInputType() {
-                return this.canSeePassword ? 'text' : 'password';
+                return this.canSeePassword ? "text" : "password";
             },
-            usernameRules() {
+            passwordRules() {
                 return [{
-                    message: '账号在4-40字符以内，只能由英文、数字或下划线组成',
+                    message: "密码为6-20位数字字母组合且不能有空格",
                     validator(val) {
-                        return validAccount(val);
+                        return validPassword(val);
                     },
-                    trigger: 'none'
+                    trigger: "none"
                 }];
             }
         },
@@ -73,27 +72,27 @@
             },
             async onLogin() {
                 if (!this.login.isAgree) {
-                    this.$toast.fail('请阅读并勾选下方协议');
+                    this.$toast.fail("请阅读并勾选下方协议");
                     return;
                 }
 
-                await this.$refs.form.validate('username');
-                await this.$refs.form.validate('password');
+                await this.$refs.form.validate("username");
+                await this.$refs.form.validate("password");
 
                 const params = {
                     username: this.username,
                     password: this.password
-                }
+                };
                 loginByPasswordRequest(params).then(res => {
                     if (res.code === 0) {
-                        this.$emit('login-success', res);
+                        this.$emit("login-success", res);
                     } else if (res.code === 1) {
-                        this.$toast.fail('用户名或密码错误');
+                        this.$toast.fail("用户名或密码错误");
                     }
-                })
+                });
             }
         },
-    }
+    };
 </script>
 
 <style scoped lang="scss">

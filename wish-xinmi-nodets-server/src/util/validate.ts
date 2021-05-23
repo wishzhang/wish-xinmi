@@ -16,11 +16,13 @@ function validatenull(val: any) {
     return false;
 }
 
-// 密码为6-20位数字字母组合 不能有空格
-function validPassword(password = "") {
-    if (password.length >= 6 && password.length <= 20 || (/^[a-zA-Z0-9]*$/.test(password))) {
-        return true;
-    }
+// 密码为6-20位数字字母组合且不能有空格
+function validPassword(password: string) {
+    const reg = /^[A-Za-z]+[0-9]+[A-Za-z0-9]*$|^[0-9]+[A-Za-z]+[A-Za-z0-9]*$/;
+    if (password.length >= 6 && password.length <= 20 && reg.test(password))
+        if (reg.test(password)) {
+            return true;
+        }
     return false;
 }
 
@@ -31,7 +33,6 @@ function validEmailAddress(emailAddress: any) {
 }
 
 export default {
-    validEmailAddress,
     validatenull,
     validPassword
 }
