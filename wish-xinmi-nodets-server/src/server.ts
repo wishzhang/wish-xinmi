@@ -1,7 +1,8 @@
 import errorHandlerMiddleware from "./middleware/error-handler-middleware";
 import Koa from "koa";
 import socket from "./socket/index";
-import {setupModel} from "./dao/model";
+import {setupDatabase} from "./dao/model";
+import debug from './util/debug';
 
 import koaBody from "koa-body";
 
@@ -10,12 +11,11 @@ import initRouter from "./router/index";
 import beforeMiddleware from "./middleware/before-middleware";
 import afterMiddleware from "./middleware/after-middleware";
 
+const log = debug('server');
+
 const app = new Koa();
 
-(async ()=>{
-    await setupModel();
-})();
-
+setupDatabase();
 
 app.use(beforeMiddleware());
 

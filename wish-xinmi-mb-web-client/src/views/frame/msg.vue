@@ -20,7 +20,7 @@
 
         <van-cell v-for="item in chatList"
                   :key="item.chatId"
-                  :value="item.createTime"
+                  :value="item.createdAt"
                   :title="item.name"
                   @click="onChatClick(item)"
                   :label="item.content">

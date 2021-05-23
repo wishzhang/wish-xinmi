@@ -44,7 +44,7 @@
                             <photo-gallery :photosUrl="item.photosUrl"></photo-gallery>
                         </div>
                         <div class="circle-item-footer">
-                            <span class="circle-item-footer-time">{{item.createTime}}</span>
+                            <span class="circle-item-footer-time">{{item.createdAt}}</span>
                         </div>
                     </div>
                 </div>

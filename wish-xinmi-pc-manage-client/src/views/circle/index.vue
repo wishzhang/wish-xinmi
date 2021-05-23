@@ -84,7 +84,7 @@
             },
             {
               label: "创建时间",
-              prop: "createTime",
+              prop: "createdAt",
               type: 'datetime',
               format: "yyyy-MM-dd hh:mm:ss",
               search: true,

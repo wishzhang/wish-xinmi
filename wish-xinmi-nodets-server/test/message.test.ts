@@ -29,7 +29,6 @@ beforeAll(async (done) => {
     expect(res2.body.code).toBe(0);
 
     done();
-
 })
 
 afterAll(async () => {

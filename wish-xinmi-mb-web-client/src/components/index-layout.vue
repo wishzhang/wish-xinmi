@@ -27,7 +27,7 @@
                 socket.on('message-unread-onechat', data => {
                     if (data && data.chatId) {
                         const chatId = data.chatId;
-                        const chatList = JSON.parse(JSON.stringify(this.chatList));
+                        const chatList = JSON.parse(JSON.stringify(self.chatList));
 
                         const index = chatList.findIndex(item => {
                             return item.chatId === chatId;
@@ -38,7 +38,7 @@
                             chatList.unshift(data);
                         }
 
-                        this.$store.commit('SET_CHAT_LIST', chatList);
+                        self.$store.commit('SET_CHAT_LIST', chatList);
                     }
                     console.log('...');
                     console.log(data);

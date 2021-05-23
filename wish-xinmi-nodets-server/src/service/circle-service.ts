@@ -19,7 +19,7 @@ const addThought = async (createUser: any, content: any, photoFiles: any = []) =
 const getPage = async (userId: any, current: any, size: any) => {
     const data: any = await circleDao.getCirclePage(userId, current, size);
     data.records.forEach((el: any) => {
-        el.createTime = datetime.datePastLong(el.createTime);
+        el.createdAt = datetime.datePastLong(el.createdAt);
     });
     return data;
 };

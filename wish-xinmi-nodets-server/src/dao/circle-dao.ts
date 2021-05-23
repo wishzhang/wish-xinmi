@@ -17,8 +17,12 @@ const addThought = async (createUser: string, content: string, photosUrl?: strin
 };
 
 const getOneCircleDetail = async (thoughtId: string) => {
-    const thought: any = await Thought.findByPk(thoughtId);
-    const user: any = await User.findByPk(thought.createUser);
+    const thought: any = await Thought.findOne({
+        where: {thoughtId: thoughtId}
+    });
+    const user: any = await User.findOne({
+        where: {userId: thought.createUser}
+    });
 
     return {
         username: user.username,
@@ -27,7 +31,7 @@ const getOneCircleDetail = async (thoughtId: string) => {
         content: thought.content,
         createUser: thought.create_user,
         photosUrl: thought.photosUrl,
-        createTime: thought.createTime
+        createdAt: thought.createdAt
     };
 };
 
@@ -81,7 +85,7 @@ const getCirclePage = async (userId: number, current?: number, size?: number) =>
     }
 
     list.sort((a, b) => {
-        return new Date(b.createTime).valueOf() - new Date(a.createTime).valueOf();
+        return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
     });
 
     const curIndex = (current - 1) * size;

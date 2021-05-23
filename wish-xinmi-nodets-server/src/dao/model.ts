@@ -1,6 +1,14 @@
 import {DataTypes} from 'sequelize';
 import {sequelize, Sequelize} from './sequelize';
+import mysql from 'mysql2/promise';
+import config from '../config';
+import debug from '../util/debug';
 
+const log = debug('db');
+
+/**
+ * 定义表
+ */
 export const Chat = sequelize.define('Chat',
     {
         chatId: {
@@ -146,7 +154,21 @@ export const Message = sequelize.define('Message',
         tableName: 'xinmi_message',
     });
 
-export const setupModel = async () => {
+// 创建数据库和表
+export async function setupDatabase() {
+    // 创建数据库
+    const connection = await mysql.createConnection({
+        host: config.mysql.host,
+        port: config.mysql.port,
+        user: config.mysql.user,
+        password: config.mysql.password
+    });
+
+    let sql = `CREATE DATABASE IF NOT EXISTS \`${config.mysql.database}\`;`;
+    log(sql);
+    await connection.query(sql);
+
+    // 数据库表关联
     User.belongsToMany(User, {through: 'Contact', as: 'tmp1', foreignKey: 'userId'});
     User.belongsToMany(User, {through: 'Contact', as: 'tmp2', foreignKey: 'contactId'});
 
@@ -163,13 +185,10 @@ export const setupModel = async () => {
     await User.sync()
     await Contact.sync()
     await ContactRecord.sync()
-
     await Chat.sync()
     await ChatMember.sync()
-
-    // TODO: 初次创建数据库表的时候，这里加不了主外键关联，要去数据库设置xinmi_message表
+    // 初次创建数据库表的时候，这里加不了主外键关联，要去数据库设置xinmi_message表
     await Message.sync()
-
     await Thought.sync()
 }
 

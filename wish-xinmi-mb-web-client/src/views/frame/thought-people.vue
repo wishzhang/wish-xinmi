@@ -35,8 +35,8 @@
                         <div class="year-list">
                             <div class="list-item" v-for="item in groupItem">
                                 <div class="date">
-                                    <span class="day">{{item.createTime|dateDay}}</span>
-                                    <span class="month">{{item.createTime|dateMonth}}月</span>
+                                    <span class="day">{{item.createdAt|dateDay}}</span>
+                                    <span class="month">{{item.createdAt|dateMonth}}月</span>
                                 </div>
                                 <div v-if="item.photosUrl&&item.photosUrl.length>0"
                                      style="display: flex">
@@ -97,7 +97,7 @@
             group() {
                 const group = {};
                 for (let item of this.list) {
-                    const mom = moment(item.createTime);
+                    const mom = moment(item.createdAt);
                     const year = mom.year();
                     if (group[year]) {
                         group[year].push(item);

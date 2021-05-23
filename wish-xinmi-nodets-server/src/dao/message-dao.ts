@@ -98,7 +98,7 @@ const getOneMessageChat = async (userId: string, chatId: string) => {
                 chatId: chatId
             },
             order: [
-                ['created_at', 'DESC']
+                ['createdAt', 'DESC']
             ]
         })
     } catch (e) {
@@ -180,29 +180,26 @@ const addMessage = async (originUser: string, targetUser: string, content: strin
 };
 
 async function getChatUnreadCount(chatId: string, contactId: string) {
-    const count1 = await Message.count({
+    const count = await Message.count({
         where: {
-            [Op.and]: [
-                {chatId: chatId},
-                {originUser: contactId},
-            ],
-            isChecked: {
-                [Op.ne]: 1
-            }
+            [Op.or]: [
+                {
+                    chatId: chatId,
+                    originUser: contactId,
+                    isChecked: {
+                        [Op.ne]: 1
+                    }
+                },
+                {
+                    chatId: chatId,
+                    originUser: contactId,
+                    isChecked: {
+                        [Op.eq]: null
+                    }
+                },
+            ]
         }
     });
-    const count2 = await Message.count({
-        where: {
-            [Op.and]: [
-                {chatId: chatId},
-                {originUser: contactId},
-            ],
-            isChecked: {
-                [Op.not]: null
-            }
-        }
-    });
-    const count = count1 + count2;
 
     return count;
 };

@@ -83,7 +83,7 @@ export default {
           },
           {
             label: "创建时间",
-            prop: "createTime",
+            prop: "createdAt",
           },
           {
             label: "更新时间",

@@ -3,7 +3,7 @@ import config from "../config";
 import debug from '../util/debug';
 import util from '../util/index'
 
-const log = debug('database');
+const log = debug('db');
 
 const sequelize: any = new Sequelize(config.mysql.database, config.mysql.user, config.mysql.password, {
     host: config.mysql.host,
@@ -11,9 +11,6 @@ const sequelize: any = new Sequelize(config.mysql.database, config.mysql.user, c
     define: {
         timestamps: true,
         paranoid: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at',
         underscored: true,
         charset: 'utf8'
     },

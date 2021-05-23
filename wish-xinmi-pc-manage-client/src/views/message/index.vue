@@ -91,12 +91,12 @@
             },
             {
               label: "创建时间",
-              prop: "createTime",
+              prop: "createdAt",
               type: 'datetime',
               format: "yyyy-MM-dd hh:mm:ss",
               search: true,
               formatter(row){
-                return dateFormat(row.createTime);
+                return dateFormat(row.createdAt);
               }
             }
           ]
@@ -140,7 +140,7 @@
         fetchAllMessagePageRequest(params).then(res => {
           this.loading = false;
           const data = res.data;
-          const dates = data.records.map(el=>new Date(el.createTime).valueOf());
+          const dates = data.records.map(el=>new Date(el.createdAt).valueOf());
           console.log(dates);
           this.data = data.records;
           this.page.total = data.total;
