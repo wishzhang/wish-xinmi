@@ -7,8 +7,8 @@ let io: any = {};
 
 async function emit(emitName: string, obj: { originUserId: string, targetUserId: string, data: any }
 ) {
-    const targetUser: any = await userService.getOneUser(obj.targetUserId);
-    const originUser: any = await userService.getOneUser(obj.originUserId);
+    const targetUser: any = await userService.findByPk(obj.targetUserId);
+    const originUser: any = await userService.findByPk(obj.originUserId);
 
     console.log(`${originUser.username}向${targetUser.username}发送消息：` + JSON.stringify(obj.data));
 

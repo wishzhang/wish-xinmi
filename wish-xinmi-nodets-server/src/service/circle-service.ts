@@ -3,8 +3,8 @@ import datetime from "../util/datetime";
 import fileUtil from "../util/file-util";
 import {Contact, Thought, User} from "../dao/model";
 import {queryPage} from "../dao/sequelize";
-import userDao from "../dao/user-dao";
 import contactDao from "../dao/contact-dao";
+import contactService from './contact-service';
 
 
 async function addThought(createUser: string, content: string, photoFiles: Array<string> = []) {
@@ -33,7 +33,7 @@ async function addThought(createUser: string, content: string, photoFiles: Array
  * @returns {Promise<{current: number, total: *, size: number, records}>}
  */
 async function getPage(userId: string, current?: number, size?: number) {
-    let data:any = {};
+    let data: any = {};
     const list = [];
     let createUserIdList = [];
     const thoughtList = [];
@@ -62,12 +62,12 @@ async function getPage(userId: string, current?: number, size?: number) {
         let info: any = {};
         const createUserId = thought.createUser;
 
-        info = await userDao.getUserDetail(createUserId);
+        info = await User.findByPk(createUserId);
         obj.name = info.username;
         obj.avatarUrl = info.avatarUrl;
 
         if (info.userId !== createUserId) {
-            const contact = await contactDao.getContactInfoHad(info.userId, createUserId);
+            const contact = await contactService.getContactInfoHad(info.userId, createUserId);
             obj.name = contact.name;
         }
 

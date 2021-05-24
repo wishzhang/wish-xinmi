@@ -206,7 +206,6 @@ export async function teardownDatabase() {
     await connection.query(sql);
 }
 
-
 // 删除所有表数据
 export async function deleteAllTable() {
     await Thought.destroy({

@@ -1,5 +1,4 @@
 import {Chat} from "./model";
-import {ChatMember} from "./model";
 import {query} from "./sequelize";
 
 async function findChatId(user1: string, user2: string) {

@@ -3,8 +3,8 @@ import userService from '../service/user-service';
 export default (emit:any) => {
     return {
         async emitMessageToOneContact(originUserId:string, targetUserId:string, data:any) {
-            const targetUser = await userService.getOneUser(targetUserId);
-            const originUser = await userService.getOneUser(originUserId);
+            const targetUser = await userService.findByPk(targetUserId);
+            const originUser = await userService.findByPk(originUserId);
 
             emit("message-one-contact", {
                 originUserId,

@@ -37,7 +37,6 @@ async function query(sql: string, options?: any) {
     return rows;
 }
 
-// TODO 类型
 async function queryPage(model: any, opt: any, current: number = 1, size: number = 10) {
     const c = +current;
     const s = +size;

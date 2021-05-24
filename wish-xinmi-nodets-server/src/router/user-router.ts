@@ -54,7 +54,7 @@ router.get("/detail", async (ctx: any) => {
         throw Error('找不到用户');
     }
 
-    const detail = await userService.getOneUser(userId);
+    const detail = await userService.findByPk(userId);
     ctx.body = R.success(detail);
 });
 

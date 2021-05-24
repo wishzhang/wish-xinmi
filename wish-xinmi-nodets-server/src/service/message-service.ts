@@ -1,11 +1,11 @@
 import chatDao from "../dao/chat-dao";
 import util from "../util";
 import datetime from '../util/datetime';
-import {Chat, ChatMember, Message} from "../dao/model";
+import {Chat, ChatMember, Message, User} from "../dao/model";
 import {Op, sequelize} from '../dao/sequelize'
 import contactDao from "../dao/contact-dao";
 import {queryPage} from "../dao/sequelize";
-import userDao from '../dao/user-dao';
+import contactService from './contact-service';
 
 const uuid = util.uuid;
 
@@ -95,12 +95,12 @@ async function getMessageDetail(message: any) {
     const chatId = message.chatId;
     const targetUserId = await findTargetUserId(chatId, originUserId);
 
-    const originUser: any = await userDao.getUserDetail(originUserId);
+    const originUser: any = await User.findByPk(originUserId);
     message.originName = originUser.username;
     message.originAvatarUrl = originUser.avatarUrl;
 
     if (targetUserId) {
-        const targetUser = await contactDao.getContactInfoHad(originUserId, targetUserId);
+        const targetUser = await contactService.getContactInfoHad(originUserId, targetUserId);
         message.targetUser = targetUserId;
         message.targetAvatarUrl = targetUser.avatarUrl;
         message.targetName = targetUser.name;
@@ -202,7 +202,7 @@ async function getOneMessageChatByUserIdAndChatId(originUser: string, chatId: st
 
     if (message) {
         const contactId = await findTargetUserId(chatId, originUser);
-        const contactInfo: any = await contactDao.getContactInfoHad(originUser, contactId);
+        const contactInfo: any = await contactService.getContactInfoHad(originUser, contactId);
         const chatUnreadMessageCount = await getChatUnreadCount(chatId, contactId);
 
         messageChat = {

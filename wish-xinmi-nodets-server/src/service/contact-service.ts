@@ -4,7 +4,7 @@ import util from "../util";
 import {sequelize, Op} from "../dao/sequelize";
 import messageDao from "../dao/message-dao";
 import chatDao from "../dao/chat-dao";
-import {Chat, ChatMember, Contact, ContactRecord, Message} from "../dao/model";
+import {Chat, ChatMember, Contact, ContactRecord, Message, User} from "../dao/model";
 
 async function getYesContactList(userId: string) {
     const contactList: any = await contactDao.getYesContactList(userId);
@@ -41,8 +41,8 @@ async function getNoContactList(userId: string, username = "") {
 }
 
 async function addContact(userId: string, contactId: string, validateMsg: string) {
-    const targetDetail: any = await userService.getOneUser(contactId);
-    const originDetail: any = await userService.getOneUser(userId);
+    const targetDetail: any = await userService.findByPk(contactId);
+    const originDetail: any = await userService.findByPk(userId);
     const msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
 
     const row: any = await ContactRecord.findOne({where: {userId: userId, contactId: contactId}});
@@ -70,8 +70,8 @@ async function getConfirmContactList(userId: string) {
 }
 
 async function confirmContact(userId: string, contactId: string) {
-    const targetDetail: any = await userService.getOneUser(contactId);
-    const originDetail: any = await userService.getOneUser(userId);
+    const targetDetail: any = await userService.findByPk(contactId);
+    const originDetail: any = await userService.findByPk(userId);
     const originName = originDetail.username;
     const targetName = targetDetail.username;
 
@@ -91,7 +91,7 @@ async function confirmContact(userId: string, contactId: string) {
             transaction: t
         })
 
-        const is = await contactDao.isContact(userId, contactId, true);
+        const is = await isContact(userId, contactId, true);
         if (!is) {
             await Contact.bulkCreate([
                 {userId: userId, contactId: contactId, contactName: targetName},
@@ -122,19 +122,54 @@ async function getUserContactStatus(userId: string, contactId: string) {
 }
 
 async function getContactInfoHad(userId: string, contactId: string) {
-    return await contactDao.getContactInfoHad(userId, contactId);
+    const is = await isContact(userId, contactId);
+    if (!is) {
+        throw Error(`${userId}没有对应的联系人${contactId}`);
+    }
+
+    const contactor: any = await Contact.findOne({
+        where: {
+            userId: userId,
+            contactId: contactId
+        }
+    });
+
+    const contactorUserInfo: any = await User.findByPk(contactId);
+    contactor.name = contactor.contactName || contactorUserInfo.username;
+    contactor.username = contactorUserInfo.username;
+    contactor.avatarUrl = contactorUserInfo.avatarUrl;
+
+    return contactor;
 };
 
 async function getContactWarnNum(userId: string) {
-    const list: any = await contactDao.getContactNoCheckedNum(userId);
-    if (list.length > 0) {
-        return list[0].num;
-    }
-    return 0;
+    const num = await ContactRecord.count({
+        where: {
+            userId: userId,
+            status: 2,
+            [Op.or]: [
+                {
+                    isChecked: {
+                        [Op.ne]: 1
+                    }
+                },
+                {
+                    isChecked: {
+                        [Op.eq]: null
+                    }
+                }
+            ]
+        }
+    });
+    return num;
 };
 
 async function setAllContactChecked(userId: string) {
-    return await contactDao.setAllContactChecked(userId);
+    await ContactRecord.update({isChecked: 1}, {
+        where: {
+            userId: userId
+        }
+    })
 };
 
 async function editContact(userId: string, contactId: string, contactName: string) {
@@ -211,8 +246,15 @@ async function deleteContact(userId: string, contactId: string) {
     });
 };
 
-async function isContact(userId: string, contactId: string) {
-    return await contactDao.isContact(userId, contactId);
+async function isContact(userId: string, contactId: string, isAll = false) {
+    const contactor: any = await Contact.findOne({
+        where: {
+            userId: userId,
+            contactId: contactId
+        },
+        paranoid: !isAll
+    });
+    return contactor !== null;
 }
 
 export default {

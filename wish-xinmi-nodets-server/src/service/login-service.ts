@@ -1,7 +1,12 @@
-import loginDao from "../dao/login-dao";
+import {User} from "../dao/model";
 
 async function login(username: string, password: string) {
-    return await loginDao.login(username, password);
+    return await User.findOne({
+        where: {
+            username: username,
+            password: password
+        }
+    })
 };
 
 export default {
