@@ -4,7 +4,7 @@ import util from "../util";
 import {sequelize, Op} from "../dao/sequelize";
 import messageDao from "../dao/message-dao";
 import chatDao from "../dao/chat-dao";
-import {Contact, ContactRecord} from "../dao/model";
+import {Chat, ChatMember, Contact, ContactRecord, Message} from "../dao/model";
 
 async function getYesContactList(userId: string) {
     const contactList: any = await contactDao.getYesContactList(userId);
@@ -148,10 +148,45 @@ async function editContact(userId: string, contactId: string, contactName: strin
     })
 };
 
+// 硬删除联系人及相关记录
 async function deleteContact(userId: string, contactId: string) {
+    if (!await isContact(userId, contactId)) {
+        throw Error(`删除失败：${userId}不存在联系人${contactId}`);
+    }
+
+    const chatId = await chatDao.findChatId(userId, contactId);
+
     await sequelize.transaction(async (t: any) => {
-        await messageDao.delMessageByPeople(userId, contactId, {force: true, transaction: t});
-        await chatDao.delChat(userId, contactId, {force: true, transaction: t});
+        // 删除消息
+        await Message.destroy({
+            where: {
+                [Op.or]: [
+                    {chatId: chatId, originUser: userId},
+                    {chatId: chatId, originUser: contactId},
+                ]
+            },
+            force: true,
+            transaction: t
+        });
+
+        // 删除会话成员
+        await ChatMember.destroy({
+            where: {
+                chatId: chatId
+            },
+            force: true,
+            transaction: t
+        })
+        // 删除会话
+        await Chat.destroy({
+            where: {
+                chatId: chatId
+            },
+            force: true,
+            transaction: t
+        })
+
+        // 硬删除联系人
         await Contact.destroy({
             where: {
                 [Op.or]: [
@@ -162,6 +197,7 @@ async function deleteContact(userId: string, contactId: string) {
             force: true,
             transaction: t
         });
+        // 硬删除联系人记录
         await ContactRecord.destroy({
             where: {
                 [Op.or]: [

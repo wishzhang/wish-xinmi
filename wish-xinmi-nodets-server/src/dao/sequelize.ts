@@ -1,4 +1,4 @@
-import {Sequelize, Op, QueryTypes} from 'sequelize';
+import {Sequelize, Op, QueryTypes, Options} from 'sequelize';
 import config from "../config";
 import debug from '../util/debug';
 import util from '../util/index'
@@ -37,19 +37,26 @@ async function query(sql: string, options?: any) {
     return rows;
 }
 
-async function queryPage(sql: string, current = 1, size = 10) {
-    const totalSql = `select count(*) as total from (${sql}) as tmp`;
-    const rows: any = await query(totalSql);
-    let list = await query(`${sql} limit ${(current - 1) * size},${size}`);
-    list = util.toHumpList(list);
+// TODO 类型
+async function queryPage(model: any, opt: any, current: number = 1, size: number = 10) {
+    const c = +current;
+    const s = +size;
 
-    let total = rows && rows.length ? rows[0].total : 0;
+    const offset = (c - 1) * s;
+    const limit = s;
+    const option = Object.assign({
+        offset: offset,
+        limit: s
+    }, opt);
+
+    const {count, rows} = await model.findAndCountAll(option);
+
     return {
-        current,
-        size,
-        total: total,
-        records: list
-    };
+        records: rows,
+        current: current,
+        size: size,
+        total: count
+    }
 }
 
 export {

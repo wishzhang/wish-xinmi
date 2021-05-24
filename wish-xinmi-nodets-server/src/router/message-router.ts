@@ -16,7 +16,7 @@ router.get("/getContactMessagePage", async (ctx: any) => {
         throw Error(`${originUser}没有联系人${targetUser}`);
     }
 
-    const list = await messageService.getContactMessagePage({originUser, targetUser, current, size});
+    const list = await messageService.getContactMessagePage(originUser, targetUser, current, size);
     ctx.body = R.success(list);
 });
 

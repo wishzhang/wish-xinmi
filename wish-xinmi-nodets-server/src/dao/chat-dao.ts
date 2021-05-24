@@ -27,23 +27,6 @@ async function findChatId(user1: string, user2: string) {
     return null;
 }
 
-async function delChat(user1: string, user2: string, options = {}) {
-    const chatId = await findChatId(user1, user2);
-    await ChatMember.destroy({
-        where: {
-            chatId: chatId
-        },
-        ...options
-    })
-    await Chat.destroy({
-        where: {
-            chatId: chatId
-        },
-        ...options
-    })
-}
-
 export default {
-    findChatId,
-    delChat
+    findChatId
 }
