@@ -6,6 +6,9 @@ import {Op, sequelize} from '../dao/sequelize'
 import contactDao from "../dao/contact-dao";
 import {queryPage} from "../dao/sequelize";
 import contactService from './contact-service';
+import userService from "./user-service";
+import Joi from "joi";
+import socket from "../socket";
 
 const uuid = util.uuid;
 
@@ -17,15 +20,28 @@ const uuid = util.uuid;
  * @returns
  */
 async function addMessage(originUser: string, targetUser: string, content: string) {
-    let chatId = await chatDao.findChatId(originUser, targetUser);
-    if (chatId) {
-        const msg = await Message.create({
-            content: content,
-            chatId: chatId,
-            originUser: originUser
-        })
-    } else {
-        try {
+    const schema = Joi.object({
+        content: Joi.string().required()
+    });
+    try {
+        await schema.validateAsync({content});
+    } catch (e) {
+        throw e.message;
+    }
+
+    if (!await contactService.isContact(originUser, targetUser)) {
+        throw Error(`${originUser}没有联系人${targetUser}`);
+    }
+
+    try {
+        let chatId = await chatDao.findChatId(originUser, targetUser);
+        if (chatId) {
+            await Message.create({
+                content: content,
+                chatId: chatId,
+                originUser: originUser
+            })
+        } else {
             await sequelize.transaction(async (t: any) => {
                 const chatId = uuid();
                 const chat = await Chat.create({chatId: chatId},
@@ -42,9 +58,14 @@ async function addMessage(originUser: string, targetUser: string, content: strin
                     originUser: originUser
                 }, {transaction: t});
             })
-        } catch (e) {
-            console.log(e);
         }
+
+        // 发送即时消息
+        await socket.emitMessageToOneContact(originUser, targetUser, content);
+        const messageChat = await getOneMessageChat(originUser, targetUser);
+        await socket.emitUnread(originUser, targetUser, messageChat);
+    } catch (e) {
+        throw Error('消息发送失败');
     }
 };
 
@@ -55,6 +76,10 @@ async function addMessage(originUser: string, targetUser: string, content: strin
  * @returns
  */
 async function getContactMessagePage(originUser: string, targetUser: string, current: number, size: number) {
+    if (!contactService.isContact(originUser, targetUser)) {
+        throw Error(`${originUser}没有联系人${targetUser}`);
+    }
+
     const resData = await getMessagePage(originUser, targetUser, current, size);
     return resData;
 };
@@ -115,6 +140,10 @@ async function getMessageDetail(message: any) {
  * @returns {Promise<any>}
  */
 async function getMineAllChatList(userId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('没有找到这个用户' + userId);
+    }
+
     const list = [];
     let myAllChatList: any[];
 
@@ -233,6 +262,10 @@ async function getOneMessageChat(originUser: string, targetUser: string) {
 };
 
 async function checkMessage(userId: string, contactId: string) {
+    if (!await contactService.isContact(userId, contactId)) {
+        throw Error(`${userId}没有联系人${contactId}`);
+    }
+
     const chatId = await chatDao.findChatId(userId, contactId);
     await Message.update({
         isChecked: 1

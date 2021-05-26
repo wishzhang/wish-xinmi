@@ -7,6 +7,10 @@ import chatDao from "../dao/chat-dao";
 import {Chat, ChatMember, Contact, ContactRecord, Message, User} from "../dao/model";
 
 async function getYesContactList(userId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const contactList: any = await contactDao.getYesContactList(userId);
     const ch = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
         "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
@@ -36,11 +40,23 @@ async function getYesContactList(userId: string) {
 }
 
 async function getNoContactList(userId: string, username = "") {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const list = await contactDao.getNoContactList(userId, username);
     return list;
 }
 
 async function addContact(userId: string, contactId: string, validateMsg: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error(`找不到${userId}`);
+    }
+
+    if (!await userService.hasUser(contactId)) {
+        throw Error(`找不到对应联系人${contactId}`);
+    }
+
     const targetDetail: any = await userService.findByPk(contactId);
     const originDetail: any = await userService.findByPk(userId);
     const msg = validateMsg ? validateMsg : `你好，我是${originDetail.username}`;
@@ -65,11 +81,23 @@ async function addContact(userId: string, contactId: string, validateMsg: string
 }
 
 async function getConfirmContactList(userId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const list = await contactDao.getConfirmContactList(userId);
     return list;
 }
 
 async function confirmContact(userId: string, contactId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const targetDetail: any = await userService.findByPk(contactId);
     const originDetail: any = await userService.findByPk(userId);
     const originName = originDetail.username;
@@ -112,6 +140,14 @@ async function confirmContact(userId: string, contactId: string) {
 }
 
 async function getUserContactStatus(userId: string, contactId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
+    if (!await userService.hasUser(contactId)) {
+        throw Error('找不到用户' + contactId);
+    }
+
     const row: any = await ContactRecord.findOne({
         where: {
             userId: userId,
@@ -122,8 +158,15 @@ async function getUserContactStatus(userId: string, contactId: string) {
 }
 
 async function getContactInfoHad(userId: string, contactId: string) {
-    const is = await isContact(userId, contactId);
-    if (!is) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
+    if (!await userService.hasUser(contactId)) {
+        throw Error('找不到用户' + contactId);
+    }
+
+    if (!await isContact(userId, contactId)) {
         throw Error(`${userId}没有对应的联系人${contactId}`);
     }
 
@@ -143,6 +186,10 @@ async function getContactInfoHad(userId: string, contactId: string) {
 };
 
 async function getContactWarnNum(userId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
     const num = await ContactRecord.count({
         where: {
             userId: userId,
@@ -165,6 +212,10 @@ async function getContactWarnNum(userId: string) {
 };
 
 async function setAllContactChecked(userId: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
     await ContactRecord.update({isChecked: 1}, {
         where: {
             userId: userId
@@ -173,6 +224,14 @@ async function setAllContactChecked(userId: string) {
 };
 
 async function editContact(userId: string, contactId: string, contactName: string) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
+    if (!await userService.hasUser(contactId)) {
+        throw Error('找不到用户' + contactId);
+    }
+
     return await Contact.update({
         contactName
     }, {
@@ -185,8 +244,17 @@ async function editContact(userId: string, contactId: string, contactName: strin
 
 // 硬删除联系人及相关记录
 async function deleteContact(userId: string, contactId: string) {
-    if (!await isContact(userId, contactId)) {
-        throw Error(`删除失败：${userId}不存在联系人${contactId}`);
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户' + userId);
+    }
+
+    if (!await userService.hasUser(contactId)) {
+        throw Error('找不到用户' + contactId);
+    }
+
+    const is = await isContact(userId, contactId);
+    if (!is) {
+        throw Error(`${userId}没有联系人${contactId}`);
     }
 
     const chatId = await chatDao.findChatId(userId, contactId);

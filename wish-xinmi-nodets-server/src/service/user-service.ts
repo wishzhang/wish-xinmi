@@ -1,5 +1,9 @@
 import util from "../util";
 import {User} from "../dao/model";
+import Joi from "joi";
+import validate from "../util/validate";
+import verifyCodeService from "./verify-code-service";
+import R from "../util/response";
 
 async function getUserList() {
     return await User.findAll();
@@ -10,11 +14,18 @@ async function insertUser(obj: any) {
 };
 
 async function updateUser(obj: any) {
+    if (!await hasUser(obj.userId)) {
+        throw Error('找不到用户');
+    }
+
     obj.avatarUrl = util.removeDomain(obj.avatarUrl);
     return await User.update(obj, {where: {userId: obj.userId}})
 };
 
 async function findByPk(userId: string) {
+    if (!await hasUser(userId)) {
+        throw Error('找不到用户');
+    }
     return await User.findByPk(userId);
 };
 
@@ -30,17 +41,83 @@ async function getMaxXinmiId() {
     return await User.max('username');
 };
 
-async function updatePasswordByEmailAddress(password: string, emailAddress: string) {
-    return await User.update({password, emailAddress}, {
+async function updatePasswordByEmailAddress(emailAddress: string, verifyCode: string, newPassword: string) {
+    const schema = Joi.object({
+        emailAddress: Joi.string().email().required(),
+        verifyCode: Joi.string().required(),
+        newPassword: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
+    })
+    try {
+        await schema.validateAsync({emailAddress, verifyCode, newPassword});
+    } catch (e) {
+        throw e.message;
+    }
+
+    // 验证码是否有效
+    const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
+    if (!isValidCode) {
+        throw Error('验证码错误');
+    }
+
+    // 邮箱地址是否已注册
+    const user = await findEmailAddress(emailAddress);
+    if (!user) {
+        throw Error('该邮箱未注册');
+    }
+
+    return await User.update({password: newPassword}, {
         where: {
             emailAddress
-        },
-        fields: ['password']
+        }
     })
 };
 
-async function editEmailAddress(originEmailAddress: string, targetEmailAddress: string, password: string) {
-    return await User.update({emailAddress: targetEmailAddress}, {
+/**
+ * 修改邮箱
+ * @param originEmailAddress
+ * @param targetEmailAddress
+ * @param verifyCode
+ * @param password
+ * @return code: 1 该邮箱未注册 2 验证码错误
+ */
+async function editEmailAddress(originEmailAddress: string,
+                                targetEmailAddress: string,
+                                password: string,
+                                verifyCode: string) {
+    const schema = Joi.object({
+        originEmailAddress: Joi.string().email().required(),
+        targetEmailAddress: Joi.string().email().required(),
+        verifyCode: Joi.required(),
+        password: Joi.string().custom((value) => {
+            if (!validate.validPassword(value)) {
+                throw new Error('密码格式错误');
+            }
+        })
+    });
+
+    try {
+        await schema.validateAsync({originEmailAddress, targetEmailAddress, verifyCode, password});
+    } catch (e) {
+        throw Error(e.message);
+    }
+
+    // 验证码是否有效
+    const isValidCode = verifyCodeService.canMatchEmailCode(targetEmailAddress, verifyCode);
+    if (!isValidCode) {
+        throw Error('验证码错误');
+    }
+
+    // 密码是否有效
+    const user = await findOne({emailAddress: originEmailAddress, password: password});
+    if (!user) {
+        throw Error('密码错误');
+    }
+
+    await User.update({emailAddress: targetEmailAddress}, {
         where: {
             emailAddress: originEmailAddress,
             password: password

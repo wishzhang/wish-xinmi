@@ -5,9 +5,25 @@ import {Contact, Thought, User} from "../dao/model";
 import {queryPage} from "../dao/sequelize";
 import contactDao from "../dao/contact-dao";
 import contactService from './contact-service';
+import userService from './user-service';
+import Joi from 'joi';
 
 
 async function addThought(createUser: string, content: string, photoFiles: Array<string> = []) {
+    const schema = Joi.object({
+        content: Joi.string().required()
+    });
+
+    try {
+        await schema.validateAsync({content});
+    } catch (e) {
+        throw e.message;
+    }
+
+    if (!await userService.hasUser(createUser)) {
+        throw Error('找不到用户');
+    }
+
     const ps = photoFiles.map((photoFile: any) => {
         return fileUtil.putFile(photoFile);
     });
@@ -32,7 +48,11 @@ async function addThought(createUser: string, content: string, photoFiles: Array
  * @param size
  * @returns {Promise<{current: number, total: *, size: number, records}>}
  */
-async function getPage(userId: string, current?: number, size?: number) {
+async function getPage(userId: string, current: number, size: number) {
+    if (!await userService.hasUser(userId)) {
+        throw '找不到用户';
+    }
+
     let data: any = {};
     const list = [];
     let createUserIdList = [];
@@ -95,7 +115,11 @@ async function getPage(userId: string, current?: number, size?: number) {
     return data;
 }
 
-async function getUserThoughtPage(userId: string, current?: number, size?: number) {
+async function getUserThoughtPage(userId: string, current: number, size: number) {
+    if (!await userService.hasUser(userId)) {
+        throw Error('找不到用户');
+    }
+
     const data = await queryPage(Thought, {
         where: {
             createUser: userId

@@ -12,25 +12,11 @@ const router = routerFactory("/login");
 router.post("/loginByPassword", async (ctx: any) => {
     const {username, password} = ctx.request.body;
 
-    const schema = Joi.object({
-        username: Joi.string().required(),
-        password: Joi.string().custom((value) => {
-            if (!validate.validPassword(value)) {
-                throw new Error('密码格式错误');
-            }
-        })
-    })
-    try {
-        await schema.validateAsync({username, password});
-    } catch (e) {
-        throw e.message;
-    }
-
-    const user = await userService.findOne({username, password});
+    const user = await loginService.loginByPassword(username, password);
     if (user) {
         ctx.body = R.success(user);
     } else {
-        ctx.body = R.fail(1, "用户名或密码错误");
+        throw Error('用户名或密码错误');
     }
 });
 
@@ -43,35 +29,7 @@ router.post("/loginByPassword", async (ctx: any) => {
 router.post("/loginByEmail", async (ctx: any) => {
     const {emailAddress, verifyCode} = ctx.request.body;
 
-    const schema = Joi.object({
-        emailAddress: Joi.string().email().required(),
-        verifyCode: Joi.required()
-    })
-
-    try {
-        await schema.validateAsync({emailAddress, verifyCode});
-    } catch (err) {
-        throw err.message;
-    }
-
-    // 验证码是否有效
-    const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
-    if (!isValidCode) {
-        ctx.body = R.fail(2, "验证码错误");
-        return;
-    }
-
-    // 邮箱地址是否已注册，没有注册就自动注册
-    let user: any = await userService.findEmailAddress(emailAddress);
-    if (!user) {
-        const maxId = await userService.getMaxXinmiId();
-        const xinmiId = generator.createXinmiId(maxId);
-        const obj = {
-            username: xinmiId,
-            emailAddress: emailAddress
-        };
-        user = await userService.insertUser(obj);
-    }
+    const user = await loginService.loginByEmail(emailAddress, verifyCode);
 
     ctx.body = R.success(user);
 });
@@ -85,37 +43,9 @@ router.post("/loginByEmail", async (ctx: any) => {
  */
 router.post("/findPasswordByEmail", async (ctx: any) => {
     const {emailAddress, verifyCode, newPassword} = ctx.request.body;
-    const schema = Joi.object({
-        emailAddress: Joi.string().email().required(),
-        verifyCode: Joi.string().required(),
-        newPassword: Joi.string().custom((value) => {
-            if (!validate.validPassword(value)) {
-                throw new Error('密码格式错误');
-            }
-        })
-    })
-    try {
-        await schema.validateAsync({emailAddress, verifyCode, newPassword});
-    } catch (e) {
-        throw e.message;
-    }
 
-    // 验证码是否有效
-    const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
-    if (!isValidCode) {
-        ctx.body = R.fail(2, "验证码错误");
-        return;
-    }
+    await userService.updatePasswordByEmailAddress(emailAddress, verifyCode, newPassword);
 
-    // 邮箱地址是否已注册
-    const user = await userService.findEmailAddress(emailAddress);
-    if (!user) {
-        ctx.body = R.fail(1, "该邮箱未注册");
-        return;
-    }
-
-    // 修改密码
-    await userService.updatePasswordByEmailAddress(newPassword, emailAddress);
     ctx.body = R.success();
 });
 
