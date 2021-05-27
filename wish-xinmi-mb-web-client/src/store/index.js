@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 import {getStore, setStore} from "../util/store";
 import {fetchUserInfoRequest} from "../api/user";
 import {fetchServerTimeRequest} from "@/api/common";
 import {fetchContactWarnNumRequest} from "../api/contact";
 import {fetchMineAllChatListRequest} from "@/api/message";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {},
@@ -14,13 +14,13 @@ export default new Vuex.Store({
     actions: {},
     getters: {
         userInfo: (state) => {
-            return state.user.userInfo
+            return state.user.userInfo;
         },
         serverTime: (state) => {
-            return state.common.serverTime
+            return state.common.serverTime;
         },
         loginType: (state) => {
-            return state.common.loginType
+            return state.common.loginType;
         },
         contactWarnNumStr: (state) => {
             return state.common.contactWarnNum;
@@ -38,13 +38,18 @@ export default new Vuex.Store({
     modules: {
         user: {
             state: {
-                userInfo: getStore({name: 'userInfo'}) || {},
-                serverTime: undefined
+                userInfo: getStore({name: "userInfo"}) || {},
+                serverTime: undefined,
+                token: getStore({name: "token"}) || {}
             },
             mutations: {
+                SET_TOKEN(state, token) {
+                    state.token = token;
+                    setStore({name: "token", content: token});
+                },
                 SET_USER_INFO(state, userInfo) {
                     state.userInfo = userInfo;
-                    setStore({name: 'userInfo', content: userInfo});
+                    setStore({name: "userInfo", content: userInfo});
                 },
                 SET_SERVER_TIME(state, serverTime) {
                     state.serverTime = serverTime;
@@ -52,7 +57,8 @@ export default new Vuex.Store({
             },
             actions: {
                 Logout({commit}) {
-                    commit('SET_USER_INFO', {});
+                    commit("SET_USER_INFO", {});
+                    commit("SET_TOKEN", "");
                 }
             },
             getters: {}
@@ -61,9 +67,9 @@ export default new Vuex.Store({
             state: {
                 serverTime: undefined,
                 // 登录方式
-                loginType: getStore({name: 'loginType'}) || 'email',
-                contactWarnNum: getStore({name: 'contactWarnNum'}),
-                chatList: getStore({name: 'chatList'}) || [],
+                loginType: getStore({name: "loginType"}) || "email",
+                contactWarnNum: getStore({name: "contactWarnNum"}),
+                chatList: getStore({name: "chatList"}) || []
             },
             mutations: {
                 SET_SERVER_TIME(state, serverTime) {
@@ -71,17 +77,17 @@ export default new Vuex.Store({
                 },
                 SET_LOGIN_TYPE(state, typeName) {
                     state.loginType = typeName;
-                    setStore({name: 'loginType', content: typeName});
+                    setStore({name: "loginType", content: typeName});
                 },
                 SET_CONTACT_WARN_NUM(state, num) {
                     num = Number.parseInt(num);
-                    let str = num >= 1 ? num + '' : '';
+                    let str = num >= 1 ? num + "" : "";
                     state.contactWarnNum = str;
-                    setStore({name: 'contactWarnNum', content: str})
+                    setStore({name: "contactWarnNum", content: str});
                 },
                 SET_CHAT_LIST(state, list) {
                     state.chatList = list;
-                    setStore({name: 'chatList', content: list});
+                    setStore({name: "chatList", content: list});
                 }
             },
             actions: {
@@ -89,10 +95,10 @@ export default new Vuex.Store({
                     return fetchServerTimeRequest().then(res => {
                         if (res.code === 0) {
                             const serverTime = res.data.serverTime;
-                            commit('SET_SERVER_TIME', serverTime);
+                            commit("SET_SERVER_TIME", serverTime);
                             return serverTime;
                         }
-                    })
+                    });
                 },
                 FetchRefreshInitData({dispatch, state, commit, rootState}) {
                     // dispatch('FetchContactWarnNum');
@@ -102,19 +108,19 @@ export default new Vuex.Store({
                         userId: rootState.user.userInfo.userId
                     };
                     return fetchContactWarnNumRequest(params).then(res => {
-                        commit('SET_CONTACT_WARN_NUM', res.data);
-                    })
+                        commit("SET_CONTACT_WARN_NUM", res.data);
+                    });
                 },
                 FetchMineAllChatList({dispatch, state, commit, rootState}) {
                     const params = {
                         userId: rootState.user.userInfo.userId
                     };
                     return fetchMineAllChatListRequest(params).then(res => {
-                        commit('SET_CHAT_LIST', res.data);
-                    })
+                        commit("SET_CHAT_LIST", res.data);
+                    });
                 },
             },
             getters: {}
         }
     }
-})
+});

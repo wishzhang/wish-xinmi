@@ -6,18 +6,32 @@ import {routerFactory} from "./router-factory";
 import generator from '../util/generator';
 import Joi from 'joi';
 import validate from "../util/validate";
+import jwt from 'jsonwebtoken';
 
 const router = routerFactory("/login");
+
+function getTokenData(user: any) {
+    const token = loginService.createToken({userId: user.userId});
+
+    const data = {
+        ...user,
+        token
+    };
+    return data;
+}
+
+router.post('/refreshToken', async (ctx: any) => {
+    const token = loginService.createToken({userId: ctx.userId});
+    ctx.body = R.success(token);
+})
 
 router.post("/loginByPassword", async (ctx: any) => {
     const {username, password} = ctx.request.body;
 
     const user = await loginService.loginByPassword(username, password);
-    if (user) {
-        ctx.body = R.success(user);
-    } else {
-        throw Error('用户名或密码错误');
-    }
+
+    const tokenData = getTokenData(user);
+    ctx.body = R.success(tokenData);
 });
 
 /**
@@ -31,7 +45,8 @@ router.post("/loginByEmail", async (ctx: any) => {
 
     const user = await loginService.loginByEmail(emailAddress, verifyCode);
 
-    ctx.body = R.success(user);
+    const tokenData = getTokenData(user);
+    ctx.body = R.success(tokenData);
 });
 
 /**

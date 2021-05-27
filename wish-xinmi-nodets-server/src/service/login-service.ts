@@ -5,6 +5,8 @@ import userService from "./user-service";
 import verifyCodeService from "./verify-code-service";
 import R from "../util/response";
 import generator from "../util/generator";
+import jwt from "jsonwebtoken";
+import config from '../config'
 
 async function loginByPassword(username: string, password: string) {
     const schema = Joi.object({
@@ -22,6 +24,11 @@ async function loginByPassword(username: string, password: string) {
     }
 
     const user = await userService.findOne({username, password});
+
+    if (!user) {
+        throw Error('用户名或密码错误');
+    }
+
     return user;
 }
 
@@ -58,7 +65,23 @@ async function loginByEmail(emailAddress: string, verifyCode: string) {
     return user;
 }
 
+// 生成token
+function createToken(data: { userId: string }) {
+    const token = jwt.sign({
+        exp: config.token.expires,
+        data: data
+    }, config.token.secret);
+
+    return token;
+}
+
+function verifyToken(token: string) {
+    return jwt.verify(token, config.token.secret);
+}
+
 export default {
     loginByPassword,
-    loginByEmail
+    loginByEmail,
+    createToken,
+    verifyToken
 }

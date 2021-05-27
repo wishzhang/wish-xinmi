@@ -78,8 +78,10 @@
                 this.$store.commit('SET_LOGIN_TYPE', loginTypeMapName);
             },
             onLoginSuccess(res) {
+                const userInfo = res.data;
                 this.$toast.success('登录成功');
-                this.$store.commit('SET_USER_INFO', res.data);
+                this.$store.commit('SET_USER_INFO', userInfo);
+                this.$store.commit('SET_TOKEN', userInfo.token);
                 this.$router.push({path: '/index-layout/frame'});
             }
         },

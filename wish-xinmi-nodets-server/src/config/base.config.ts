@@ -15,7 +15,7 @@ const ip = (function getIPAddress() {
 })();
 
 // 公共环境配置
-export = {
+export default {
     projectName: "xinmi",
     projectCName: "信迷",
     // 服务器配置, 没有实际用到，只用来打印
@@ -33,5 +33,16 @@ export = {
         user: "root",
         password: "123456",
         database: "xinmi"
+    },
+    // token
+    token: {
+        header: 'xinmi-token',
+        secret: 'xinmi_v1',
+        expires: Math.floor(Date.now() / 1000) + (60 * 60),
+        whiteList: [
+            '/login/loginByPassword',
+            '/login/loginByEmail',
+            '/login/findPasswordByEmail'
+        ]
     }
 };

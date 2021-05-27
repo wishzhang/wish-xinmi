@@ -24,3 +24,10 @@ export const loginByPasswordRequest = (params) => {
     })
 }
 
+export const refreshTokenRequest = () => {
+    return request({
+        url: '/login/refreshToken',
+        method: 'post'
+    })
+}
+

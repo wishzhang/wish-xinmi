@@ -1,21 +1,24 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
-const website = Object.create(null);
+const website = {
+    refreshTokenTime: 1000 * 60 * 30,
+    tokenHeader: 'xinmi-token'
+}
 
 Object.defineProperty(website, 'winWidth', {
     get() {
-        let winWidth;
+        let winWidth
         if (window.innerWidth) {
-            winWidth = window.innerWidth;
+            winWidth = window.innerWidth
         } else if ((document.body) && (document.body.clientWidth)) {
-            winWidth = document.body.clientWidth;
+            winWidth = document.body.clientWidth
         }
-        return winWidth;
+        return winWidth
     }
 })
 
 website.install = function (Vue) {
-    Vue.prototype.website = website;
+    Vue.prototype.website = website
 }
 
-export default website;
+export default website
