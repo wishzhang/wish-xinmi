@@ -1,7 +1,7 @@
-import baseConfig = require("./base.config");
+import baseConfig from "./base.config";
 
 const devConfig = Object.assign({}, baseConfig, {
     serverPort: 3000
 });
 
-export = devConfig
+export default devConfig

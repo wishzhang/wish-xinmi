@@ -1,7 +1,7 @@
-import devConfig = require("./dev.config");
-import testConfig = require("./test.config");
+import devConfig from "./dev.config";
+import testConfig from "./test.config";
 
-let config:any;
+let config: any;
 
 if (process.env.NODE_ENV === "development") {
     config = devConfig;
@@ -9,4 +9,4 @@ if (process.env.NODE_ENV === "development") {
     config = testConfig;
 }
 
-export = config;
+export default config;

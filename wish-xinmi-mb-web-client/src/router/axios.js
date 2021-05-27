@@ -42,7 +42,7 @@ axios.interceptors.response.use(res => {
         return Promise.reject(res.data)
     }
 }, error => {
-    Toast.fail(res.data)
+    Toast.fail(error.message);
     return Promise.reject(new Error(error))
 })
 

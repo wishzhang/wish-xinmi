@@ -1,4 +1,4 @@
-import baseConfig = require("./base.config");
+import baseConfig from "./base.config";
 
 const testConfig = Object.assign({}, baseConfig, {
     serverPort: 3001,
@@ -10,4 +10,4 @@ const testConfig = Object.assign({}, baseConfig, {
     }
 })
 
-export = testConfig;
+export default testConfig;

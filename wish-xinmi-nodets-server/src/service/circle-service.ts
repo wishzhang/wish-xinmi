@@ -17,7 +17,7 @@ async function addThought(createUser: string, content: string, photoFiles: Array
     try {
         await schema.validateAsync({content});
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     if (!await userService.hasUser(createUser)) {

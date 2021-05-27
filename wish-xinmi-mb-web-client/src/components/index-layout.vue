@@ -41,9 +41,6 @@
 
                         self.$store.commit('SET_CHAT_LIST', chatList)
                     }
-                    console.log('...')
-                    console.log(data)
-                    // self.$store.commit('SET_CONTACT_WARN_NUM', num);
                 })
             }
 

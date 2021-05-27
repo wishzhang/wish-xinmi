@@ -29,7 +29,7 @@ router.get("/update", async (ctx: any) => {
             password: password
         })
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     const obj = {

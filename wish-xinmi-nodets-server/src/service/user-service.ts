@@ -54,7 +54,7 @@ async function updatePasswordByEmailAddress(emailAddress: string, verifyCode: st
     try {
         await schema.validateAsync({emailAddress, verifyCode, newPassword});
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     // 验证码是否有效
@@ -102,7 +102,7 @@ async function editEmailAddress(originEmailAddress: string,
     try {
         await schema.validateAsync({originEmailAddress, targetEmailAddress, verifyCode, password});
     } catch (e) {
-        throw Error(e.message);
+        throw e;
     }
 
     // 验证码是否有效

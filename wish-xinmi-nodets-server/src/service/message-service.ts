@@ -26,7 +26,7 @@ async function addMessage(originUser: string, targetUser: string, content: strin
     try {
         await schema.validateAsync({content});
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     if (!await contactService.isContact(originUser, targetUser)) {

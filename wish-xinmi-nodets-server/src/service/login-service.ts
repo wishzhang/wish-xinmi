@@ -20,7 +20,7 @@ async function loginByPassword(username: string, password: string) {
     try {
         await schema.validateAsync({username, password});
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     const user = await userService.findOne({username, password});
@@ -41,13 +41,13 @@ async function loginByEmail(emailAddress: string, verifyCode: string) {
     try {
         await schema.validateAsync({emailAddress, verifyCode});
     } catch (e) {
-        throw e.message;
+        throw e;
     }
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);
     if (!isValidCode) {
-        return Error('验证码错误')
+        throw Error('验证码错误')
     }
 
     // 邮箱地址是否已注册，没有注册就自动注册
