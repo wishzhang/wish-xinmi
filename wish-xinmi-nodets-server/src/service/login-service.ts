@@ -17,11 +17,8 @@ async function loginByPassword(username: string, password: string) {
             }
         })
     })
-    try {
-        await schema.validateAsync({username, password});
-    } catch (e) {
-        throw e;
-    }
+
+    await schema.validateAsync({username, password});
 
     const user = await userService.findOne({username, password});
 
@@ -38,11 +35,7 @@ async function loginByEmail(emailAddress: string, verifyCode: string) {
         verifyCode: Joi.required()
     })
 
-    try {
-        await schema.validateAsync({emailAddress, verifyCode});
-    } catch (e) {
-        throw e;
-    }
+    await schema.validateAsync({emailAddress, verifyCode});
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(emailAddress, verifyCode);

@@ -99,11 +99,7 @@ async function editEmailAddress(originEmailAddress: string,
         })
     });
 
-    try {
-        await schema.validateAsync({originEmailAddress, targetEmailAddress, verifyCode, password});
-    } catch (e) {
-        throw e;
-    }
+    await schema.validateAsync({originEmailAddress, targetEmailAddress, verifyCode, password});
 
     // 验证码是否有效
     const isValidCode = verifyCodeService.canMatchEmailCode(targetEmailAddress, verifyCode);

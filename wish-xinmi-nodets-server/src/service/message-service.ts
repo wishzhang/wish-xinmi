@@ -216,18 +216,15 @@ async function getOneMessageChatByUserIdAndChatId(originUser: string, chatId: st
 
     let messageChat: any = {};
     let message: any;
-    try {
-        message = await Message.findOne({
-            where: {
-                chatId: chatId
-            },
-            order: [
-                ['createdAt', 'DESC']
-            ]
-        })
-    } catch (e) {
-        console.log(e);
-    }
+
+    message = await Message.findOne({
+        where: {
+            chatId: chatId
+        },
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    })
 
     if (message) {
         const contactId = await findTargetUserId(chatId, originUser);

@@ -14,11 +14,7 @@ async function addThought(createUser: string, content: string, photoFiles: Array
         content: Joi.string().required()
     });
 
-    try {
-        await schema.validateAsync({content});
-    } catch (e) {
-        throw e;
-    }
+    await schema.validateAsync({content});
 
     if (!await userService.hasUser(createUser)) {
         throw Error('找不到用户');
