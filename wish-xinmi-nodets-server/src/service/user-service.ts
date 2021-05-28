@@ -17,8 +17,6 @@ async function updateUser(obj: any) {
     if (!await hasUser(obj.userId)) {
         throw Error('找不到用户');
     }
-
-    obj.avatarUrl = util.removeDomain(obj.avatarUrl);
     return await User.update(obj, {where: {userId: obj.userId}})
 };
 

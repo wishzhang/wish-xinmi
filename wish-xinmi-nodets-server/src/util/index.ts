@@ -51,14 +51,14 @@ function getSuffix(filename: any) {
     return /\.[^\.]+$/.exec(filename);
 }
 
-function removeDomain(url: any) {
-    if (!url) return "";
-    url = "/" + url.split("/").slice(3).join("/");
-    return url;
-}
+// function removeDomain(url: any) {
+//     if (!url) return "";
+//     url = "/" + url.split("/").slice(3).join("/");
+//     return url;
+// }
 
-function getMinioUrl(path: any) {
-    return `/${config.minioBucketName}/${path}`;
+function getMinioUrl(filename: string) {
+    return `/${config.minioBucketName}/${filename}`;
 }
 
 const type = (function () {
@@ -107,7 +107,7 @@ export default {
     getFirstUpperLetter,
     toHumpList,
     getSuffix,
-    removeDomain,
+    // removeDomain,
     getMinioUrl,
 
     isPlainObject,

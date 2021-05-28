@@ -42,7 +42,8 @@ export default {
         whiteList: [
             '/login/loginByPassword',
             '/login/loginByEmail',
-            '/login/findPasswordByEmail'
+            '/login/findPasswordByEmail',
+            '/verifyCode/sendEmailCode'
         ]
     }
 };

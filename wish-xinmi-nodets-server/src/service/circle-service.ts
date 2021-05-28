@@ -1,11 +1,11 @@
 import circleDao from "../dao/circle-dao";
 import datetime from "../util/datetime";
-import fileUtil from "../util/file-util";
 import {Contact, Thought, User} from "../dao/model";
 import {queryPage} from "../dao/sequelize";
 import contactDao from "../dao/contact-dao";
 import contactService from './contact-service';
 import userService from './user-service';
+import fileService from './file-service';
 import Joi from 'joi';
 
 
@@ -21,7 +21,7 @@ async function addThought(createUser: string, content: string, photoFiles: Array
     }
 
     const ps = photoFiles.map((photoFile: any) => {
-        return fileUtil.putFile(photoFile);
+        return fileService.putFile(photoFile);
     });
 
     const resArr = await Promise.all(ps);
