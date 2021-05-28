@@ -10,7 +10,8 @@ async function getUserList() {
 };
 
 async function insertUser(obj: any) {
-    return await User.create(obj);
+    const user = await User.create(obj);
+    return user.toJSON();
 };
 
 async function updateUser(obj: any) {

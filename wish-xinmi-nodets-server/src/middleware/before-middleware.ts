@@ -9,10 +9,12 @@ export default () => {
         if (config.token.whiteList.includes(ctx.originalUrl)) {
             await next();
         } else {
-            const headers = ctx.req.headers;
-            const token = headers[config.token.header];
             try {
+                const headers = ctx.req.headers;
+                const token = headers[config.token.header];
                 const decode: any = loginService.verifyToken(token);
+                log(`token: ${token}`);
+                log(`token decode: ${decode}`);
                 ctx.userId = decode.userId;
                 await next();
             } catch (e) {
