@@ -157,7 +157,10 @@ async function getUserContactStatus(userId: string, contactId: string) {
     return row && row.status;
 }
 
+// 获取某个对方用户的信息，已经是联系人和还不是联系人返回的信息不一样的
 async function getContactInfoHad(userId: string, contactId: string) {
+    let contactor = null;
+
     if (!await userService.hasUser(userId)) {
         throw Error('找不到用户' + userId);
     }
@@ -166,21 +169,20 @@ async function getContactInfoHad(userId: string, contactId: string) {
         throw Error('找不到用户' + contactId);
     }
 
-    if (!await isContact(userId, contactId)) {
-        throw Error(`${userId}没有对应的联系人${contactId}`);
-    }
-
-    const contactor: any = await Contact.findOne({
-        where: {
-            userId: userId,
-            contactId: contactId
-        }
-    });
-
     const contactorUserInfo: any = await User.findByPk(contactId);
-    contactor.name = contactor.contactName || contactorUserInfo.username;
-    contactor.username = contactorUserInfo.username;
-    contactor.avatarUrl = contactorUserInfo.avatarUrl;
+    contactor = contactorUserInfo;
+
+    if (!await isContact(userId, contactId)) {
+        contactor.name = contactorUserInfo.username;
+    } else {
+        const c = await Contact.findOne({
+            where: {
+                userId: userId,
+                contactId: contactId
+            }
+        });
+        contactor.name = c.contactName;
+    }
 
     return contactor;
 };

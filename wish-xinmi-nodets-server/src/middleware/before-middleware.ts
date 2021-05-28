@@ -1,5 +1,8 @@
 import loginService from '../service/login-service'
 import config from '../config'
+import debug from '../util/debug'
+
+const log = debug('before-middleware')
 
 export default () => {
     return (async (ctx: any, next: any) => {
@@ -15,6 +18,7 @@ export default () => {
             } catch (e) {
                 ctx.status = 401;
                 ctx.body = '请求未授权';
+                log(e);
             }
         }
     });

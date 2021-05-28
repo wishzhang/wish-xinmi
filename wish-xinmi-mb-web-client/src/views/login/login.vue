@@ -27,14 +27,14 @@
 </template>
 
 <script>
-    import {socket} from "../../util/socket";
-    import {mapGetters} from 'vuex';
-    import {validAccount} from "@/util/validate";
-    import LoginEmail from '@/views/login/login-email';
-    import LoginPassword from '@/views/login/login-password';
+    import {socket} from '../../util/socket'
+    import {mapGetters} from 'vuex'
+    import {validAccount} from '@/util/validate'
+    import LoginEmail from '@/views/login/login-email'
+    import LoginPassword from '@/views/login/login-password'
 
     export default {
-        name: "login",
+        name: 'login',
         components: {
             LoginEmail,
             LoginPassword
@@ -58,7 +58,7 @@
                         componentName: LoginPassword.name
                     }
                 }
-            };
+            }
         },
         computed: {
             ...mapGetters(['userInfo', 'loginType']),
@@ -68,21 +68,23 @@
         },
         created() {
             if (socket) {
-                socket.disconnect();
+                socket.disconnect()
             }
-            this.curloginTypeMap = this.loginType;
+            this.curloginTypeMap = this.loginType
         },
         methods: {
             onSelectloginTypeMap(loginTypeMapName) {
-                this.curloginTypeMap = loginTypeMapName;
-                this.$store.commit('SET_LOGIN_TYPE', loginTypeMapName);
+                this.curloginTypeMap = loginTypeMapName
+                this.$store.commit('SET_LOGIN_TYPE', loginTypeMapName)
             },
             onLoginSuccess(res) {
-                const userInfo = res.data;
-                this.$toast.success('登录成功');
-                this.$store.commit('SET_USER_INFO', userInfo);
-                this.$store.commit('SET_TOKEN', userInfo.token);
-                this.$router.push({path: '/index-layout/frame'});
+                const userInfo = res.data
+                this.$toast.success('登录成功')
+                this.$store.commit('SET_USER_INFO', userInfo)
+                this.$store.commit('SET_TOKEN', userInfo.token)
+                setTimeout(() => {
+                    this.$router.push({path: '/index-layout/frame'})
+                })
             }
         },
     }

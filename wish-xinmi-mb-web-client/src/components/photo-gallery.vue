@@ -30,7 +30,7 @@
                             :lazy-load="true"
                             :style="otherImageStyle"
                             :src="photos[getOtherIndex(row, col)]"
-                            @click="onImageClick(getOtherIndex)"/>
+                            @click="onImageClick(getOtherIndex(row,col))"/>
                 </van-col>
             </van-row>
         </template>
@@ -38,10 +38,10 @@
 </template>
 
 <script>
-    import {ImagePreview} from 'vant';
+    import {ImagePreview} from 'vant'
 
     export default {
-        name: "photo-gallery",
+        name: 'photo-gallery',
         props: {
             photosUrl: {
                 type: String
@@ -49,20 +49,20 @@
         },
         computed: {
             photos() {
-                if (!this.photosUrl) return [];
-                return this.photosUrl.split(',');
+                if (!this.photosUrl) return []
+                return this.photosUrl.split(',')
             },
             oneImageStyle() {
-                const oneMaxHeight = Math.trunc(this.maxWidth * 1.3);
-                const width = this.website.winWidth - 70;
-                const oneMaxWidth = Math.trunc(width / 3 * 1.8);
+                const oneMaxHeight = Math.trunc(this.maxWidth * 1.3)
+                const width = this.website.winWidth - 70
+                const oneMaxWidth = Math.trunc(width / 3 * 1.8)
                 return {
                     'max-width': oneMaxWidth + 'px',
                     'max-height': oneMaxHeight + 'px'
                 }
             },
             otherImageStyle() {
-                const width = (this.website.winWidth - 70) / 3 - 10;
+                const width = (this.website.winWidth - 70) / 3 - 10
                 return {
                     'width': width + 'px',
                     'height': width + 'px'
@@ -70,11 +70,11 @@
             }
         },
         methods: {
-            getFourIndex(row, col){
-                return (row - 1) * 2 + col - 1;
+            getFourIndex(row, col) {
+                return (row - 1) * 2 + col - 1
             },
             getOtherIndex(row, col) {
-                return (row - 1) * 3 + col - 1;
+                return (row - 1) * 3 + col - 1
             },
             onImageClick(photoInd) {
                 ImagePreview({
@@ -83,7 +83,7 @@
                     showIndicators: true,
                     loop: false,
                     startPosition: photoInd
-                });
+                })
             }
         }
     }
