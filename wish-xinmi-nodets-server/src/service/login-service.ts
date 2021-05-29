@@ -61,7 +61,7 @@ async function loginByEmail(emailAddress: string, verifyCode: string) {
 // 生成token
 function createToken(data: { userId: string }) {
     const token = jwt.sign({
-        exp: config.token.expires,
+        exp: Math.floor(Date.now() / 1000) + config.token.expires,
         data: data
     }, config.token.secret);
 

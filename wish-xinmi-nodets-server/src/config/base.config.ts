@@ -38,7 +38,7 @@ export default {
     token: {
         header: 'xinmi-token',
         secret: 'xinmi_v1',
-        expires: Math.floor(Date.now() / 1000) + (60 * 60),
+        expires: 3600,
         whiteList: [
             '/login/loginByPassword',
             '/login/loginByEmail',
