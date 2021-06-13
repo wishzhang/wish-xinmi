@@ -1,0 +1,181 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				},
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/contact/contact",
+			"style": {
+				"navigationBarTitleText": "通讯录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/msg/msg",
+			"style": {
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/thought/thought",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/login-findpsw/login-findpsw",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/login-agreement/login-agreement",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/login-policy/login-policy",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/setting-edit-psw/setting-edit-psw",
+			"style": {
+				"navigationBarTitleText": "修改密码",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/setting-edit-email/setting-edit-email",
+			"style": {
+				"navigationBarTitleText": "绑定邮箱修改",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/thought-common/thought-common",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/thought-send/thought-send",
+			"style": {
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/thought-people/thought-people",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/contact-confirm/contact-confirm",
+			"style": {
+				"navigationBarTitleText": "新的朋友",
+				"enablePullDownRefresh": false
+			}
+		}
+	    ,{
+            "path" : "pages/mine-info/mine-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/contact-people/contact-people",
+			"style": {
+				"navigationStyle": "custom"
+			}
+            
+        }
+        ,{
+            "path" : "pages/contact-add/contact-add",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加朋友",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#f7f8fa"
+	},
+	"tabBar": {
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"color": "#8F8F94",
+		"selectedColor": "#c471ed",
+		"list": [{
+				"pagePath": "pages/msg/msg",
+				"iconPath": "static/img/tabbar/msg.png",
+				"selectedIconPath": "static/img/tabbar/msg_active.png",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/contact/contact",
+				"iconPath": "static/img/tabbar/contact.png",
+				"selectedIconPath": "static/img/tabbar/contact_active.png",
+				"text": "通讯录"
+			},
+			{
+				"pagePath": "pages/thought/thought",
+				"iconPath": "static/img/tabbar/thought.png",
+				"selectedIconPath": "static/img/tabbar/thought_active.png",
+				"text": "发现"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"iconPath": "static/img/tabbar/mine.png",
+				"selectedIconPath": "static/img/tabbar/mine_active.png",
+				"text": "我的"
+			}
+		]
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}

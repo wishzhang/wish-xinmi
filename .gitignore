@@ -2,6 +2,8 @@
 node_modules
 /dist
 
+wish-xinmi-wechat-mini-client
+
 
 # local env files
 .env.local
