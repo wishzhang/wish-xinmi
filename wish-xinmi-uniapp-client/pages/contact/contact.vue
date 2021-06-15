@@ -1,5 +1,10 @@
 <template>
-	<view style="position:relative;height:100%;overflow: hidden;">
+	<view>
+		<uni-navbar title="通讯录" :is-back="false">
+			<template slot="right">
+				<uni-popover-add></uni-popover-add>
+			</template>
+		</uni-navbar>
 		<uni-list :border="true">
 			<!-- 显示圆形头像 -->
 			<uni-list-item title="新的朋友" clickable @click="onToContactConfirm">
@@ -9,34 +14,70 @@
 			</uni-list-item>
 		</uni-list>
 
-		<uni-list :border="false">
-			<view class="group-title uni-padding-wrap">#</view>
-			<!-- 显示圆形头像 -->
-			<uni-list-item title="uni-app" clickable @click="onToContactPeople">
-				<view style="margin-right: 22rpx;" slot="header">
-					<uni-avatar ></uni-avatar>
-				</view>
-			</uni-list-item>
-		</uni-list>
+		<u-index-list :scrollTop="scrollTop">
+			<view v-for="(group, index) in list" :key="index">
+				<template v-if="group.records.length>0">
+					<u-index-anchor :index="group.label" />
+					<view v-for="(item, itemIndex) in group.records" class="list-cell">
+						<uni-list :key="item.contactId" :border="false">
+							<uni-list-item :title="item.name" clickable @click="onToContactPeople(item)">
+								<view style="margin-right: 22rpx;" slot="header">
+									<uni-avatar :src="item.avatarUrl"></uni-avatar>
+								</view>
+							</uni-list-item>
+						</uni-list>
+					</view>
+				</template>
+			</view>
+		</u-index-list>
 	</view>
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
+	import {
+		fetchYetContactListRequest
+	} from '@/api/contact.js'
+
 	export default {
 		data() {
 			return {
-
+				list: [],
+				scrollTop: 0,
+				indexList: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+					"T", "U",
+					"V", "W", "X", "Y", "Z"
+				]
 			}
 		},
+		computed: {
+			...mapGetters(['userInfo'])
+		},
+		onLoad() {
+			const params = {
+				userId: this.userInfo.userId
+			}
+			fetchYetContactListRequest(params).then(res => {
+				this.list = res.data
+			})
+		},
 		methods: {
+			onPageScroll(e) {
+				this.scrollTop = e.scrollTop
+			},
 			onToContactConfirm() {
 				uni.navigateTo({
 					url: '/pages/contact-confirm/contact-confirm'
 				})
 			},
-			onToContactPeople(){
-				uni.navigateTo({
-					url: '/pages/contact-people/contact-people'
+			onToContactPeople(item) {
+				this.$navigateTo({
+					url: '/pages/contact-friend/contact-friend',
+					params: {
+						userId: item.contactId
+					}
 				})
 			}
 		}

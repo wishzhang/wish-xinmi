@@ -64,6 +64,6 @@
         "devServer" : {
             "https" : false
         },
-        "template" : "template.h5.html"
+        "template" : ""
     }
 }

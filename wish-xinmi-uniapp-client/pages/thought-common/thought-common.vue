@@ -1,11 +1,11 @@
 <template>
 	<view>
-		<uni-nav-bar :statusBar="true" left-icon="back" title="朋友圈" @clickLeft="onClickLeft">
+		<uni-navbar title="朋友圈">
 			<template slot="right">
 				<uni-icons type="camera-filled" size="22" :color="$style.uniColorPrimary" @click="onToThoughtSendPage">
 				</uni-icons>
 			</template>
-		</uni-nav-bar>
+		</uni-navbar>
 
 		<view class="bg-box">
 			<image style="width: 100%; height: 200px; background-color: #eeeeee;" src="/static/img/bg1.jpg"></image>

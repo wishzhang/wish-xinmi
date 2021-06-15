@@ -1,31 +1,67 @@
 <template>
-	<view>
-		<view style="background-color:white;">
-			<u-field v-model="value" icon="search" label-width="0" placeholder="请输入信迷号">
+	<view class="uni-bg-white">
+		<uni-navbar title="添加朋友"></uni-navbar>
+
+		<view>
+			<u-field v-model="value" icon="search" label-width="0" placeholder="请输入信迷号" @input="onValueInput">
 				<text slot="right">取消</text>
 			</u-field>
-			<uni-list :border="true">
-				<uni-list-item title="新的朋友">
-					<view style="margin-right: 22rpx;" slot="header">
-						<uni-avatar></uni-avatar>
-					</view>
-				</uni-list-item>
-			</uni-list>
 
+			<uni-list :border="true">
+				<template v-for="(item,index) in list">
+					<uni-list-item :key="index" :title="item.username" clickable @click="onToContactPeople(item)">
+						<view style="margin-right: 22rpx;" slot="header">
+							<uni-avatar :src="item.avatarUrl"></uni-avatar>
+						</view>
+					</uni-list-item>
+				</template>
+			</uni-list>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
+	import {
+		fetchNoContactListRequest
+	} from '@/api/contact.js'
+
 	export default {
 		data() {
 			return {
-				value: ''
+				value: '',
+				list: []
 			}
 		},
+		computed: {
+			...mapGetters(['userInfo'])
+		},
 		methods: {
+			onToContactPeople(item) {
+				this.$navigateTo({
+					url: '/pages/contact-stranger/contact-stranger',
+					params: {
+						userId: item.userId
+					}
+				})
+			},
+			onValueInput() {
+				this.fetchData()
+			},
+			fetchData() {
+				const params = {
+					userId: this.userInfo.userId,
+					username: this.value
+				}
+				console.dir(JSON.parse(JSON.stringify(params)))
+				fetchNoContactListRequest(params).then(res => {
+					this.list = res.data
+				})
+			}
+		},
 
-		}
 	}
 </script>
 

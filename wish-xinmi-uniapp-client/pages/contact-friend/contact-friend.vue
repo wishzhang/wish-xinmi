@@ -1,10 +1,11 @@
 <template>
 	<view>
-		<u-navbar back-text="000001"></u-navbar>
+		<uni-navbar back-text="000001"></uni-navbar>
+
 		<uni-list :border="false">
-			<uni-list-item title="00002" note="信迷号:00002">
+			<uni-list-item :title="contactDetail.name" :note="'信迷号:'+contactDetail.username">
 				<template slot="header">
-					<uni-avatar style="margin-right: 22rpx;"></uni-avatar>
+					<uni-avatar :src="contactDetail.avatarUrl" style="margin-right: 22rpx;"></uni-avatar>
 				</template>
 			</uni-list-item>
 
@@ -15,11 +16,31 @@
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
+	import {
+		fetchContactDetailRequest
+	} from '@/api/contact.js'
 	export default {
 		data() {
 			return {
-
+				option: {},
+				contactDetail: {}
 			}
+		},
+		computed: {
+			...mapGetters(['userInfo'])
+		},
+		onLoad(option) {
+			this.option = option
+			const params = {
+				userId: this.userInfo.userId,
+				contactId: this.option.userId
+			}
+			fetchContactDetailRequest(params).then(res => {
+				this.contactDetail = res.data
+			})
 		},
 		methods: {
 			onToContactConfirm() {
@@ -27,12 +48,15 @@
 					url: '/pages/contact-confirm/contact-confirm'
 				})
 			},
-			onToChat(){
-				uni.navigateTo({
-					url: '/pages/chat/chat'
+			onToChat() {
+				this.$navigateTo({
+					url: '/pages/chat/chat',
+					params: {
+						userId: this.contactDetail.userId
+					}
 				})
 			},
-			onToThoughtPeople(){
+			onToThoughtPeople() {
 				uni.navigateTo({
 					url: '/pages/thought-people/thought-people'
 				})

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-navbar back-text="000001"></u-navbar>
+		<uni-navbar back-text="000001"></uni-navbar>
 
 		<view class="bg-box">
 			<image style="width: 100%; height: 200px; background-color: #eeeeee;" src="/static/img/bg1.jpg"></image>

@@ -1,6 +1,6 @@
 <template>
 	<view>
-
+	<uni-navbar title="个人信息"></uni-navbar>
 		<uni-list :border="false">
 			<!-- 显示圆形头像 -->
 			<uni-list-item style="padding: 20rpx 0;" title="头像" link>

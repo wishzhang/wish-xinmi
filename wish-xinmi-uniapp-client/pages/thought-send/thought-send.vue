@@ -1,13 +1,13 @@
 <template>
 	<view>
-		<uni-nav-bar :statusBar="true" left-icon="back" @clickLeft="onClickLeft">
+		<uni-navbar :statusBar="true" left-icon="back">
 			<template slot="right">
 				<u-button class="publish-button" type="primary" :disabled="publishDisabled" @click="onPublish">发表
 				</u-button>
 			</template>
-		</uni-nav-bar>
+		</uni-navbar>
 
-		<view class="uni-padding-wrap">
+		<view class="uni-page-padding">
 			<u-input class="thought-text" v-model="value" type="textarea" :border="false" placeholder="这一刻的想法"
 				:clearable="false" auto-height />
 			<u-upload :before-upload="onBeforeUpload" :upload-text="''"></u-upload>

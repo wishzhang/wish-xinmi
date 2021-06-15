@@ -1,6 +1,7 @@
 <template>
-	<view class="uni-padding-wrap">
-		  <u-parse :content="content"></u-parse>
+	<view class="uni-page-padding">
+		<uni-navbar title="用户协议"></uni-navbar>
+		<u-parse :content="content"></u-parse>
 	</view>
 
 </template>
@@ -8,7 +9,7 @@
 <script>
 	import uParse from '@/components/u-parse/u-parse.vue'
 	import marked from 'marked'
-	
+
 	const text = marked(`
 	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 18px;text-align: center;">用户协议</div>
 	
@@ -102,22 +103,22 @@
 	
 	3. 甲方保留对"信迷APP"所有甲方产品说明性文档的解释权。
 	`)
-	
+
 	export default {
-		  components: {
-		    uParse
-		  },
+		components: {
+			uParse
+		},
 		data() {
 			return {
 				content: text
 			}
 		},
 		methods: {
-			
+
 		}
 	}
 </script>
 
 <style>
-@import url("@/components/u-parse/u-parse.css");
+	@import url("@/components/u-parse/u-parse.css");
 </style>

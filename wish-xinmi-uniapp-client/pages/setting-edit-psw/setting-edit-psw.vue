@@ -1,5 +1,6 @@
 <template>
-	<view class="uni-padding-wrap">
+	<view class="uni-page-padding">
+			<uni-navbar title="修改密码"></uni-navbar>
 		<view style="margin: 15rpx 0 12rpx;">
 			<text>当前绑定的邮箱是：</text><text class="uni-color-primary">fasdfSd@qq.com</text>
 		</view>

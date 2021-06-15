@@ -3,141 +3,82 @@
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [{
-			"path": "pages/login/login",
-			"style": {
-				"app-plus": {
-					"titleNView": false
-				},
-				"navigationBarTitleText": "登录"
-			}
+			"path": "pages/login/login"
 		},
 		{
-			"path": "pages/contact/contact",
-			"style": {
-				"navigationBarTitleText": "通讯录",
-				"enablePullDownRefresh": false
-			}
+			"path": "pages/contact/contact"
 		},
 		{
-			"path": "pages/msg/msg",
-			"style": {
-				"navigationStyle": "custom"
-			}
-
-		}, {
-			"path": "pages/mine/mine",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/thought/thought",
-			"style": {
-				"navigationBarTitleText": "发现",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/login-findpsw/login-findpsw",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/login-agreement/login-agreement",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/login-policy/login-policy",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/setting/setting",
-			"style": {
-				"navigationBarTitleText": "设置",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/setting-edit-psw/setting-edit-psw",
-			"style": {
-				"navigationBarTitleText": "修改密码",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/setting-edit-email/setting-edit-email",
-			"style": {
-				"navigationBarTitleText": "绑定邮箱修改",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/thought-common/thought-common",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
-			"path": "pages/thought-send/thought-send",
-			"style": {
-				"navigationStyle": "custom"
-			}
-
-		}, {
-			"path": "pages/thought-people/thought-people",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
+			"path": "pages/msg/msg"
+		},
+		{
+			"path": "pages/mine/mine"
+		},
+		{
+			"path": "pages/thought/thought"
+		},
+		{
+			"path": "pages/login-findpsw/login-findpsw"
+		},
+		{
+			"path": "pages/login-agreement/login-agreement"
+		},
+		{
+			"path": "pages/login-policy/login-policy"
+		},
+		{
+			"path": "pages/setting/setting"
+		},
+		{
+			"path": "pages/setting-edit-psw/setting-edit-psw"
+		},
+		{
+			"path": "pages/setting-edit-email/setting-edit-email"
+		},
+		{
+			"path": "pages/thought-common/thought-common"
+		},
+		{
+			"path": "pages/thought-send/thought-send"
+		},
+		{
+			"path": "pages/thought-people/thought-people"
+		},
+		{
 			"path": "pages/chat/chat",
 			"style": {
-				"navigationStyle": "custom"
+				//手机软键盘升起不让其将页面头部上推
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
 			}
 		},
 		{
-			"path": "pages/contact-confirm/contact-confirm",
+			"path": "pages/contact-confirm/contact-confirm"
+		},
+		{
+			"path": "pages/mine-info/mine-info"
+		},
+		{
+			"path": "pages/contact-friend/contact-friend"
+		},
+		{
+			"path": "pages/contact-add/contact-add"
+		}, {
+			"path": "pages/contact-stranger/contact-stranger",
 			"style": {
-				"navigationBarTitleText": "新的朋友",
+				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
+
 		}
-	    ,{
-            "path" : "pages/mine-info/mine-info",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "个人信息",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/contact-people/contact-people",
-			"style": {
-				"navigationStyle": "custom"
-			}
-            
-        }
-        ,{
-            "path" : "pages/contact-add/contact-add",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加朋友",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#f7f8fa"
+		"backgroundColor": "#f7f8fa",
+		"navigationStyle": "custom"
 	},
 	"tabBar": {
 		"borderStyle": "black",

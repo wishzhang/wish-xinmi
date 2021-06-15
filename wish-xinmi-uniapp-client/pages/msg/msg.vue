@@ -1,10 +1,10 @@
 <template>
 	<view>
-		<u-navbar title="消息" :is-back="false">
-			<view class="uni-padding-wrap" slot="right">
+		<uni-navbar title="消息" :is-back="false">
+			<template slot="right">
 				<uni-popover-add></uni-popover-add>
-			</view>
-		</u-navbar>
+			</template>
+		</uni-navbar>
 
 		<uni-list :border="false">
 			<uni-list-chat title="uni-app"

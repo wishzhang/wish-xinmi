@@ -1,60 +1,143 @@
-
-
-.uni-padding-wrap{
-	padding: 0 $uni-padding-horizontal;
+page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family:  "PingFang SC", "Heiti SC",serif, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  color: $uni-main-color;
+  background-color: $uni-bg-color;
+  font-size: $uni-font-size-base;
+  overflow-x: hidden;
 }
 
-.uni-input{
-	border-bottom: 1px solid #ccc;
+.uni-height-full{
+	position: relative;
+	height: 100%;
 }
 
-.uni-color-primary{
-	color: $uni-color-primary;
+.uni-bg-white{
+	background-color: white;
 }
 
-.uni-color-error{
-	color: $uni-color-error;
+.uni-relative{
+	position: relative;
 }
 
-.uni-text-color-grey{
-	color: $uni-text-color-grey;
+.uni-page-padding {
+  padding: 0 $uni-padding-horizontal;
 }
 
 /* 分割线 */
 .uni-divider {
-	display: flex;
-	align-items: center;
-	font-size: 14px;
-	color: $uni-text-color-grey;
+  display: flex;
+  align-items: center;
+  color:$uni-tips-color;
 }
 
 .uni-divider::before,
 .uni-divider::after {
-	content: '';
-	flex: 1;
-	height: 1rpx;
-	background: $uni-text-color-disable;
+  content: '';
+  flex: 1;
+  height: 1rpx;
+  background:  $uni-border-color;
 }
 
 .uni-divider::before {
-	margin-right: 1em;
+  margin-right: 1em;
 }
 
 .uni-divider::after {
-	margin-left: 1em;
+  margin-left: 1em;
 }
 
-.uni-tip{
-	font-size: 13px;
-	color: $uni-text-color-grey;
+
+/* 公共类 */
+
+.uni-color-primary {
+  color: $uni-color-primary;
 }
 
-page {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	color: #2c3e50;
-	background-color: $uni-bg-color-grey;
+.uni-color-primary-light{
+	color: $uni-color-primary-light;
 }
 
+.uni-color-primary-disabled{
+	color: $uni-color-primary-disabled;
+}
+
+.uni-color-primary-dark{
+	color: $uni-color-primary-dark;
+}
+
+/* 元素背景色 */
+.uni-bg-primary {
+  background-color: $uni-color-primary;
+}
+
+.uni-color-primary-light{
+	background-color: $uni-color-primary-light;
+}
+
+.uni-color-primary-disabled{
+	background-color: $uni-color-primary-disabled;
+}
+
+.uni-color-primary-dark{
+	background-color: $uni-color-primary-dark;
+}
+
+
+.uni-color-success {
+  color: $uni-color-success;
+}
+
+.uni-color-warning {
+  color: $uni-color-warning;
+}
+
+.uni-color-error {
+  color: $uni-color-error;
+}
+
+/* 背景颜色 */
+.uni-bg-color {
+  color: $uni-bg-color;
+}
+
+.uni-bg-color-mask {
+  color: $uni-bg-color-mask
+}
+
+/* 边框颜色 */
+.uni-border-color {
+  color: $uni-border-color;
+}
+
+/* 文字尺寸 */
+.uni-font-size-sm {
+  font-size: $uni-font-size-sm;
+}
+
+.uni-font-size-base {
+  font-size: $uni-font-size-base;
+}
+
+.uni-font-size-lg {
+  font-size: $uni-font-size-lg;
+}
+
+/* 文字基本颜色 */
+.uni-main-color {
+  color: $uni-main-color;
+}
+
+.uni-content-color {
+  color: $uni-content-color;;
+}
+
+.uni-tips-color {
+  color: $uni-tips-color;
+}
+
+.uni-light-color {
+  color: $uni-light-color;
+}

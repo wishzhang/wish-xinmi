@@ -1,5 +1,5 @@
 <template>
-	<view class="mine">
+	<view class="uni-page-white">
 		<uni-list :border="true">
 			<uni-list-item class="profile-box" title="列表左侧带略缩图" note="列表描述信息"
 				thumb="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/460d46d0-4fcc-11eb-8ff1-d5dcf8779628.png"
@@ -27,11 +27,7 @@
 	}
 </script>
 
-<style>
-	.mine{
-		background-color: white;
-	}
-	
+<style scoped>
 	.profile-box {
 		padding: 26rpx 0;
 	}

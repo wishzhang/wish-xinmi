@@ -1,5 +1,10 @@
 <script>
 	export default {
+		// 全局的静态变量
+		globalData: {
+			baseURL: 'http://159.75.234.119/xinmi',
+			tokenHeader: 'xinmi-token'
+		},
 		onLaunch: function() {
 			console.log('App Launch');
 
@@ -19,15 +24,14 @@
 		onHide: function() {
 			console.log('App Hide');
 		}
-	};
+	}
 </script>
 
 <style lang="scss">
-		@import "uview-ui/index.scss";
-	@import "./common/style.scss";
-
-	/*每个页面公共css */
-	body {
-		font-size: $uni-font-size-base;
-	}
+	/* 导入阿里矢量字体图标 */
+	@import "/static/css/iconfont.css";
+	/* 导入uview css */
+	@import "uview-ui/index.scss";
+	/* 导入公共css类 */
+	@import "/common/style.scss";
 </style>

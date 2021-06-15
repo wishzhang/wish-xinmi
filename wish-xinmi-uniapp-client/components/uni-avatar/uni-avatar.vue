@@ -1,5 +1,6 @@
 <template>
-	<u-image class="avatar" :width="width" :height="height" :src="src" @click="onToContactPeople"></u-image>
+	<u-image class="avatar" :fade="false" :width="width" :height="height" :src="src||defaultAvatar" @click="onToContactPeople">
+	</u-image>
 </template>
 
 <script>
@@ -8,8 +9,7 @@
 		inheritAttrs: false,
 		props: {
 			src: {
-				type: String,
-				default: '/static/img/default-avatar.png'
+				type: String
 			},
 			size: {
 				type: String,
@@ -18,7 +18,7 @@
 		},
 		data() {
 			return {
-
+				defaultAvatar: '/static/img/default-avatar.png'
 			}
 		},
 		computed: {
@@ -36,10 +36,10 @@
 
 			}
 		},
-		methods:{
-			onToContactPeople(){
+		methods: {
+			onToContactPeople() {
 				uni.navigateTo({
-					url: '/pages/contact-people/contact-people'
+					url: '/pages/contact-friend/contact-friend'
 				})
 			}
 		}

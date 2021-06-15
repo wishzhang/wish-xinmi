@@ -1,14 +1,18 @@
 <template>
-	<view class="uni-padding-wrap">
-		  <u-parse :content="content"></u-parse>
+	<view>
+		<uni-navbar title="信迷用户隐私政策"></uni-navbar>
+		<view class="uni-page-padding">
+			<u-parse :content="content"></u-parse>
+		</view>
 	</view>
+
 
 </template>
 
 <script>
 	import uParse from '@/components/u-parse/u-parse.vue'
 	import marked from 'marked'
-	
+
 	const text = marked(`
 	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 18px;text-align: center;">信迷用户隐私政策</div>
 
@@ -130,22 +134,22 @@
 本版发布日期：2021年【5】月【1】日
 生效日期：2021年【6】月【1】日
 	`)
-	
+
 	export default {
-		  components: {
-		    uParse
-		  },
+		components: {
+			uParse
+		},
 		data() {
 			return {
 				content: text
 			}
 		},
 		methods: {
-			
+
 		}
 	}
 </script>
 
 <style>
-@import url("@/components/u-parse/u-parse.css");
+	@import url("@/components/u-parse/u-parse.css");
 </style>

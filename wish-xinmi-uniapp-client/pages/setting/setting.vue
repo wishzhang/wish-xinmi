@@ -1,5 +1,6 @@
 <template>
 	<view>
+			<uni-navbar title="设置"></uni-navbar>
 		<uni-list :border="true">
 			<uni-list-item title="邮箱" rightText="121312@qq.com" to="/pages/setting-edit-email/setting-edit-email" link>
 			</uni-list-item>

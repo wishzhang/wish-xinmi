@@ -1,15 +1,16 @@
 <template>
 	<view class="login">
+		<uni-navbar title="用户协议"></uni-navbar>
 		<view class="login-wrap">
 			<!-- 邮箱登录（未登录系统将自动注册） -->
 			<uni-forms :modelValue="formData" ref="form" border>
 				<uni-forms-item label="邮箱" name="name">
-					<uni-easyinput focus :inputBorder="false" type="text" placeholder="请输入邮箱" v-model="formData.email" />
+					<uni-easyinput focus :inputBorder="false" type="text" placeholder="请输入邮箱"
+						v-model="formData.email" />
 				</uni-forms-item>
 				<uni-forms-item label="验证码" name="vcode">
 					<view class="v-code-box" style="">
-						<uni-easyinput :inputBorder="false" type="text" placeholder="请输入验证码"
-							v-model="formData.vcode" />
+						<uni-easyinput :inputBorder="false" type="text" placeholder="请输入验证码" v-model="formData.vcode" />
 						<text v-if="!vcodeLock" class="v-code" :class="{'uni-color-primary': isValidEmail}"
 							@click="onGetVCode">获取验证码</text>
 						<text v-else style="margin-right: 5px;">{{restSeconds}}S</text>
@@ -155,5 +156,4 @@
 		justify-content: space-between;
 		align-items: center;
 	}
-
 </style>
