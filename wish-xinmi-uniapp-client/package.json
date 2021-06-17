@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "marked": "^2.0.7"
+    "marked": "^2.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-shared-utils": "^4.5.13"
   }
 }

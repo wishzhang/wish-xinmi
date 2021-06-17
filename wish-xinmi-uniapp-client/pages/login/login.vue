@@ -203,6 +203,11 @@
 </script>
 
 <style scoped lang="scss">
+	page {
+		height: 100%;
+	}
+
+
 	.login {
 		padding: 0 60rpx;
 

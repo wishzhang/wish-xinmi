@@ -47,10 +47,17 @@
 		{
 			"path": "pages/chat/chat",
 			"style": {
-				//手机软键盘升起不让其将页面头部上推
 				"app-plus": {
-					"softinputMode": "adjustResize"
-				}
+					//手机软键盘升起不让其将页面头部上推
+					"softinputMode": "adjustResize",
+					"pullToRefresh": {
+						"support": true,
+						"style": "circle",
+						"offset": "47rpx",
+						"color": "#000000"
+					}
+				},
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -78,7 +85,12 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f7f8fa",
-		"navigationStyle": "custom"
+		"navigationStyle": "custom",
+		"app-plus": {
+			"bounce": "none",
+			"scrollIndicator": "none"
+		}
+
 	},
 	"tabBar": {
 		"borderStyle": "black",
