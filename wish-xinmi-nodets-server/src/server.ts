@@ -1,5 +1,6 @@
 import errorHandlerMiddleware from "./middleware/error-handler-middleware";
 import Koa from "koa";
+import cors from 'koa2-cors';
 import socket from "./socket/index";
 import {setupDatabase} from "./dao/model";
 import debug from './util/debug';
@@ -16,6 +17,9 @@ const log = debug('server');
 const app = new Koa();
 
 setupDatabase();
+
+// 跨域
+app.use(cors());
 
 app.use(beforeMiddleware());
 
