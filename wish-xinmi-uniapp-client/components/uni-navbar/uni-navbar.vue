@@ -1,5 +1,6 @@
 <template>
-	<u-navbar :title="title" :is-back="isBack" :back-text="backText" :title-bold="true" :title-size="34"
+	<u-navbar :title="title" 
+	:is-back="isBack" :back-text="backText" :title-bold="true" :title-size="34"
 		:border-bottom="borderBottom" back-icon-name="arrow-left" :height="47" :back-icon-color="$style.uniMainColor"
 		:back-icon-size="39" :back-text-style="{color:$style.uniMainColor}" :title-color="$style.uniMainColor">
 		<view class="uni-page-padding" slot="right">

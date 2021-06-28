@@ -1,5 +1,29 @@
+const langUtil = {
+	passwordFormat: '密码为6-20位数字字母组合且不能有空格'
+}
+
+const formUtil = {
+	defaultErrorType: ['border-bottom', 'toast'],
+	validator: {
+		password(rule, value, callback) {
+			if (!validPassword(value)) {
+				callback(new Error(langUtil.passwordFormat));
+			} else {
+				callback();
+			}
+		},
+		emailAddress(rule, value, callback) {
+			if (!validEmail(value)) {
+				callback(new Error('邮箱格式错误'));
+			} else {
+				callback();
+			}
+		}
+	}
+}
+
 // 密码为6-20位数字字母组合且不能有空格
-export function validPassword(password) {
+function validPassword(password) {
 	const reg = /^[A-Za-z]+[0-9]+[A-Za-z0-9]*$|^[0-9]+[A-Za-z]+[A-Za-z0-9]*$/;
 	if (password.length >= 6 && password.length <= 20 && reg.test(password))
 		if (reg.test(password)) {
@@ -9,11 +33,11 @@ export function validPassword(password) {
 }
 
 // 邮箱
-export function validEmail(s) {
+function validEmail(s) {
 	return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s);
 }
 
-export function validatenull(val) {
+function validatenull(val) {
 	if (typeof val == "boolean") {
 		return false;
 	}
@@ -31,7 +55,7 @@ export function validatenull(val) {
 	return false;
 }
 
-export const serialize = data => {
+function serialize(data) {
 	let list = [];
 	Object.keys(data).forEach(ele => {
 		list.push(`${ele}=${encodeURIComponent(data[ele])}`)
@@ -39,7 +63,7 @@ export const serialize = data => {
 	return list.join('&');
 }
 
-export function rpx2px(size) {
+function rpx2px(size) {
 	const info = uni.getSystemInfoSync()
 	const scale = 750 / info.windowWidth;
 	// 分离字体大小和单位,rpx 转 px
@@ -57,7 +81,7 @@ export function rpx2px(size) {
 	return [s, u, s + u]
 }
 
-export function uuid() {
+function uuid() {
 	var s = [];
 	var hexDigits = "0123456789abcdef";
 	for (var i = 0; i < 36; i++) {
@@ -69,4 +93,17 @@ export function uuid() {
 
 	var uuid = s.join("");
 	return 'xinmi_' + uuid;
+}
+
+
+
+export {
+	validPassword,
+	validEmail,
+	validatenull,
+	serialize,
+	rpx2px,
+	uuid,
+	langUtil,
+	formUtil
 }

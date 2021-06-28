@@ -21,13 +21,13 @@ function req(option = {}) {
 
 	opt.method = opt.method && opt.method.toUpperCase()
 
-	// 设置请求头 token字段
+	// 设置请求头 token字段, 并且兼容option.headers
 	const token = getStore({
 		name: 'token'
 	})
 	opt.header = Object.assign({
 		[tokenHeader]: token
-	}, opt.header || {})
+	}, opt.headers || {}, opt.header || {})
 
 	// 设置url
 	if (!/^http/.test(opt.url)) {
@@ -68,11 +68,11 @@ function req(option = {}) {
 	}
 
 	opt.fail = function(res) {
-		failFun(res.data)
+		failFun(res)
 	}
 
 	opt.complete = function(res) {
-		completeFun(res.data)
+		completeFun(res)
 	}
 
 	// 返回requestTask， 可调用requestTask.abort()，从而中止请求

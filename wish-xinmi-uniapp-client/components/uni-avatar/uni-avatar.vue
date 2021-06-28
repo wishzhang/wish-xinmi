@@ -1,5 +1,5 @@
 <template>
-	<u-image class="avatar" :fade="false" :width="width" :height="height" :src="src||defaultAvatar" @click="onToContactPeople">
+	<u-image class="avatar" :fade="false" :width="width" :height="height" :src="imageSrc" @click="onClick">
 	</u-image>
 </template>
 
@@ -14,14 +14,19 @@
 			size: {
 				type: String,
 				default: 'default'
+			},
+			preview: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
-			return {
-				defaultAvatar: '/static/img/default-avatar.png'
-			}
+			return {}
 		},
 		computed: {
+			imageSrc() {
+				return this.src || '/static/img/default-avatar.png'
+			},
 			width() {
 				if (this.size === 'default' || !this.size) {
 					return 86;
@@ -37,10 +42,20 @@
 			}
 		},
 		methods: {
-			onToContactPeople() {
-				uni.navigateTo({
-					url: '/pages/contact-friend/contact-friend'
-				})
+			onClick() {
+				if (this.preview) {
+					uni.previewImage({
+						urls: [this.imageSrc],
+						fail() {
+							uni.showToast({
+								title: '预览图片失败',
+								icon: 'none'
+							})
+						}
+					})
+				} else {
+					this.$emit('click')
+				}
 			}
 		}
 	}

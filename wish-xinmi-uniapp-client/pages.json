@@ -49,15 +49,9 @@
 			"style": {
 				"app-plus": {
 					//手机软键盘升起不让其将页面头部上推
-					"softinputMode": "adjustResize",
-					"pullToRefresh": {
-						"support": true,
-						"style": "circle",
-						"offset": "47rpx",
-						"color": "#000000"
-					}
+					"softinputMode": "adjustResize"
 				},
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": false
 			}
 		},
 		{

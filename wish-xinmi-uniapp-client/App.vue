@@ -1,8 +1,12 @@
 <script>
+	const origin = 'http://localhost:3000'
+
 	export default {
 		// 全局的静态变量
 		globalData: {
-			baseURL: 'http://159.75.234.119/xinmi',
+			origin: origin,
+			baseURL: `${origin}`,
+			socketPath: '/socket.io',
 			tokenHeader: 'xinmi-token'
 		},
 		onLaunch: function() {

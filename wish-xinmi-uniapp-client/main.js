@@ -7,6 +7,7 @@ import UniGalleryNine from './components/uni-gallery-nine/uni-gallery-nine.vue'
 import UniGalleryFour from './components/uni-gallery-four/uni-gallery-four.vue'
 import UniPopover from './components/uni-popover/uni-popover.vue'
 import UniPopoverAdd from './components/uni-popover-add/uni-popover-add.vue'
+import UniIndexLayout from './components/uni-index-layout/uni-index-layout.vue'
 import UniNavbar from './components/uni-navbar/uni-navbar.vue'
 import uView from "uview-ui"
 import toast from './plugins/toast.js'
@@ -17,6 +18,7 @@ Vue.use(uView)
 Vue.use(UniPopover)
 Vue.use(UniPopoverAdd)
 Vue.use(UniNavbar)
+Vue.use(UniIndexLayout)
 
 Vue.config.productionTip = false
 

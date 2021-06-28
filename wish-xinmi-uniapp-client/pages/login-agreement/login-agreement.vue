@@ -1,9 +1,8 @@
 <template>
-	<view class="uni-page-padding">
+	<view class="uni-page-padding uni-bg-white">
 		<uni-navbar title="用户协议"></uni-navbar>
 		<u-parse :content="content"></u-parse>
 	</view>
-
 </template>
 
 <script>
@@ -11,11 +10,12 @@
 	import marked from 'marked'
 
 	const text = marked(`
-	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 18px;text-align: center;">用户协议</div>
+	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 16px;text-align: center;">用户协议</div>
 	
 	感谢您选择此产品以及服务。
 	
 	请您务必审慎阅读并充分理解各条款内容，特别是免除或者限制责任的条款、争议解决和法律适用条款。免除或者限制责任的条款可能以加粗字体显示，您应重点阅读。除非您已阅读并接受本协议所有条款，否则您无权使用本产品或本服务。您使用本产品或本服务即视为您已阅读并同意本协议的约束。如您对本协议有任何疑问的，应向客服咨询。
+	
 	
 	#### 一、声明
 	
@@ -102,6 +102,9 @@
 	2. 用户需严格遵守《中华人民共和国计算机信息网络国际联网管理暂行规定》、《中国公用计算机互联网国际联网管理办法》、《中国互联网络域名注册暂行管理办法》等有关法律法规和行政规章制度；
 	
 	3. 甲方保留对"信迷APP"所有甲方产品说明性文档的解释权。
+	
+	<br/>
+
 	`)
 
 	export default {
@@ -119,6 +122,6 @@
 	}
 </script>
 
-<style>
-	@import url("@/components/u-parse/u-parse.css");
+<style scoped lang="scss">
+	@import "@/components/u-parse/u-parse.scss";
 </style>

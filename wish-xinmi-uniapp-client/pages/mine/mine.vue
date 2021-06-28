@@ -1,9 +1,13 @@
 <template>
 	<view class="uni-page-white">
 		<uni-list :border="true">
-			<uni-list-item class="profile-box" title="列表左侧带略缩图" note="列表描述信息"
-				thumb="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/460d46d0-4fcc-11eb-8ff1-d5dcf8779628.png"
-				thumb-size="lg" link clickable @click="onToMineInfo"></uni-list-item>
+			<uni-list-item class="profile-box" :title="userInfo.username" :note="'信迷号'+userInfo.username" link clickable
+				@click="onToMineInfo">
+				<view style="margin-right: 22rpx;" slot="header">
+					<uni-avatar :src="userInfo.avatarUrl"></uni-avatar>
+				</view>
+			</uni-list-item>
+
 			<uni-list-item title="设置" to="/pages/setting/setting" link></uni-list-item>
 			<uni-list-item title="我发的朋友圈" link></uni-list-item>
 		</uni-list>
@@ -11,11 +15,17 @@
 </template>
 
 <script>
+	import {
+		mapGetters
+	} from 'vuex'
 	export default {
 		data() {
 			return {
 
 			}
+		},
+		computed: {
+			...mapGetters(['userInfo'])
 		},
 		methods: {
 			onToMineInfo() {

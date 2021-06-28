@@ -161,7 +161,7 @@
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
 						uni.showLoading({
-							title: '登录中...'
+							title: '正在登录...'
 						});
 
 						this.loginRequest().then(res => {
@@ -281,6 +281,7 @@
 
 		/* 忘记密码 */
 		.forget-psw-box {
+			width: 100%;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;

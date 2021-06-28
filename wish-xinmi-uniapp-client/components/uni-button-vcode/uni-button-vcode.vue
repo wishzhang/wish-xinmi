@@ -6,27 +6,44 @@
 </template>
 
 <script>
+	import {
+		validEmail
+	} from '@/common/util.js'
+	import {
+		sendEmailRequest
+	} from '@/api/verifycode.js'
+
 	const VCODE_SECONDS = 60
 
 	export default {
 		name: "button-vcode",
 		props: {
-			valid: {
-				type: Boolean,
-				default: false
+			emailAddress: {
+				type: String
 			}
 		},
 		data() {
 			return {
+				valid: false,
 				timer: 0,
 				vcodeLock: false,
 				restSeconds: VCODE_SECONDS,
-				loading: false
+				loading: false,
+				theEmailAddress: ''
 			}
 		},
 		computed: {
 			isValid() {
 				return !this.vcodeLock && this.valid
+			}
+		},
+		watch: {
+			emailAddress: {
+				immediate: true,
+				handler(val) {
+					this.theEmailAddress = val
+					this.valid = validEmail(val)
+				}
 			}
 		},
 		methods: {
@@ -38,7 +55,7 @@
 			onGetVCode() {
 				if (!(this.isValid && !this.loading)) return
 				this.loading = true;
-				
+
 				uni.showLoading({
 					title: '正在发送验证码'
 				});
@@ -60,17 +77,16 @@
 						title: '发送失败',
 					});
 				}).finally(() => {
-					this.loading = false;
-					uni.hideLoading();
+					this.loading = false
+					uni.hideLoading()
 				})
 			},
 			fetchVcode() {
-				return new Promise((resolve, reject) => {
-					setTimeout(() => {
-						resolve()
-					}, 2000)
-				})
-			},
+				const params = {
+					emailAddress: this.theEmailAddress
+				}
+				return sendEmailRequest(params)
+			}
 		}
 	}
 </script>

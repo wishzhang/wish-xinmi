@@ -14,12 +14,12 @@ export default () => {
                 const token = headers[config.token.header];
                 const decode: any = loginService.verifyToken(token);
                 log(`token: ${token}`);
-                log(`token decode: ${decode}`);
+                log(`token decode: %o`, decode);
                 ctx.userId = decode.userId;
                 await next();
             } catch (e) {
                 ctx.status = 401;
-                ctx.body = '请求未授权';
+                ctx.body = '请求未授权 :' + e.toString();
                 log(e);
             }
         }

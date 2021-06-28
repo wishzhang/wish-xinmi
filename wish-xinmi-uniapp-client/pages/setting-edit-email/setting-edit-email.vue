@@ -1,40 +1,51 @@
 <template>
-	<view class="uni-page-padding">
-				<uni-navbar title="绑定邮箱修改"></uni-navbar>
-		<view style="margin: 15rpx 0 12rpx;">
-			<text>您之前绑定的邮箱是：</text><text class="uni-color-primary">fasdfSd@qq.com</text>
+	<uni-index-layout>
+		<uni-navbar title="绑定邮箱修改"></uni-navbar>
+		<view class="current-email">
+			<text>您之前绑定的邮箱是：</text><text class="uni-color-primary">{{userInfo.emailAddress}}</text>
 		</view>
-		<uni-forms :modelValue="formData" ref="form" border>
 
-			<uni-forms-item label="密码" name="password">
-				<uni-easyinput :inputBorder="false" type="password" placeholder="请输入密码" v-model="formData.password" />
-			</uni-forms-item>
-			<uni-forms-item label="邮箱" name="email">
-				<uni-easyinput :inputBorder="false" type="text" placeholder="请输入邮箱" v-model="formData.email" />
-			</uni-forms-item>
-			<uni-forms-item label="验证码" name="vcode">
-				<view style="display: flex;align-items: center;">
-					<uni-easyinput :inputBorder="false" type="text" placeholder="请输入验证码" v-model="formData.vcode" />
-					<uni-button-vcode :valid="true"></uni-button-vcode>
-				</view>
-			</uni-forms-item>
-			
-			<view style="margin-top: 30px;">
-				<button class="uni-button" type="default" @click="submitForm">提 交</button>
-			</view>
+		<view class="uni-page-padding uni-bg-white">
+			<u-form :model="formData" ref="uForm" :label-width="110" :errorType="errorType">
+				<u-form-item focus label="密码" prop="password">
+					<u-input :inputBorder="false" type="password" placeholder="请输入密码" v-model="formData.password" />
+				</u-form-item>
+				<u-form-item label="邮箱" prop="email">
+					<u-input :inputBorder="false" type="text" placeholder="请输入新邮箱" v-model="formData.email" />
+				</u-form-item>
+				<u-form-item label="验证码" prop="vcode">
+					<view class="v-code-box">
+						<u-input :inputBorder="false" type="text" placeholder="请输入验证码" v-model="formData.vcode" />
+						<uni-button-vcode :email-address="formData.email"></uni-button-vcode>
+					</view>
+				</u-form-item>
+			</u-form>
+		</view>
 
-			<view class="tip">
-				<text class="tip-row">如果没有收到邮件，可以尝试：</text>
-				<text class="tip-row">1. 在广告垃圾邮件中找找看</text>
-				<text class="tip-row">2. 点击重新发送</text>
-			</view>
-		</uni-forms>
-	</view>
+		<view class="uni-page-padding submit-button">
+			<u-button type="primary" @click="submitForm">提交</u-button>
+		</view>
+		
+		<view class="uni-page-padding tip">
+			<text class="tip-row">如果没有收到邮件，可以尝试：</text>
+			<text class="tip-row">1. 在广告垃圾邮件中找找看</text>
+			<text class="tip-row">2. 点击重新发送</text>
+		</view>
+	</uni-index-layout>
 </template>
 
 <script>
 	import UniButtonVcode from '@/components/uni-button-vcode/uni-button-vcode.vue'
 	import util from '@/common/util.js'
+	import {
+		formUtil
+	} from '@/common/util.js'
+	import {
+		editEmailAddressRequest
+	} from "@/api/user"
+	import {
+		mapGetters
+	} from 'vuex'
 
 	export default {
 		components: {
@@ -42,39 +53,72 @@
 		},
 		data() {
 			return {
-				formData: {},
+				errorType: formUtil.defaultErrorType,
+				formData: {
+					email: '',
+					vcode: '',
+					password: ''
+				},
 				rules: {
-					email: {
-						rules: [{
-							format: 'email',
-							errorMessage: '请输入正确的邮箱地址',
-						}]
-					},
-					password: {
-						rules: [{
-								required: true,
-								errorMessage: '请输入密码',
-							},
-							{
-								validateFunction: function(rule, value, data, callback) {
-									if (!util.validPassword(value)) {
-										callback('密码为6-20位数字字母组合且不能有空格')
-									}
-									return true
-								}
-							}
-						]
-					}
+					email: [{
+							required: true,
+							message: '请输入邮箱',
+							trigger: ['change'],
+						},
+						{
+							validator: formUtil.validator.emailAddress,
+							trigger: ['blur']
+						}
+					],
+					vcode: [{
+						required: true,
+						message: '请输入验证码',
+						trigger: []
+					}],
+					password: [{
+							required: true,
+							message: '请输入密码',
+							trigger: []
+						},
+						{
+							validator: formUtil.validator.password,
+							trigger: []
+						}
+					]
 				}
 			}
 		},
-		onReady() {
-			this.$refs.form.setRules(this.rules)
+		computed: {
+			...mapGetters(['userInfo'])
+		},
+		mounted() {
+			this.$refs.uForm.setRules(this.rules)
 		},
 		methods: {
 			submitForm() {
-				this.$refs.form.validate().then(() => {}).catch(err => {
-					console.log('表单错误信息：', err);
+				this.$refs.uForm.validate(valid => {
+					if (valid) {
+						uni.showLoading()
+
+						const params = {
+							originEmailAddress: this.userInfo.emailAddress,
+							verifyCode: this.vcode,
+							password: this.password,
+							targetEmailAddress: this.email
+						}
+						editEmailAddressRequest(params).then(res => {
+							if (res.code === 0) {
+								this.$toast('新邮箱绑定成功')
+								uni.navigateBack()
+							} else if (res.code === 1) {
+								this.$toast('密码错误')
+							} else if (res.code === 2) {
+								this.$toast('验证码错误')
+							}
+						}).finally(() => {
+							uni.hideLoading()
+						})
+					}
 				})
 			}
 		}
@@ -82,15 +126,32 @@
 </script>
 
 <style scoped lang="scss">
+	.current-email {
+		margin: 15rpx $uni-padding-horizontal;
+	}
+
+	.v-code-box {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
 	.tip {
+		display: inline-block;
 		margin-top: 20rpx;
+		margin-bottom: 20rpx;
 		font-size: $uni-font-size-sm;
 		color: $uni-text-color-grey;
 		text-align: left;
 	}
-	
-	.tip-row{
+
+	.tip-row {
 		display: block;
 		margin-bottom: 5rpx;
 	}
+
+    .submit-button {
+        margin-top: 50rpx;
+    }
 </style>
