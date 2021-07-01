@@ -1,5 +1,5 @@
 <script>
-	const origin = 'http://localhost:3000'
+	const origin = 'http://192.168.24.6:3000'
 
 	export default {
 		// 全局的静态变量

@@ -17,9 +17,9 @@
 		<u-index-list :scrollTop="scrollTop">
 			<view v-for="(group, index) in list" :key="index">
 				<template v-if="group.records.length>0">
-					<u-index-anchor :index="group.label" />
-					<view v-for="(item, itemIndex) in group.records" class="list-cell">
-						<uni-list :key="item.contactId" :border="false">
+					<u-index-anchor :index="group.label"/>
+					<view :key="itemIndex" v-for="(item, itemIndex) in group.records" class="list-cell">
+						<uni-list  :border="false">
 							<uni-list-item :title="item.name" clickable @click="onToContactPeople(item)">
 								<view style="margin-right: 22rpx;" slot="header">
 									<uni-avatar :src="item.avatarUrl"></uni-avatar>

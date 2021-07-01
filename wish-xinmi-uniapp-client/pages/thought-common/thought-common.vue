@@ -1,88 +1,131 @@
 <template>
-	<view>
-		<uni-navbar title="朋友圈">
-			<template slot="right">
-				<uni-icons type="camera-filled" size="22" :color="$style.uniColorPrimary" @click="onToThoughtSendPage">
-				</uni-icons>
-			</template>
-		</uni-navbar>
+	<uni-index-layout class="uni-height-full">
+		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
+			<uni-navbar title="朋友圈">
+				<template slot="right">
+					<uni-icons type="camera-filled" size="22" :color="$style.uniColorPrimary"
+						@click="onToThoughtSendPage">
+					</uni-icons>
+				</template>
+			</uni-navbar>
+			<view class="bg-box">
+				<image style="width: 100%; height: 200px; background-color: #eeeeee;" :src="userInfo.bgUrl"
+					@click="onUpdateBg"></image>
 
-		<view class="bg-box">
-			<image style="width: 100%; height: 200px; background-color: #eeeeee;" src="/static/img/bg1.jpg"></image>
-
-			<view class="avatar-box">
-				<text class="name">000001</text>
-				<uni-avatar class="avatar"></uni-avatar>
-			</view>
-		</view>
-
-		<view class="thought-list">
-			<view class="thought-item">
-				<view class="thought-item-left">
-					<uni-avatar></uni-avatar>
+				<view class="avatar-box">
+					<text class="name">{{userInfo.username}}</text>
+					<uni-avatar class="avatar"></uni-avatar>
 				</view>
-				<view class="thought-item-right">
-					<text class="name">000001</text>
-					<text class="text">asdfas</text>
-					<view class="media">
-						<uni-gallery-nine :list="list1"></uni-gallery-nine>
+			</view>
+			<view class="thought-list">
+				<view :key="item.thoughtId" class="thought-item" v-for="(item,index) in list">
+					<view class="thought-item-left">
+						<uni-avatar :src="item.avatarUrl"></uni-avatar>
 					</view>
-					<text class="time">昨天</text>
-				</view>
-			</view>
-
-			<view class="thought-item">
-				<view class="thought-item-left">
-					<uni-avatar></uni-avatar>
-				</view>
-				<view class="thought-item-right">
-					<text class="name">000001</text>
-					<text class="text">asdfas</text>
-					<view class="media">
-						<uni-gallery-nine :list="list2"></uni-gallery-nine>
+					<view class="thought-item-right">
+						<text class="name">{{item.name}}</text>
+						<text class="text">{{item.content}}</text>
+						<view class="media">
+							<uni-gallery-nine :list="item.photosUrl"></uni-gallery-nine>
+						</view>
+						<text class="time">{{item.createdAt}}</text>
 					</view>
-					<text class="time">昨天</text>
 				</view>
 			</view>
+		</mescroll-body>
 
-			<view class="thought-item">
-				<view class="thought-item-left">
-					<uni-avatar></uni-avatar>
-				</view>
-				<view class="thought-item-right">
-					<text class="name">000001</text>
-					<text class="text">asdfas</text>
-					<view class="media">
-						<uni-gallery-nine :list="list3"></uni-gallery-nine>
-					</view>
-					<text class="time">昨天</text>
-				</view>
+		<u-popup v-model="show" mode="bottom" border-radius="14">
+			<view class="popup-item" @click="onChangeAlbumCover">
+				更换相处封面
 			</view>
-		</view>
-	</view>
+			<view class="uni-bg-color popup-item-split"></view>
+			<view class="popup-item" @click="show=false">
+				取消
+			</view>
+		</u-popup>
+	</uni-index-layout>
 </template>
 
 <script>
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
+	import {
+		apiGoods
+	} from "@/api/mock.js"
+	import {
+		fetchPageRequest,
+	} from "@/api/thought";
+	import {
+		mapGetters
+	} from 'vuex'
+
 	export default {
+		mixins: [MescrollMixin],
 		components: {
 
 		},
 		data() {
 			return {
-				list1: ['asdf'],
-				list2: ['asdf', 'asdf', 'asdf', 'asdf'],
-				list3: ['asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asdf'],
+				show: false,
+
+				loading: false,
+				list: [],
+				downOption: {
+					use: false
+				},
+				upOption: {
+					noMoreSize: 0,
+					page: {
+						size: 10
+					}
+				}
 			}
 		},
+		computed: {
+			...mapGetters(['userInfo'])
+		},
 		methods: {
-			onClickLeft() {
-				uni.navigateBack({
-
+			onChangeAlbumCover() {
+				this.show = false
+				this.$navigateTo({
+					url: '/pages/change-album-cover/change-album-cover'
 				})
+			},
+			onUpdateBg() {
+				this.show = true
+			},
+			onClickLeft() {
+				uni.navigateBack()
 			},
 			onToThoughtSendPage() {
 				uni.navigateTo({
 					url: '/pages/thought-send/thought-send'
+				})
+			},
+			upCallback(page) {
+				const self = this
+				const params = {
+					userId: this.userInfo.userId,
+					current: page.num,
+					size: page.size
+				}
+				fetchPageRequest(params).then(res => {
+					if (res.code === 0) {
+						const data = res.data
+						data.records = data.records.map(el => {
+							el.photosUrl = el.photosUrl && el.photosUrl.split(',') || []
+							return el
+						})
+
+						self.mescroll.endBySize(data.records.length, data.total)
+
+						if (page.num === 1) {
+							this.list = []
+						}
+						this.list = this.list.concat(data.records)
+
+					}
+				}).catch(() => {
+					this.mescroll.endErr()
 				})
 			}
 		}
@@ -90,8 +133,24 @@
 </script>
 
 <style scoped lang="scss">
+	/* 弹出层 */
+	.popup-item {
+		height: 100rpx;
+		line-height: 100rpx;
+		text-align: center;
+		background-color: white;
+	}
+
+	.popup-item-split {
+		height: 10rpx;
+		background-color: $uni-bg-color;
+	}
+
+
+
 	.bg-box {
 		position: relative;
+		overflow: hidden;
 	}
 
 	.avatar-box {
@@ -108,7 +167,7 @@
 	}
 
 	.thought-list {
-		padding-top: 120rpx;
+		/* 	padding-top: 120rpx; */
 
 		.thought-item {
 			display: flex;

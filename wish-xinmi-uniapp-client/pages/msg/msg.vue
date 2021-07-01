@@ -6,10 +6,11 @@
 			</template>
 		</uni-navbar>
 
-		<mescroll-body  height="0"  ref="mescrollRef" :topbar="true"   :down="downOption"   :up="upOption" @up="upCallback">
+		<mescroll-body  height="0"  ref="mescrollRef" :topbar="true"  :down="downOption"  :up="upOption" @up="upCallback">
 			<uni-list :border="false">
 				<uni-list-chat title="uni-app" :avatar="item.avatarUrl" :note="item.content" :time="item.createdAt"
-					badge-positon="left" :badge-text="item.unreadCount===0?'':item.unreadCount" v-for="item in chatList"
+					:key="index"
+					badge-positon="left" :badge-text="item.unreadCount===0?'':item.unreadCount" v-for="(item,index) in chatList"
 					@click.native="toChatClick(item)">
 				</uni-list-chat>
 			</uni-list>

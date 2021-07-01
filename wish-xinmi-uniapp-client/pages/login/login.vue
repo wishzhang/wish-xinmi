@@ -171,6 +171,8 @@
 							uni.switchTab({
 								url: '/pages/msg/msg'
 							})
+						}).catch(err=>{
+							this.$toast('登录失败')
 						}).finally(() => {
 							uni.hideLoading()
 						})

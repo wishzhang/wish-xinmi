@@ -9,7 +9,7 @@ import fileService from './file-service';
 import Joi from 'joi';
 
 
-async function addThought(createUser: string, content: string, photoFiles: Array<string> = []) {
+async function addThought(createUser: string, content: string, photoFiles: Array<any> = []) {
     const schema = Joi.object({
         content: Joi.string().required()
     });
@@ -94,8 +94,13 @@ async function getPage(userId: string, current: number, size: number) {
         return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
     });
 
+    current = +current;
+    size = +size;
+
     const curIndex = (current - 1) * size;
-    const records = list.slice(curIndex, curIndex + size);
+    const endIndex = curIndex + size;
+
+    const records = list.slice(curIndex, endIndex);
 
     data = {
         records: records,

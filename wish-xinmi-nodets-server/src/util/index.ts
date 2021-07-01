@@ -2,6 +2,8 @@ import {v1} from "uuid";
 
 const pinyin = require("pinyin");
 import config from '../config/index';
+import circleService from "../service/circle-service";
+import R from "./response";
 
 const generateRouteKey = (namespace: any) => {
     return (name: any) => {

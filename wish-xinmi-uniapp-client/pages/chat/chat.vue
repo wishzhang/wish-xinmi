@@ -4,7 +4,7 @@
 
 		<!-- 用来计算一页的高度 -->
 		<view class="chat-list chat-list-tmp" id="tmp-list">
-			<view class="chat-list-item tmp-msg" v-for="(msg,ind) in tmpList">
+			<view :key="ind" class="chat-list-item tmp-msg" v-for="(msg,ind) in tmpList">
 				<view v-show="msg.type==='left'" class="list-item item-your">
 					<uni-avatar class="avatar-left" />
 					<chat-msg type="left" class="item-msg">{{msg.content}}</chat-msg>

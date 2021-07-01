@@ -4,7 +4,8 @@ page {
   color: $uni-main-color;
   background-color: $uni-bg-color;
   font-size: $uni-font-size-base;
-  overflow-x: hidden;
+  /* 需要*/
+  height: 100%;
 }
 
 .uni-height-full{

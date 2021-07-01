@@ -2,7 +2,7 @@
 	<view>
 		<uni-navbar :statusBar="true" left-icon="back">
 			<template slot="right">
-				<u-button class="publish-button" type="primary" :disabled="publishDisabled" @click="onPublish">发表
+				<u-button class="publish-button" type="primary" :disabled="publishDisabled" @click.native="onPublish">发表
 				</u-button>
 			</template>
 		</uni-navbar>
@@ -10,35 +10,61 @@
 		<view class="uni-page-padding">
 			<u-input class="thought-text" v-model="value" type="textarea" :border="false" placeholder="这一刻的想法"
 				:clearable="false" auto-height />
-			<u-upload :before-upload="onBeforeUpload" :upload-text="''"></u-upload>
+			<u-upload ref="uUpload" :upload-text="''" :auto-upload="false" action="http://uploasd"></u-upload>
 		</view>
 	</view>
 </template>
 
 <script>
-	let files = [];
+	import {addThoughtForUniappRequest} from '@/api/thought.js'
+	import {mapGetters} from 'vuex'
+	
 	export default {
 		data() {
 			return {
-				value: ''
+				value: '',
+				lists: []
 			}
 		},
 		computed: {
+			...mapGetters(['userInfo']),
 			publishDisabled() {
-				return !(this.value.trim() || files.length > 0)
+				return !(this.value.trim() && this.lists.length > 0)
 			}
 		},
 		methods: {
 			onClickLeft() {
-				uni.navigateBack({
-
+				uni.navigateBack()
+			},
+			onPublish() {
+				uni.showLoading()
+				const files = this.lists.map((el,index)=>{
+					return {
+						name: `file${index}`,
+						file: el.file,
+						uri: el.file.path
+					}
+				})
+				addThoughtForUniappRequest({
+					content: this.value,
+					files: files,
+					createUser: this.userInfo.userId,
+					success: ()=>{
+						this.$toast('发表成功')
+						uni.navigateBack()
+					},
+					fail: (err)=>{
+						console.log(err)
+						this.$toast('发表失败')
+					},
+					complete: ()=>{
+						uni.hideLoading()
+					}
 				})
 			},
-			onPublish() {},
-			onBeforeUpload(index, list) {
-				files = list
-				return false
-			}
+			onReady() {
+				this.lists = this.$refs.uUpload.lists
+			},
 		}
 	}
 </script>

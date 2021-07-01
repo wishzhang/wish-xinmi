@@ -37,4 +37,15 @@ router.post("/addThought", async (ctx: any) => {
     ctx.body = R.success();
 });
 
+router.post("/addToughtForUniapp", async (ctx: any)=>{
+    const query = ctx.request.body;
+    const {createUser, content} = query;
+    const files = ctx.request.files;
+
+    let photoFiles = Object.keys(files).map(key=>files[key]);
+
+    await circleService.addThought(createUser, content, photoFiles);
+    ctx.body = R.success();
+})
+
 export default router;

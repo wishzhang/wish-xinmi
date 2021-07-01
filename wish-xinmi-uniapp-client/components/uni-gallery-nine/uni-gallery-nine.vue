@@ -2,23 +2,23 @@
 	<view class="uni-gallery-nine">
 		<template v-if="list.length===1">
 			<view class="list-length-1">
-				<image class="image" key="fasd" src="/static/img/bg1.jpg" @click="onImageClick"></image>
+				<image class="image" key="fasd" :src="list[0]" @click="onImageClick(0)"></image>
 			</view>
 		</template>
 		<template v-else-if="list.length===4">
 			<view class="list-length-4">
-				<image class="image" src="/static/img/bg1.jpg" @click="onImageClick"></image>
-				<image class="image" src="/static/img/bg2.jpg" @click="onImageClick"></image>
+				<image class="image" :src="list[0]" @click="onImageClick(0)"></image>
+				<image class="image" :src="list[1]" @click="onImageClick(1)"></image>
 			</view>
 			<view class="list-length-4">
-				<image class="image" src="/static/img/bg3.jpg" @click="onImageClick"></image>
-				<image class="image" src="/static/img/bg4.jpg" @click="onImageClick"></image>
+				<image class="image" :src="list[2]" @click="onImageClick(2)"></image>
+				<image class="image" :src="list[3]" @click="onImageClick(3)"></image>
 			</view>
 		</template>
 		<template v-else>
 			<view class="list-lenght-9">
-				<template v-for="i in 9">
-					<image class="image" src="/static/img/bg4.jpg" :key="i" @click="onImageClick"></image>
+				<template v-for="(url,index) in list">
+					<image class="image" :src="url" :key="index" @click="onImageClick(index)"></image>
 				</template>
 			</view>
 		</template>
@@ -30,15 +30,16 @@
 		props: {
 			list: {
 				type: Array,
-				default(){
+				default () {
 					return []
 				}
 			}
 		},
 		methods: {
-			onImageClick() {
+			onImageClick(current) {
 				uni.previewImage({
-					urls: ['/static/img/bg3.jpg'],
+					current: current,
+					urls: this.list,
 					fail() {
 						uni.showToast({
 							title: '预览图片失败',
