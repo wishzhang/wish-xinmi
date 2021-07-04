@@ -55,7 +55,7 @@
 <style scoped lang="scss">
 	$maxWidth: 500rpx;
 	$splitWidth: 10rpx;
-	$borderRadius: $uni-border-radius-base;
+	$borderRadius: 0;
 
 	.split {
 		margin-right: $splitWidth;

@@ -50,7 +50,9 @@
 </script>
 
 <style scoped lang="scss">
-	.uni-index-layout{
 
+	.uni-index-layout{
+		position: relative;
+		height: 100%;
 	}
 </style>

@@ -6,20 +6,25 @@
 			</template>
 		</uni-navbar>
 
-		<mescroll-body  height="0"  ref="mescrollRef" :topbar="true"  :down="downOption"  :up="upOption" @up="upCallback">
-			<uni-list :border="false">
-				<uni-list-chat title="uni-app" :avatar="item.avatarUrl" :note="item.content" :time="item.createdAt"
-					:key="index"
-					badge-positon="left" :badge-text="item.unreadCount===0?'':item.unreadCount" v-for="(item,index) in chatList"
-					@click.native="toChatClick(item)">
-				</uni-list-chat>
-			</uni-list>
-		</mescroll-body>
+		<uni-list :border="false">
+			<uni-list-chat class="u-border-bottom" :title="item.name" :avatar="item.avatarUrl" :note="item.content"
+				:time="item.createdAt" :key="index" badge-positon="left"
+				:badge-text="item.unreadCount===0?'':item.unreadCount" v-for="(item,index) in chatList"
+				@click.native="toChatClick(item)">
+			</uni-list-chat>
+		</uni-list>
+
+		<!-- 	<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @up="upCallback">
+		
+		</mescroll-body> -->
+
+		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
+			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
 	</uni-index-layout>
 </template>
 
 <script>
-	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js"
 	import {
 		apiGoods
 	} from "@/api/mock.js"
@@ -95,10 +100,10 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo', 'chatList'])
+			...mapGetters(['userInfo', 'chatList', 'tabbar'])
 		},
-		created() {
-			this.$store.dispatch('FetchMineAllChatList');
+		onLoad() {
+			this.$store.dispatch('FetchMineAllChatList')
 		},
 		methods: {
 			toChatClick(item) {
@@ -113,19 +118,7 @@
 			upCallback(page) {
 				//联网加载数据
 				apiGoods(page.num, page.size).then(res => {
-					//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
-					//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
 
-					//方法一(推荐): 后台接口有返回列表的总页数 totalPage
-					//this.mescroll.endByPage(res.list.length, totalPage); //必传参数(当前页的数据个数, 总页数)
-
-					//方法二(推荐): 后台接口有返回列表的总数据量 totalSize
-					//this.mescroll.endBySize(res.list.length, totalSize); //必传参数(当前页的数据个数, 总数据量)
-
-					//方法三(推荐): 您有其他方式知道是否有下一页 hasNext
-					//this.mescroll.endSuccess(res.list.length, hasNext); //必传参数(当前页的数据个数, 是否有下一页true/false)
-
-					//方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据
 					this.mescroll.endSuccess(res.list.length);
 
 					//设置列表数据
@@ -140,6 +133,9 @@
 	}
 </script>
 
-<style>
-
+<style scoped lang="scss">
+	/deep/ .uni-list-chat__header {
+		width: $uni-img-size-base;
+		height: $uni-img-size-base;
+	}
 </style>

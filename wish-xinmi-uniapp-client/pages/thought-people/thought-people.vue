@@ -1,55 +1,160 @@
 <template>
-	<view>
-		<uni-navbar back-text="000001"></uni-navbar>
+	<uni-index-layout class="uni-bg-white">
+		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
+			<uni-navbar></uni-navbar>
 
-		<view class="bg-box">
-			<image style="width: 100%; height: 200px; background-color: #eeeeee;" src="/static/img/bg1.jpg"></image>
+			<uni-user-thought-bg :height="400" :name="userDetail.name" :bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl"
+				@bg-click="onUpdateBg" />
 
-			<view class="avatar-box">
-				<text class="name">000001</text>
-				<uni-avatar class="avatar"></uni-avatar>
-			</view>
-		</view>
+			<view class="thought-list">
+				<view :key="name" class="thought-item-group" v-for="(groupItem, name) in group">
+					<text class="year">{{name}}年</text>
 
-		<view class="thought-list">
-			<view class="thought-item-group">
-				<text class="year">2021年</text>
-
-				<view class="thought-item">
-					<view class="thought-item-left">
-						<text class="day">12</text>
-						<text class="month">06月</text>
-					</view>
-					<view class="thought-item-right">
-						<text class="text">asdfas</text>
-						<view class="media">
-							<uni-gallery-four :list="list1"></uni-gallery-four>
+					<view :key="item.thoughtId" class="thought-item u-border-bottom" v-for="item in groupItem">
+						<view class="thought-item-left">
+							<text class="day">{{item.createdAt|dateDay}}</text>
+							<text class="month">{{item.createdAt|dateMonth}}月</text>
+						</view>
+						<view class="thought-item-right">
+							<text class="text">{{item.content}}</text>
+							<view class="media">
+								<uni-gallery-four :list="item.photosUrl"></uni-gallery-four>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
+		</mescroll-body>
 
-	</view>
-	</view>
+		<u-popup v-model="show" mode="bottom" border-radius="14">
+			<view class="popup-item" @click="onChangeAlbumCover">
+				更换相处封面
+			</view>
+			<view class="uni-bg-color popup-item-split"></view>
+			<view class="popup-item" @click="show=false">
+				取消
+			</view>
+		</u-popup>
+	</uni-index-layout>
 </template>
 
 <script>
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
+	import {
+		apiGoods
+	} from "@/api/mock.js"
+	import {
+		fetchPeopleListRequest,
+		fetchUserThoughtPageRequest
+	} from "@/api/thought";
+	import {
+		fetchUserInfoRequest
+	} from "@/api/user.js"
+	import {
+		fetchContactDetailRequest
+	} from "@/api/contact"
+	import {
+		mapGetters
+	} from 'vuex'
+	import moment from 'moment'
+
 	export default {
+		mixins: [MescrollMixin],
 		data() {
 			return {
-				list1: ['asdf']
+				userDetail: {},
+				show: false,
+
+				loading: false,
+				list: [],
+				downOption: {
+					use: false
+				},
+				upOption: {
+					noMoreSize: 0,
+					page: {
+						size: 10
+					}
+				}
+			}
+		},
+		computed: {
+			...mapGetters(['userInfo']),
+			group() {
+				const group = {};
+				for (let item of this.list) {
+					const mom = moment(item.createdAt);
+					const year = mom.year();
+					if (group[year]) {
+						group[year].push(item);
+					} else {
+						group[year] = [item];
+					}
+				}
+				return group;
+			}
+		},
+		onLoad(option) {
+			if (this.userInfo.userId !== option.userId) {
+				const params1 = {
+					userId: this.userInfo.userId,
+					contactId: option.userId
+				};
+				fetchContactDetailRequest(params1).then(res => {
+					if (res.code === 0) {
+						this.userDetail = res.data;
+					}
+				});
+			} else {
+				this.userDetail = {
+					name: this.userInfo.username,
+					avatarUrl: this.userInfo.avatarUrl,
+					bgUrl: this.userInfo.bgUrl
+				}
 			}
 		},
 		methods: {
-			onClickLeft() {
-				uni.navigateBack({
-
+			onChangeAlbumCover() {
+				this.show = false
+				this.$navigateTo({
+					url: '/pages/change-album-cover/change-album-cover'
 				})
+			},
+			onUpdateBg() {
+				this.show = true
+			},
+			onClickLeft() {
+				uni.navigateBack()
 			},
 			onToThoughtSendPage() {
 				uni.navigateTo({
 					url: '/pages/thought-send/thought-send'
+				})
+			},
+			upCallback(page) {
+				const self = this
+				const params = {
+					userId: this.userInfo.userId,
+					current: page.num,
+					size: page.size
+				}
+				fetchUserThoughtPageRequest(params).then(res => {
+					if (res.code === 0) {
+						const data = res.data
+						data.records = data.records.map(el => {
+							el.photosUrl = el.photosUrl && el.photosUrl.split(',') || []
+							return el
+						})
+
+						self.mescroll.endBySize(data.records.length, data.total)
+
+						if (page.num === 1) {
+							this.list = []
+						}
+						this.list = this.list.concat(data.records)
+					}
+				}).catch(() => {
+					this.mescroll.endErr()
 				})
 			}
 		}
@@ -61,25 +166,22 @@
 		background-color: white;
 	}
 
-	.bg-box {
-		position: relative;
+	/* 弹出层 */
+	.popup-item {
+		height: 100rpx;
+		line-height: 100rpx;
+		text-align: center;
+		background-color: white;
 	}
 
-	.avatar-box {
-		position: absolute;
-		right: $uni-padding-horizontal;
-		bottom: -16rpx;
-		display: flex;
-		align-items: center;
-
-		.name {
-			color: white;
-			margin-right: $uni-padding-horizontal - 10rpx;
-		}
+	.popup-item-split {
+		height: 10rpx;
+		background-color: $uni-bg-color;
 	}
 
 	.thought-list {
 		padding-top: 120rpx;
+		background-color: white;
 
 		.thought-item-group {
 			.year {
@@ -90,7 +192,6 @@
 
 			.thought-item {
 				display: flex;
-				border-bottom: 1rpx solid $uni-border-color;
 				padding: 28rpx $uni-padding-horizontal 14rpx;
 
 				.thought-item-left {

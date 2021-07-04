@@ -352,7 +352,7 @@
 		@include vue-flex;
 		// align-items: flex-start;
 		padding: 20rpx 0;
-		font-size: 28rpx;
+		font-size: $uni-font-size-base;
 		color: $u-main-color;
 		box-sizing: border-box;
 		line-height: $u-form-item-height;

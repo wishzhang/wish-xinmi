@@ -1,47 +1,24 @@
 <template>
 	<uni-index-layout>
-		<uni-navbar :back-text="contactDetail.name"></uni-navbar>
+		<uni-navbar :title="contactDetail.name"></uni-navbar>
 
-		<!-- 用来计算一页的高度 -->
-		<view class="chat-list chat-list-tmp" id="tmp-list">
-			<view :key="ind" class="chat-list-item tmp-msg" v-for="(msg,ind) in tmpList">
-				<view v-show="msg.type==='left'" class="list-item item-your">
-					<uni-avatar class="avatar-left" />
-					<chat-msg type="left" class="item-msg">{{msg.content}}</chat-msg>
-				</view>
-				<view v-show="msg.type==='right'" class="list-item item-mine">
-					<chat-msg type="right" class="item-msg">{{msg.content}}</chat-msg>
-					<uni-avatar class="avatar-right" />
-				</view>
+		<mescroll-body ref="mescrollRef" bottom="100rpx" @init="mescrollInit" :up="upOption" :down="downOption"
+			@down="downCallback">
+			<u-loadmore v-if="isEnd" status="nomore" class="no-more"/>
+
+			<view class="list-item" :key="msg.VIEW_ID" :id="msg.VIEW_ID" :class="['item-'+msg.type]"
+				v-for="(msg,ind) in list">
+				<uni-avatar v-show="msg.type==='left'" class="avatar-left" size="small" @click="onToPeopleInfo(msg)" />
+				<chat-msg :type="msg.type" class="item-msg">{{msg.content}}</chat-msg>
+				<uni-avatar v-show="msg.type==='right'" class="avatar-right" size="small"
+					@click="onToPeopleInfo(msg)" />
 			</view>
-		</view>
-
-		<!-- 加载 -->
-		<view class="load-more" v-show="loadingMore">
-			<u-loading :show="loadingMore" mode="circle"></u-loading>
-		</view>
-
-		<view class="chat-list">
-			<view class="chat-list-wrap" :style="{height: listHeight}">
-				<template v-for="(msg,ind) in list">
-					<view :key="'msg_'+ind" :style="{visibility: !(ind>=0&&ind<10&&lock)? 'visible': 'hidden'}"
-						class="chat-list-item" :id="'msg_'+ind">
-						<view v-show="msg.type==='left'" class="list-item item-your">
-							<uni-avatar class="avatar-left" @click="onToPeopleInfo(msg)" />
-							<chat-msg type="left" class="item-msg">{{msg.content}}</chat-msg>
-						</view>
-						<view v-show="msg.type==='right'" class="list-item item-mine">
-							<chat-msg type="right" class="item-msg">{{msg.content}}</chat-msg>
-							<uni-avatar class="avatar-right" @click="onToPeopleInfo(msg)" />
-						</view>
-					</view>
-				</template>
-			</view>
-		</view>
+		</mescroll-body>
 
 		<view class="send-box">
-			<u-input ref="inputRef" :focus="false" :clearable="false" v-model="content" placeholder=""
-				class="send-input" type="text" clearable />
+			<u-input ref="inputRef" :focus="false" :clearable="false" v-model="content" placeholder="" :height="36"
+				type="textarea" :custom-style="{padding: `${$style.uniSpacingColBase} ${$style.uniSpacingRowBase}`}"
+				:maxlength="2000" class="send-input" />
 			<view class="send-button" @touchend.prevent="onSend">
 				<u-button type="primary" size="medium" :ripple="true" :hair-line="false">发送</u-button>
 			</view>
@@ -52,10 +29,7 @@
 </template>
 
 <script>
-	/**
-	 * 当scrollTop为0，那么触发，然后防止触发标志。但更新后解锁触发标志。
-	 * 当loadEnd为true则锁死
-	 */
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
 
 	import {
 		mapGetters
@@ -69,7 +43,8 @@
 	} from '@/api/message.js'
 	import ChatMsg from '@/components/uni-chat-msg/uni-chat-msg.vue'
 	import {
-		rpx2px
+		rpx2px,
+		uuid
 	} from '@/common/util.js'
 	import {
 		socket
@@ -80,26 +55,23 @@
 	const tmpHeight = rpx2px('10000rpx')[0]
 
 	export default {
+		mixins: [MescrollMixin], // 使用mixin
 		components: {
 			ChatMsg
 		},
 		data() {
 			return {
-				tmpShow: false,
-				tmpList: [],
-				tmpRect: [],
-				tmpListHeight: 0,
-
-				listHeight: 0,
-
-				curScrollIntoView: '',
-				lock: false,
-				loadingMore: false,
-				loadEnd: false,
-				scrollTop: 0,
-				current: {
-					scrollTop: 0
+				downOption: {
+					autoShowLoading: true, // 显示下拉刷新的进度条
+					textColor: this.$style.uniTipsColor
 				},
+				upOption: {
+					use: false, // 禁止上拉
+					toTop: {
+						src: '' // 不显示回到顶部按钮
+					}
+				},
+				isEnd: false, // 是否无消息
 
 				list: [],
 				content: '',
@@ -109,9 +81,6 @@
 					currentPage: 1,
 					total: 0
 				},
-
-				preRect: {},
-				curRect: {},
 
 				// 联系人详情
 				contactDetail: {}
@@ -126,7 +95,7 @@
 
 			uni.onKeyboardHeightChange(res => {
 				if (res.height > 0) {
-					this.scrollToBottom()
+					this.mescroll.scrollTo(99999, 0)
 				}
 			})
 
@@ -143,15 +112,6 @@
 		},
 		mounted() {
 			const self = this
-			this.fetchList().then(async (newList) => {
-				const h = await this.calcHeight(newList)
-				self.listHeight = h + 'px'
-
-				self.scrollToBottom().then(() => {
-					self.pushList(newList)
-				})
-			})
-
 			// 监听socket
 			console.log(socket)
 			if (socket) {
@@ -162,10 +122,50 @@
 			}
 		},
 		onReady() {},
-		onShow() {
-			this.scrollToBottom()
-		},
+		onShow() {},
 		methods: {
+			downCallback() {
+				//联网加载数据
+				this.fetchList().then(data => {
+					// 先隐藏下拉刷新的状态
+					this.mescroll.endSuccess();
+					// 不满一页,说明已经无更多消息 (建议根据您实际接口返回的总页码数,总消息量,是否有消息的字段来判断)
+					if (data.length < this.page.pageSize) {
+						this.isEnd = true; // 标记已无更多消息
+						this.mescroll.lockDownScroll(true); // 锁定下拉
+					}
+					// 生成VIEW_ID,大写,避免污染源数据
+					data.forEach(val => {
+						debugger
+						val.VIEW_ID = this.generateId() // 不以数字开头
+					})
+
+					// 获取当前最顶部的VIEW_ID (注意是写在data.concat前面)
+					let topMsg = this.list[0]
+
+					//设置列表数据
+					this.list = data.concat(this.list); // 注意不是this.msgList.concat
+
+					this.$nextTick(() => {
+						if (this.page.currentPage <= 2) {
+							// 第一页直接滚动到底部 ( this.pageNum已在前面加1 )
+							this.mescroll.scrollTo(99999, 0)
+						} else if (topMsg) {
+							// 保持顶部消息的位置
+							let view = uni.createSelectorQuery().select('#' + topMsg.VIEW_ID);
+							view.boundingClientRect(v => {
+								console.log("节点离页面顶部的距离=" + v.top);
+								this.mescroll.scrollTo(v.top - 100, 0) // 减去上偏移量100
+							}).exec();
+						}
+					})
+
+				}).catch(() => {
+					this.page.currentPage--; // 联网失败,必须回减页码
+					this.mescroll.endErr(); // 隐藏下拉刷新的状态
+				})
+			},
+
 			onToPeopleInfo(msg) {
 				this.$navigateTo({
 					url: '/pages/contact-friend/contact-friend',
@@ -173,34 +173,6 @@
 						userId: msg.userId
 					}
 				})
-			},
-			pushList(newList) {
-				this.list = [...newList, ...this.list]
-			},
-			calcHeight(tmpList) {
-				const self = this
-
-				self.tmpList = tmpList
-				return new Promise((resolve, reject) => {
-					self.$nextTick(() => {
-						try {
-							const query = uni.createSelectorQuery().in(self)
-							const tmpMsg = query.selectAll('.tmp-msg')
-							tmpMsg.boundingClientRect(data => {
-								const height = data.reduce((total,
-									el) => {
-									return total + el.height
-								}, 0)
-								resolve(height)
-							}).exec()
-						} catch (e) {
-							reject(e)
-						}
-					})
-				})
-			},
-			onTap() {
-
 			},
 			async onSend() {
 				if (!this.content.trim()) {
@@ -235,52 +207,6 @@
 					return arr
 				})
 			},
-			pageScrollTo(scrollTop) {
-				const self = this
-				return new Promise((resolve, reject) => {
-					self.$nextTick(function() {
-						uni.pageScrollTo({
-							scrollTop: scrollTop,
-							duration: 0,
-							success() {
-								resolve()
-							},
-							fail(err) {
-								reject(err)
-							}
-						})
-					})
-				})
-			},
-			onPageScroll(e) {
-				if (e.scrollTop < 0 + 5 && !this.loadingMore) {
-					this.loadingMore = true
-					this.loadMore()
-				}
-				this.current.scrollTop = e.scrollTop
-			},
-			onPullDownRefresh(e) {
-				this.loadMore()
-			},
-			loadMore() {
-				const self = this
-
-				this.fetchList()
-					.then(async list => {
-						const h = await self.calcHeight(list)
-						self.listHeight = (Number.parseFloat(self.listHeight) + h) + 'px'
-
-						self.pushList(list)
-						this.lock = true
-
-						await self.pageScrollTo(h)
-						this.lock = false
-					}).catch(err => {
-
-					}).finally(() => {
-						this.loadingMore = false
-					})
-			},
 			// 发送消息
 			async pushMessage(data) {
 				this.showOneMessage(data)
@@ -309,16 +235,15 @@
 					userId: originUser,
 					type: originUser === this.userInfo.userId ? 'right' : 'left',
 					content: content,
-					avatarUrl: originAvatarUrl
+					avatarUrl: originAvatarUrl,
+					VIEW_ID: this.generateId()
 				}
 
 				this.content = ''
 
 				self.list.push(msgObj)
-				const h = await this.calcHeight([msgObj])
-				self.listHeight = (Number.parseFloat(self.listHeight) + h) + 'px'
 
-				return await this.scrollToBottom()
+				this.scrollToBottom()
 			},
 			convertList(list = []) {
 				const arr = list.map(el => {
@@ -333,24 +258,12 @@
 				return arr;
 			},
 			scrollToBottom() {
-				const self = this
-				return new Promise((resolve, reject) => {
-					self.$nextTick(function() {
-						uni.pageScrollTo({
-							scrollTop: Number.MAX_SAFE_INTEGER,
-							duration: 0,
-							success() {
-								resolve()
-							},
-							fail(res) {
-								reject()
-							}
-						})
-					})
+				this.$nextTick(function() {
+					this.mescroll.scrollTo(99999, 0)
 				})
 			},
-			getId(index) {
-				return `msg_${index}`
+			generateId() {
+				return `msg_` + uuid()
 			}
 		}
 	}
@@ -358,13 +271,6 @@
 
 <style scoped lang="scss">
 	$bottom-height: 100rpx;
-
-	.chat-list-wrap {
-		padding-top: 36rpx;
-		padding-bottom: 100rpx;
-		overflow: hidden;
-		box-sizing: content-box;
-	}
 
 	.avatar-left {
 		margin: 0 8px 0 12px;
@@ -374,45 +280,30 @@
 		margin: 0 12px 0 8px;
 	}
 
-	/* 加载更多 */
-	.load-more {
+	.no-more {
 		text-align: center;
 		height: 90rpx;
 		line-height: 90rpx;
 	}
 
-	.chat-list-tmp {
-		height: 0;
-		overflow: hidden;
-	}
+	.list-item {
+		width: 100%;
+		display: flex;
+		margin-bottom: 26rpx;
+		box-sizing: border-box;
 
-	.chat-list {
-		display: block;
+		&.item-left {
+			justify-content: flex-start;
+			padding-right: 132rpx;
+		}
 
-		.chat-list-item {
-			overflow: hidden;
+		&.item-right {
+			justify-items: flex-end;
+			padding-left: 132rpx;
+		}
 
-			.list-item {
-				width: 100%;
-				display: flex;
-				margin-bottom: 26rpx;
-				box-sizing: border-box;
-
-				&.item-your {
-					justify-content: flex-start;
-					padding-right: 132rpx;
-				}
-
-				&.item-mine {
-					justify-items: flex-end;
-					padding-left: 132rpx;
-				}
-
-				.item-msg {
-					flex: 1;
-				}
-
-			}
+		.item-msg {
+			flex: 1;
 		}
 	}
 
@@ -422,16 +313,17 @@
 		left: 0;
 		right: 0;
 		display: flex;
-		align-items: center;
-		background-color: white;
+		align-items: flex-end;
 		width: 100%;
-		height: $bottom-height;
 		border-top: 1rpx solid $uni-border-color;
 		overflow: hidden;
-		padding: 0 $uni-padding-horizontal 0 $uni-padding-horizontal+10rpx;
+		padding: $uni-spacing-col-base $uni-padding-horizontal $uni-spacing-col-base $uni-padding-horizontal+10rpx;
+		background-color: $uni-bg-color;
 
 		.send-input {
 			flex: 1;
+			background-color: white;
+			border-radius: $uni-border-radius-base;
 		}
 
 		.send-button {

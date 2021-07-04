@@ -55,7 +55,6 @@
 					userId: this.userInfo.userId,
 					username: this.value
 				}
-				console.dir(JSON.parse(JSON.stringify(params)))
 				fetchNoContactListRequest(params).then(res => {
 					this.list = res.data
 				})

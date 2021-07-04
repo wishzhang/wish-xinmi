@@ -65,26 +65,21 @@
 		},
 		{
 			"path": "pages/contact-add/contact-add"
-		}, {
-			"path": "pages/contact-stranger/contact-stranger",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}
-	],
+		}, 
+		{
+			"path": "pages/contact-stranger/contact-stranger"
+		},
+		{
+            "path" : "pages/change-album-cover/change-album-cover"
+        }
+    ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f7f8fa",
 		"navigationStyle": "custom",
 		"app-plus": {
 			"bounce": "none",
 			"scrollIndicator": "none"
 		}
-
 	},
 	"tabBar": {
 		"borderStyle": "black",

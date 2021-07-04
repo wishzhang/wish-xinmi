@@ -22,6 +22,8 @@
 				</view>
 			</view>
 		</view>
+
+		<view v-if="show" class="popover-layer" @click="show=false"></view>
 	</view>
 </template>
 
@@ -40,12 +42,17 @@
 
 
 	export default {
+		props:{
+			active:{
+				type:Boolean,
+				default: false
+			}
+		},
 		data() {
 			return {
 				show: this.active,
 				dotShow: this.active
 			}
-
 		},
 		computed: {
 			width() {
@@ -112,6 +119,7 @@
 <style scope lang="scss">
 	.compos {
 		position: relative;
+		z-index: 10000;
 
 		.modal {
 			background-color: #4a4a4a;
@@ -161,5 +169,15 @@
 		align-items: center;
 		justify-content: center;
 		box-sizing: border-box;
+	}
+
+	.popover-layer {
+		position: fixed;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background-color: transparent;
+		z-index: 9999;
 	}
 </style>

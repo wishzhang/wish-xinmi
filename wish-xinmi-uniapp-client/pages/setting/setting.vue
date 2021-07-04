@@ -1,14 +1,19 @@
 <template>
 	<uni-index-layout>
 		<uni-navbar title="设置"></uni-navbar>
-		<uni-list :border="true">
-			<uni-list-item title="邮箱" rightText="121312@qq.com" to="/pages/setting-edit-email/setting-edit-email" link>
-			</uni-list-item>
-			<uni-list-item title="密码" rightText="修改密码" to="/pages/setting-edit-psw/setting-edit-psw" link>
-			</uni-list-item>
-		</uni-list>
 
-		<view class="login-out" @click="onLoginOut">退出登录</view>
+		<uni-cell-group :border="false">
+			<uni-cell-item title="邮箱" :value="userInfo.emailAddress" to="/pages/setting-edit-email/setting-edit-email">
+			</uni-cell-item>
+			<uni-cell-item title="密码" :value="'修改密码'" to="/pages/setting-edit-psw/setting-edit-psw"></uni-cell-item>
+		</uni-cell-group>
+
+		<uni-cell-group class="login-out" :border="false">
+			<uni-cell-item :border-bottom="false" :title-style="{width:'100%', textAlign: 'center'}" 
+			:arrow="false"
+			title="退出登录" @click="onLoginOut">
+			</uni-cell-item>
+		</uni-cell-group>
 	</uni-index-layout>
 </template>
 

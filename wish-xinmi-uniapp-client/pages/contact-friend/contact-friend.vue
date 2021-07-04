@@ -1,18 +1,24 @@
 <template>
-	<view>
-		<uni-navbar back-text="000001"></uni-navbar>
+	<uni-index-layout>
+		<uni-navbar></uni-navbar>
 
-		<uni-list :border="false">
-			<uni-list-item :title="contactDetail.name" :note="'信迷号:'+contactDetail.username">
-				<template slot="header">
-					<uni-avatar :src="contactDetail.avatarUrl" style="margin-right: 22rpx;"></uni-avatar>
+		<uni-cell-group :border="false">
+			<uni-cell-item :arrow="false" :item-style="{paddingTop: '60rpx', paddingBottom: '60rpx'}"
+				:hover-class="'none'" :title="contactDetail.name" :label="'信迷号:'+contactDetail.username">
+				<template slot="icon">
+					<uni-avatar :src="contactDetail.avatarUrl" :style="{marginRight: $style.uniPaddingHorizontal}">
+					</uni-avatar>
 				</template>
-			</uni-list-item>
+			</uni-cell-item>
 
-			<uni-list-item title="朋友圈" link clickable @click="onToThoughtPeople"></uni-list-item>
-		</uni-list>
-		<u-button style="margin-top: 60rpx;" type="default" @click="onToChat">发消息</u-button>
-	</view>
+			<uni-cell-item title="朋友圈" @click="onToThoughtPeople"></uni-cell-item>
+		</uni-cell-group>
+
+		<uni-cell-group>
+			<uni-cell-button style="margin-top: 60rpx;" icon-name="chat" title='发消息' @click="onToChat">
+			</uni-cell-button>
+		</uni-cell-group>
+	</uni-index-layout>
 </template>
 
 <script>
@@ -57,8 +63,11 @@
 				})
 			},
 			onToThoughtPeople() {
-				uni.navigateTo({
-					url: '/pages/thought-people/thought-people'
+				this.$navigateTo({
+					url: '/pages/thought-people/thought-people',
+					params: {
+						userId: this.contactDetail.userId
+					}
 				})
 			}
 		}

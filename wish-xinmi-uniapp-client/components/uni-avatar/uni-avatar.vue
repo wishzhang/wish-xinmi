@@ -1,5 +1,6 @@
 <template>
-	<u-image class="avatar" :fade="false" :width="width" :height="height" :src="imageSrc" @click="onClick">
+	<u-image class="avatar" :border-radius="borderRadius" :fade="false" :width="width" :height="height" :src="imageSrc"
+		@click="onClick">
 	</u-image>
 </template>
 
@@ -29,13 +30,25 @@
 			},
 			width() {
 				if (this.size === 'default' || !this.size) {
-					return 86;
+					return this.$style.uniImgSizeBase
+				} else if (this.size === 'small') {
+					return this.$style.uniImgSizeSm
 				} else if (this.size === 'large') {
-					return 130;
+					return this.$style.uniImgSizeLg
 				}
 			},
 			height() {
-				return this.width;
+				const w = (Number.parseInt(this.width) + 2) + 'rpx'
+				return w
+			},
+			borderRadius() {
+				if (this.size === 'default' || !this.size) {
+					return this.$style.uniBorderRadiusBase
+				} else if (this.size === 'small') {
+					return this.$style.uniBorderRadiusSm
+				} else if (this.size === 'large') {
+					return this.$style.uniBorderRadiusLg
+				}
 			},
 			style() {
 
@@ -63,6 +76,6 @@
 
 <style scoped lang="scss">
 	.avatar {
-		border-radius: 3px;
+		border-radius: 3rpx;
 	}
 </style>

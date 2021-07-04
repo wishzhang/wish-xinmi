@@ -1,5 +1,5 @@
 const langUtil = {
-	passwordFormat: '密码为6-20位数字字母组合且不能有空格'
+	passwordFormat: '密码为6-20位数字字母组合 不能有空格'
 }
 
 const formUtil = {

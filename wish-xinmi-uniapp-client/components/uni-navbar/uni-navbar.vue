@@ -1,8 +1,13 @@
 <template>
-	<u-navbar :title="title" 
-	:is-back="isBack" :back-text="backText" :title-bold="true" :title-size="34"
-		:border-bottom="borderBottom" back-icon-name="arrow-left" :height="47" :back-icon-color="$style.uniMainColor"
-		:back-icon-size="39" :back-text-style="{color:$style.uniMainColor}" :title-color="$style.uniMainColor">
+	<u-navbar 
+	:title="title" 
+	:is-back="isBack" :back-text="backText" :title-bold="true" 
+	:title-size="$style.uniFontSizeBase"
+		:border-bottom="borderBottom" back-icon-name="arrow-left" 
+		:height="47" :back-icon-color="$style.uniMainColor"
+		:background="{background: bg}"
+		:back-icon-size="39" 
+		:back-text-style="{color:$style.uniMainColor}" :title-color="$style.uniMainColor">
 		<view class="uni-page-padding" slot="right">
 			<slot name="right"></slot>
 		</view>
@@ -27,10 +32,18 @@
 			borderBottom: {
 				type: Boolean,
 				default: true
+			},
+			background: {
+				type: String
 			}
 		},
 		data() {
 			return {}
+		},
+		computed:{
+			bg(){
+				return this.background || this.$style.uniBgColor
+			}
 		},
 		methods: {
 			toChatClick() {

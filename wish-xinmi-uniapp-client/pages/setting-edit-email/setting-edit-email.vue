@@ -1,6 +1,6 @@
 <template>
 	<uni-index-layout>
-		<uni-navbar title="绑定邮箱修改"></uni-navbar>
+		<uni-navbar title="绑定邮箱修改" background="white"></uni-navbar>
 		<view class="current-email">
 			<text>您之前绑定的邮箱是：</text><text class="uni-color-primary">{{userInfo.emailAddress}}</text>
 		</view>
@@ -8,7 +8,7 @@
 		<view class="uni-page-padding uni-bg-white">
 			<u-form :model="formData" ref="uForm" :label-width="110" :errorType="errorType">
 				<u-form-item focus label="密码" prop="password">
-					<u-input :inputBorder="false" type="password" placeholder="请输入密码" v-model="formData.password" />
+					<u-input focus :inputBorder="false" type="password" placeholder="请输入密码" v-model="formData.password" />
 				</u-form-item>
 				<u-form-item label="邮箱" prop="email">
 					<u-input :inputBorder="false" type="text" placeholder="请输入新邮箱" v-model="formData.email" />
@@ -139,7 +139,7 @@
 
 	.tip {
 		display: inline-block;
-		margin-top: 20rpx;
+		margin-top: 50rpx;
 		margin-bottom: 20rpx;
 		font-size: $uni-font-size-sm;
 		color: $uni-text-color-grey;

@@ -1,17 +1,20 @@
 <template>
-	<view class="uni-page-white">
-		<uni-list :border="true">
-			<uni-list-item class="profile-box" :title="userInfo.username" :note="'信迷号'+userInfo.username" link clickable
-				@click="onToMineInfo">
-				<view style="margin-right: 22rpx;" slot="header">
-					<uni-avatar :src="userInfo.avatarUrl"></uni-avatar>
-				</view>
-			</uni-list-item>
+	<uni-index-layout>
+		<view class="uni-status-bar"></view>
+		<uni-cell-group style="position: relative;overflow: hidden;">
+			<uni-cell-item :itemStyle="{height: '240rpx'}" :title="userInfo.username" :label="'信迷号'+userInfo.username"
+				to="/pages/mine-info/mine-info">
+				<template slot="icon">
+					<uni-avatar class="profile-box" size="large" :src="userInfo.avatarUrl"></uni-avatar>
+				</template>
+			</uni-cell-item>
+			<uni-cell-item title="设置" to="/pages/setting/setting"></uni-cell-item>
+			<uni-cell-item title="我发的朋友圈"></uni-cell-item>
+		</uni-cell-group>
 
-			<uni-list-item title="设置" to="/pages/setting/setting" link></uni-list-item>
-			<uni-list-item title="我发的朋友圈" link></uni-list-item>
-		</uni-list>
-	</view>
+		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
+			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
+	</uni-index-layout>
 </template>
 
 <script>
@@ -25,7 +28,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo'])
+			...mapGetters(['userInfo', 'tabbar'])
 		},
 		methods: {
 			onToMineInfo() {
@@ -37,8 +40,9 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.profile-box {
-		padding: 26rpx 0;
+		margin-left: 20rpx;
+		margin-right: $uni-spacing-row-lg;
 	}
 </style>

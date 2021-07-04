@@ -1,36 +1,40 @@
 <template>
-	<view>
+	<uni-index-layout>
 		<uni-navbar title="通讯录" :is-back="false">
 			<template slot="right">
 				<uni-popover-add></uni-popover-add>
 			</template>
 		</uni-navbar>
-		<uni-list :border="true">
-			<!-- 显示圆形头像 -->
-			<uni-list-item title="新的朋友" clickable @click="onToContactConfirm">
-				<template slot="header">
-					<view class="iconfont iconlianxiren3 new-contact"></view>
-				</template>
-			</uni-list-item>
-		</uni-list>
+
+		<uni-cell-item title="新的朋友" :arrow="false" @click="onToContactConfirm">
+			<template slot="icon">
+				<u-icon name="lianxiren3" :size="50" custom-prefix="xinmi-icon" class="new-contact avatar"
+					@click="onToContactConfirm"></u-icon>
+			</template>
+		</uni-cell-item>
 
 		<u-index-list :scrollTop="scrollTop">
 			<view v-for="(group, index) in list" :key="index">
 				<template v-if="group.records.length>0">
-					<u-index-anchor :index="group.label"/>
-					<view :key="itemIndex" v-for="(item, itemIndex) in group.records" class="list-cell">
-						<uni-list  :border="false">
-							<uni-list-item :title="item.name" clickable @click="onToContactPeople(item)">
-								<view style="margin-right: 22rpx;" slot="header">
-									<uni-avatar :src="item.avatarUrl"></uni-avatar>
-								</view>
-							</uni-list-item>
-						</uni-list>
-					</view>
+					<u-index-anchor :index="group.label" />
+
+					<uni-cell-group>
+						<template v-for="(item, itemIndex) in group.records">
+							<uni-cell-item :arrow="false" :title="item.name" :key="itemIndex"
+								@click="onToContactPeople(item)">
+								<template slot="icon">
+									<uni-avatar class="avatar" size="small" :src="item.avatarUrl"></uni-avatar>
+								</template>
+							</uni-cell-item>
+						</template>
+					</uni-cell-group>
 				</template>
 			</view>
 		</u-index-list>
-	</view>
+
+		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
+			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
+	</uni-index-layout>
 </template>
 
 <script>
@@ -53,7 +57,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo'])
+			...mapGetters(['userInfo', 'tabbar'])
 		},
 		onLoad() {
 			const params = {
@@ -89,30 +93,20 @@
 		height: 100%;
 	}
 
-	.group-title {
-		background-color: $uni-bg-color-grey !important;
-		padding-top: 10rpx !important;
-		padding-bottom: 10rpx !important;
-	}
-
-	/deep/ {
-		.uni-list-item__content-title,
-		.uni-list-chat__content-title {
-			position: relative;
-			top: 24rpx;
-		}
+	.avatar {
+		margin-right: $uni-padding-horizontal;
 	}
 
 	.new-contact {
+		$width: $uni-img-size-sm;
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 86rpx;
-		height: 86rpx;
+		width: $width;
+		height: $width;
 		color: white;
-		background-color: #07C160;
+		background-color: $uni-color-warning;
 		border-radius: $uni-border-radius-base;
-		font-size: 64rpx;
-		margin-right: 22rpx;
 	}
 </style>

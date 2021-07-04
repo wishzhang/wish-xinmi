@@ -1,6 +1,6 @@
 <template>
 	<uni-index-layout>
-		<uni-navbar title="修改密码"></uni-navbar>
+		<uni-navbar title="修改密码" class="uni-bg-white"></uni-navbar>
 		<view class="current-email">
 			<text>当前绑定的邮箱是：</text>
 			<text class="uni-color-primary">{{userInfo.emailAddress}}</text>
@@ -23,15 +23,17 @@
 					<u-input :inputBorder="false" type="password" placeholder="请输入密码" v-model="formData.password2" />
 				</u-form-item>
 			</u-form>
+
+			<view class="tip">
+				<text>密码为6-20位数字字母组合 不能有空格</text>
+			</view>
 		</view>
 
 		<view class="uni-page-padding submit-button">
 			<u-button type="primary" @click="submitForm">提交</u-button>
 		</view>
 
-		<view class="tip">
-			<text>密码为6-20位数字字母组合 不能有空格</text>
-		</view>
+
 	</uni-index-layout>
 </template>
 
@@ -138,17 +140,11 @@
 	}
 
 	.tip {
-
 		display: inline-block;
-		margin: 40rpx $uni-padding-horizontal;
+		margin: $uni-spacing-col-base 0;
 		font-size: $uni-font-size-sm;
 		color: $uni-text-color-grey;
 		text-align: left;
-	}
-
-	.tip-row {
-		display: block;
-		margin-bottom: 5 rpx;
 	}
 
 	.submit-button {

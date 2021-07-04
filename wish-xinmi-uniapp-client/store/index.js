@@ -5,9 +5,16 @@ import {
 	setStore
 } from '@/common/store.js'
 
-import {fetchServerTimeRequest} from '@/api/common.js'
-import {fetchContactWarnNumRequest} from '@/api/contact.js'
-import {fetchMineAllChatListRequest} from '@/api/message.js'
+import {
+	fetchServerTimeRequest
+} from '@/api/common.js'
+import {
+	fetchContactWarnNumRequest
+} from '@/api/contact.js'
+import {
+	fetchMineAllChatListRequest
+} from '@/api/message.js'
+import style from '@/common/style.js'
 
 Vue.use(Vuex)
 
@@ -36,6 +43,47 @@ export default new Vuex.Store({
 				return total + chat.unreadCount
 			}, 0)
 			return total
+		},
+		tabbar: () => {
+			return {
+				list: [{
+						selectedIconPath: "xiaoxiintouch01",
+						iconPath: 'xiaoxiintouch01',
+						customPrefix: "xinmi-icon",
+						text: '消息',
+						count: 2,
+						isDot: true,
+						pagePath: "/pages/msg/msg"
+					},
+					{
+						selectedIconPath: "renshu",
+						iconPath: 'renshu',
+						customPrefix: "xinmi-icon",
+						text: '联系人',
+						count: 2,
+						isDot: true,
+						pagePath: "/pages/contact/contact"
+					},
+					{
+						selectedIconPath: "faxian",
+						iconPath: 'faxian',
+						customPrefix: "xinmi-icon",
+						text: '发现',
+						pagePath: "/pages/thought/thought"
+					},
+					{
+						selectedIconPath: "renyuan",
+						iconPath: 'renyuan',
+						customPrefix: "xinmi-icon",
+						text: '我的',
+						pagePath: "/pages/mine/mine"
+					}
+				],
+				iconSize: 44,
+				activeColor: style.uniColorPrimary,
+				inactiveColor: style.uniTipsColor,
+				height: 106
+			}
 		}
 	},
 	modules: {

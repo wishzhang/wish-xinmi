@@ -1,26 +1,25 @@
 <template>
-	<view>
+	<uni-index-layout>
 		<uni-navbar title="新的朋友"></uni-navbar>
 
-		<uni-list :border="false">
+		<uni-cell-group :border="false">
 			<template v-for="(item, index) in list">
-				<uni-list-item :key="index" :title="item.name" :note="item.validateMsg">
-					<view style="margin-right: 22rpx;" slot="header">
-						<uni-avatar :src="item.avatarUrl"></uni-avatar>
-					</view>
-					<view class="right-class" slot="footer">
-						<template v-if="item.status===2">
-							<u-button type="primary" size="mini" :loading="acceptLoading" @click="onAccept(item)">接受
-							</u-button>
-						</template>
-						<template v-else>
-							<text class="u-tips-color">已添加</text>
-						</template>
-					</view>
-				</uni-list-item>
+				<uni-cell-item :item-style="{padding: `${$style.uniSpacingColLg} ${$style.uniPaddingHorizontal}`}"
+					:key="index" :title="item.name" :label="item.validateMsg" :arrow="false">
+					<template slot="icon">
+						<uni-avatar class="avatar" :src="item.avatarUrl"></uni-avatar>
+					</template>
+
+					<template slot="right-icon">
+						<u-button v-if="item.status===2" type="primary" size="mini" :loading="acceptLoading"
+							@click="onAccept(item)">接受
+						</u-button>
+						<text v-else class="u-tips-color">已添加</text>
+					</template>
+				</uni-cell-item>
 			</template>
-		</uni-list>
-	</view>
+		</uni-cell-group>
+	</uni-index-layout>
 </template>
 
 <script>
@@ -73,18 +72,11 @@
 </script>
 
 <style scoped lang="scss">
-	page {
-		height: 100%;
+	.avatar {
+		margin-right: $uni-spacing-row-lg;
 	}
 
-	.group-title {
-		background-color: $uni-bg-color-grey !important;
-		padding-top: 10rpx !important;
-		padding-bottom: 10rpx !important;
-	}
-
-	.right-class {
-		position: relative;
-		top: 20rpx;
+	.cell-item {
+		padding: $uni-spacing-col-lg 0;
 	}
 </style>

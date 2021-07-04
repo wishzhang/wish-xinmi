@@ -19,7 +19,7 @@
 						:name="elIconPath(index)"
 						img-mode="scaleToFill"
 						:color="elColor(index)"
-						:custom-prefix="item.customIcon ? 'custom-icon' : 'uicon'"
+						:custom-prefix="item.customPrefix ? item.customPrefix : 'uicon'"
 					></u-icon>
 					<u-badge :count="item.count" :is-dot="item.isDot"
 						v-if="item.count || item.isDot"
@@ -289,10 +289,10 @@
 
 				&__text {
 					color: $u-content-color;
-					font-size: 26rpx;
-					line-height: 28rpx;
+					font-size: $uni-font-size-xs;
+					line-height: 26rpx;
 					position: absolute;
-					bottom: 14rpx;
+					bottom: 16rpx;
 					left: 50%;
 					transform: translateX(-50%);
 					width: 100%;

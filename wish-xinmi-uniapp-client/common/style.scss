@@ -1,9 +1,9 @@
 page {
   position: relative;
-  font-family:  "PingFang SC", "Heiti SC",serif, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-family: "Heiti SC",serif, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   color: $uni-main-color;
   background-color: $uni-bg-color;
-  font-size: $uni-font-size-base;
+  font-size:$uni-font-size-base;
   /* 需要*/
   height: 100%;
 }
@@ -139,4 +139,9 @@ page {
 
 .uni-light-color {
   color: $uni-light-color;
+}
+
+.uni-status-bar{
+	height: var(--status-bar-height);
+	width: 100%;
 }

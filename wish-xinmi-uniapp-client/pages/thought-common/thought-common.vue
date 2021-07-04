@@ -1,5 +1,5 @@
 <template>
-	<uni-index-layout class="uni-height-full">
+	<uni-index-layout class="uni-bg-white">
 		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
 			<uni-navbar title="朋友圈">
 				<template slot="right">
@@ -8,17 +8,12 @@
 					</uni-icons>
 				</template>
 			</uni-navbar>
-			<view class="bg-box">
-				<image style="width: 100%; height: 200px; background-color: #eeeeee;" :src="userInfo.bgUrl"
-					@click="onUpdateBg"></image>
 
-				<view class="avatar-box">
-					<text class="name">{{userInfo.username}}</text>
-					<uni-avatar class="avatar"></uni-avatar>
-				</view>
-			</view>
+			<uni-user-thought-bg :name="userInfo.username" :bgSrc="userInfo.bgUrl" :avatarSrc="userInfo.avatarUrl"
+				@bg-click="onUpdateBg" />
+
 			<view class="thought-list">
-				<view :key="item.thoughtId" class="thought-item" v-for="(item,index) in list">
+				<view :key="item.thoughtId" class="thought-item u-border-bottom" v-for="(item,index) in list">
 					<view class="thought-item-left">
 						<uni-avatar :src="item.avatarUrl"></uni-avatar>
 					</view>
@@ -36,7 +31,7 @@
 
 		<u-popup v-model="show" mode="bottom" border-radius="14">
 			<view class="popup-item" @click="onChangeAlbumCover">
-				更换相处封面
+				更换相册封面
 			</view>
 			<view class="uni-bg-color popup-item-split"></view>
 			<view class="popup-item" @click="show=false">
@@ -146,32 +141,12 @@
 		background-color: $uni-bg-color;
 	}
 
-
-
-	.bg-box {
-		position: relative;
-		overflow: hidden;
-	}
-
-	.avatar-box {
-		position: absolute;
-		right: $uni-padding-horizontal;
-		bottom: -18rpx;
-		display: flex;
-		align-items: center;
-
-		.name {
-			color: white;
-			margin-right: $uni-padding-horizontal - 10rpx;
-		}
-	}
-
 	.thought-list {
-		/* 	padding-top: 120rpx; */
+		padding-top: 120rpx;
+		background-color: white;
 
 		.thought-item {
 			display: flex;
-			border-bottom: 1rpx solid $uni-border-color;
 			padding: 28rpx $uni-padding-horizontal 14rpx;
 
 			.thought-item-left {
@@ -180,7 +155,7 @@
 
 			.thought-item-right {
 				flex: 1;
-				padding: 10rpx 0;
+				padding: 0rpx 0 10rpx;
 
 				.name {
 					display: block;
@@ -199,6 +174,8 @@
 				.time {
 					display: block;
 					margin-top: 14rpx;
+					font-size: $uni-font-size-xs;
+					color: $uni-tips-color;
 				}
 			}
 		}

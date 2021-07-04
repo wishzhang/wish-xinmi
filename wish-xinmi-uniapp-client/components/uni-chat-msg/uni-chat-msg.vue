@@ -20,7 +20,7 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.chat-bubble {
 		position: relative;
 		padding: 9px 10px;
@@ -50,7 +50,7 @@
 
 	.chat-bubble-right {
 		margin-right: 6px;
-		background-color: #91ED61;
+		background-color:$u-type-primary-light;
 	}
 
 	.chat-bubble-right:after {
@@ -61,6 +61,6 @@
 		right: -16px;
 		top: 7px;
 		border: 8px solid;
-		border-color: transparent transparent transparent #91ED61;
+		border-color: transparent transparent transparent $u-type-primary-light;
 	}
 </style>

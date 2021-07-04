@@ -505,7 +505,7 @@ export default {
 }
 
 .u-size-default {
-	font-size: 30rpx;
+	font-size: $uni-font-size-base;
 	height: 80rpx;
 	line-height: 80rpx;
 }
@@ -515,7 +515,7 @@ export default {
 	display: inline-flex;		
 	/* #endif */
 	width: auto;
-	font-size: 26rpx;
+	font-size: $uni-font-size-sm;
 	height: 70rpx;
 	line-height: 70rpx;
 	padding: 0 36rpx;

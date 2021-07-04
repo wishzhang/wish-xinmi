@@ -1,16 +1,9 @@
 <template>
 	<uni-index-layout>
-		<uni-navbar title="个人信息"></uni-navbar>
-		<uni-list :border="false">
-			<uni-list-item style="padding: 20rpx 0;" title="头像" link @click="onUpdateImage">
-				<template slot="footer">
-					<uni-avatar :src="userInfo.avatarUrl" size="large" :preview="true"></uni-avatar>
-				</template>
-			</uni-list-item>
-
-			<uni-list-item :title="userInfo.username">
-			</uni-list-item>
-		</uni-list>
+		<uni-navbar title="更换相册封面"></uni-navbar>
+		<u-cell-group>
+			<u-cell-item  title="从手机相册选择" :arrow="true" @click="onChooseFromMobileAlbum"></u-cell-item>
+		</u-cell-group>
 	</uni-index-layout>
 </template>
 
@@ -24,7 +17,6 @@
 	import {
 		mapGetters
 	} from 'vuex'
-
 	export default {
 		data() {
 			return {
@@ -35,7 +27,7 @@
 			...mapGetters(['userInfo'])
 		},
 		methods: {
-			onUpdateImage() {
+			onChooseFromMobileAlbum() {
 				const self = this
 				uni.chooseImage({
 					count: 1,
@@ -52,47 +44,29 @@
 								let url = res2.data.link;
 
 								const userInfo = JSON.parse(JSON.stringify(self.userInfo));
-								userInfo.avatarUrl = url;
+								userInfo.bgUrl = url;
 								self.$store.commit('SET_USER_INFO', userInfo);
 
 								const params = {
 									userId: self.userInfo.userId,
-									avatarUrl: userInfo.avatarUrl
+									bgUrl: userInfo.bgUrl
 								}
-								updateUserInfoRequest(params)
+							    updateUserInfoRequest(params).then(res=>{
+									uni.navigateBack()
+									uni.hideLoading()
+								})
 							},
 							fail() {
-								self.$toast('更新失败')
-							},
-							complete() {
-								uni.hideLoading()
+								self.$toast('操作失败')
 							}
 						})
-
 					}
-				})
-			},
-			onToContactConfirm() {
-				uni.navigateTo({
-					url: '/pages/contact-confirm/contact-confirm'
 				})
 			}
 		}
 	}
 </script>
 
-<style scoped lang="scss">
-	page {
-		height: 100%;
-	}
+<style>
 
-	.group-title {
-		background-color: $uni-bg-color-grey !important;
-		padding-top: 10rpx !important;
-		padding-bottom: 10rpx !important;
-	}
-
-	/deep/ .uni-list-item__content-title {
-		margin: auto 0;
-	}
 </style>

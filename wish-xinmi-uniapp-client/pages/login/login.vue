@@ -50,13 +50,16 @@
 			<view class="login-bottom">
 				<view class="uni-divider">上次登录方式</view>
 				<view class="login-type-box">
-					<view v-if="curLoginType!=='email'" class="iconfont iconyouxiang login-type-email"
-						@click="oncurLoginTypeClick"></view>
-					<view v-else class="iconfont iconsuo login-type-password" @click="oncurLoginTypeClick"></view>
+					<u-icon v-if="curLoginType!=='email'" name="youxiang" custom-prefix="xinmi-icon"
+						class="login-type-email" @click="oncurLoginTypeClick"></u-icon>
+
+					<u-icon v-else class="login-type-password" name="suo" custom-prefix="xinmi-icon"
+						@click="oncurLoginTypeClick"></u-icon>
+
 				</view>
 
 				<view class="agreement-box">
-					<u-checkbox :size="30" class="agreement-checkbox" v-model="isAgree">
+					<u-checkbox :size="$style.uniFontSizeSm" class="agreement-checkbox" v-model="isAgree">
 						登录表示同意<text class="agreement" @click="onAgreement">用户协议</text>和
 						<text class="agreement" @click="onPolicy">隐私政策</text>
 					</u-checkbox>
@@ -171,7 +174,7 @@
 							uni.switchTab({
 								url: '/pages/msg/msg'
 							})
-						}).catch(err=>{
+						}).catch(err => {
 							this.$toast('登录失败')
 						}).finally(() => {
 							uni.hideLoading()
