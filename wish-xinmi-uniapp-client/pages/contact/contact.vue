@@ -78,7 +78,7 @@
 			},
 			onToContactPeople(item) {
 				this.$navigateTo({
-					url: '/pages/contact-friend/contact-friend',
+					url: '/pages/contact-people/contact-people',
 					params: {
 						userId: item.contactId
 					}

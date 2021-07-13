@@ -9,7 +9,7 @@
 				</template>
 			</uni-cell-item>
 			<uni-cell-item title="设置" to="/pages/setting/setting"></uni-cell-item>
-			<uni-cell-item title="我发的朋友圈"></uni-cell-item>
+			<uni-cell-item title="我发的朋友圈" @click="onToMyThought"></uni-cell-item>
 		</uni-cell-group>
 
 		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
@@ -34,6 +34,14 @@
 			onToMineInfo() {
 				uni.navigateTo({
 					url: '/pages/mine-info/mine-info'
+				})
+			},
+			onToMyThought() {
+				this.$navigateTo({
+					url: '/pages/thought-people/thought-people',
+					params: {
+						userId: this.userInfo.userId
+					}
 				})
 			}
 		}

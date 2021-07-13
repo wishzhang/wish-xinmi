@@ -6,7 +6,7 @@
 
 		<view class="avatar-box">
 			<text class="name">{{name}}</text>
-			<uni-avatar size="large" class="avatar" :src="avatarSrc" @click="onAvatarClick"></uni-avatar>
+			<uni-avatar size="large" class="avatar" :src="avatarSrc" :to-user="toUser" @click="onAvatarClick"></uni-avatar>
 		</view>
 	</view>   
 </template>
@@ -26,6 +26,10 @@
 			height: {
 				type: Number,
 				default: 460
+			},
+			toUser: {
+				type: String,
+				required: true
 			}
 		},
 		data() {

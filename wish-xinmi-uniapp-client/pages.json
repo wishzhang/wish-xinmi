@@ -61,16 +61,19 @@
 			"path": "pages/mine-info/mine-info"
 		},
 		{
-			"path": "pages/contact-friend/contact-friend"
-		},
-		{
 			"path": "pages/contact-add/contact-add"
 		}, 
 		{
-			"path": "pages/contact-stranger/contact-stranger"
-		},
-		{
             "path" : "pages/change-album-cover/change-album-cover"
+        }
+        ,{
+            "path" : "pages/contact-people/contact-people",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
         }
     ],
 	"globalStyle": {

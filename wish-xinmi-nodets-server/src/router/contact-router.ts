@@ -68,6 +68,20 @@ router.get("/getContactInfoHad", async (ctx: any) => {
 });
 
 /**
+ *
+ */
+router.get("/getContactDetail", async (ctx: any) => {
+    const query = ctx.query;
+    const {userId, contactId} = query;
+
+    const status = await contactService.getUserContactStatus(userId, contactId);
+    const info = await contactService.getContactInfoHad(userId, contactId);
+    info.contactStatus = status;
+
+    ctx.body = R.success(info);
+})
+
+/**
  * 获取联系人的提醒数量，目前为未查看的待确认记录的数量
  */
 router.get("/getContactWarnNum", async (ctx: any) => {

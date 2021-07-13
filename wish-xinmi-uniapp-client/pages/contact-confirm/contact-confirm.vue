@@ -5,7 +5,7 @@
 		<uni-cell-group :border="false">
 			<template v-for="(item, index) in list">
 				<uni-cell-item :item-style="{padding: `${$style.uniSpacingColLg} ${$style.uniPaddingHorizontal}`}"
-					:key="index" :title="item.name" :label="item.validateMsg" :arrow="false">
+					:key="index" :title="item.name" :label="item.validateMsg" :arrow="false" @click="onItemClick(item)">
 					<template slot="icon">
 						<uni-avatar class="avatar" :src="item.avatarUrl"></uni-avatar>
 					</template>
@@ -45,6 +45,14 @@
 			this.fetchData()
 		},
 		methods: {
+			onItemClick(item) {
+				this.$navigateTo({
+					url: '/pages/contact-people/contact-people',
+					params: {
+						userId: item.contactId
+					}
+				})
+			},
 			fetchData() {
 				const params = {
 					userId: this.userInfo.userId

@@ -10,12 +10,12 @@
 			</uni-navbar>
 
 			<uni-user-thought-bg :name="userInfo.username" :bgSrc="userInfo.bgUrl" :avatarSrc="userInfo.avatarUrl"
-				@bg-click="onUpdateBg" />
+				:to-user="userInfo.userId" @bg-click="onUpdateBg" />
 
 			<view class="thought-list">
 				<view :key="item.thoughtId" class="thought-item u-border-bottom" v-for="(item,index) in list">
 					<view class="thought-item-left">
-						<uni-avatar :src="item.avatarUrl"></uni-avatar>
+						<uni-avatar :src="item.avatarUrl" :to-user="item.createUser"></uni-avatar>
 					</view>
 					<view class="thought-item-right">
 						<text class="name">{{item.name}}</text>

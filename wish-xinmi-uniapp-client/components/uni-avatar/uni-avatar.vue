@@ -19,6 +19,9 @@
 			preview: {
 				type: Boolean,
 				default: false
+			},
+			toUser: {
+				type: String
 			}
 		},
 		data() {
@@ -64,6 +67,13 @@
 								title: '预览图片失败',
 								icon: 'none'
 							})
+						}
+					})
+				} else if (this.toUser) {
+					this.$navigateTo({
+						url: '/pages/contact-people/contact-people',
+						params: {
+							userId: this.toUser
 						}
 					})
 				} else {

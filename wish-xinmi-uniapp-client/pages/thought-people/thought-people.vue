@@ -3,7 +3,7 @@
 		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
 			<uni-navbar></uni-navbar>
 
-			<uni-user-thought-bg :height="400" :name="userDetail.name" :bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl"
+			<uni-user-thought-bg :height="400" :to-user="userDetail.userId" :name="userDetail.name" :bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl"
 				@bg-click="onUpdateBg" />
 
 			<view class="thought-list">

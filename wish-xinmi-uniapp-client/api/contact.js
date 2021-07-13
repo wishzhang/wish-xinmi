@@ -48,9 +48,17 @@ export const fetchUserContactStatusRequest = (params) => {
     })
 }
 
-export const fetchContactDetailRequest = (params) => {
+export const fetchContactInfoHadRequest = (params) => {
     return request({
         url: '/contact/getContactInfoHad',
+        method: 'get',
+        params: params
+    })
+}
+
+export const fetchContactDetailRequest = (params) => {
+    return request({
+        url: '/contact/getContactDetail',
         method: 'get',
         params: params
     })

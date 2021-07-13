@@ -1,8 +1,11 @@
 <template>
-	<view class="login uni-bg-white uni-relative uni-height-full">
-		<view class="login-wrap">
+	<view class="login uni-bg-white uni-height-full">
+		<view class="uni-status-bar"></view>
+		<view class="login-main">
 			<view class="logo-box">
-				<text>信迷</text>
+				<u-image class="logo" :width="140" :height="140" :border-radius="10"
+					src="/static/img/logo/xinmi_1024.png">
+				</u-image>
 			</view>
 
 			<!-- 邮箱登录（未登录系统将自动注册） -->
@@ -45,25 +48,26 @@
 					</view>
 				</template>
 			</u-form>
+		</view>
 
-			<!-- 底部 -->
-			<view class="login-bottom">
-				<view class="uni-divider">上次登录方式</view>
-				<view class="login-type-box">
-					<u-icon v-if="curLoginType!=='email'" name="youxiang" custom-prefix="xinmi-icon"
-						class="login-type-email" @click="oncurLoginTypeClick"></u-icon>
 
-					<u-icon v-else class="login-type-password" name="suo" custom-prefix="xinmi-icon"
-						@click="oncurLoginTypeClick"></u-icon>
+		<view class="login-bottom" v-if="showBottom">
+			<u-divider :half-width="'50%'">上次登录方式</u-divider>
+			<!-- <view class="uni-divider">上次登录方式</view> -->
+			<view class="login-type-box">
+				<u-icon v-if="curLoginType!=='email'" name="youxiang" custom-prefix="xinmi-icon"
+					class="login-type-email" @click="oncurLoginTypeClick"></u-icon>
 
-				</view>
+				<u-icon v-else class="login-type-password" name="suo" custom-prefix="xinmi-icon"
+					@click="oncurLoginTypeClick"></u-icon>
 
-				<view class="agreement-box">
-					<u-checkbox :size="$style.uniFontSizeSm" class="agreement-checkbox" v-model="isAgree">
-						登录表示同意<text class="agreement" @click="onAgreement">用户协议</text>和
-						<text class="agreement" @click="onPolicy">隐私政策</text>
-					</u-checkbox>
-				</view>
+			</view>
+
+			<view class="agreement-box">
+				<u-checkbox :size="$style.uniFontSizeSm" class="agreement-checkbox" v-model="isAgree">
+					登录表示同意<text class="agreement" @click="onAgreement">用户协议</text>和
+					<text class="agreement" @click="onPolicy">隐私政策</text>
+				</u-checkbox>
 			</view>
 		</view>
 	</view>
@@ -88,6 +92,9 @@
 		},
 		data() {
 			return {
+				// hack 使底部不随键盘移动
+				showBottom: true,
+
 				// 是否统一登录协议
 				isAgree: true,
 				// 邮箱是否有效
@@ -133,6 +140,7 @@
 		},
 		created() {
 			this.curLoginType = this.loginType
+
 		},
 		mounted() {
 			this.$refs.uForm.setRules(this.rules)
@@ -208,50 +216,54 @@
 </script>
 
 <style scoped lang="scss">
-	page {
-		height: 100%;
-	}
-
-
 	.login {
+		position: relative;
+		height: 100%;
 		padding: 0 60rpx;
+		min-height: 1200rpx;
 
-		.login-wrap {
-			position: relative;
-			height: 100%;
+		.login-main {
+			overflow: hidden;
+
+			.logo-box {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.logo {
+					margin-top: 80rpx;
+					margin-bottom: 60rpx;
+				}
+			}
+
+			.v-code-input {
+				flex: 1;
+				padding-right: 10px;
+			}
+
+			.v-code-box {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.login-email-tip {
+				margin-top: 20rpx;
+				font-size: 13px;
+				color: $uni-tips-color;
+				text-align: center;
+			}
 		}
 
-		.logo-box {
-			min-height: 150px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			font-size: 20px;
-		}
 
-		.v-code-input {
-			flex: 1;
-			padding-right: 10px;
-		}
-
-		.v-code-box {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.login-email-tip {
-			margin-top: 20rpx;
-			font-size: 13px;
-			color: $uni-tips-color;
-			text-align: center;
-		}
 
 		/* 底部 */
 
 		.login-bottom {
 			position: absolute;
-			bottom: 100rpx;
+			z-index: 0;
+			margin-top: 60rpx;
+			bottom: 20rpx;
 			left: 0;
 			right: 0;
 		}
@@ -264,16 +276,16 @@
 		}
 
 		.login-type-email {
-			font-size: 50rpx;
+			font-size: 44rpx;
 		}
 
 		.login-type-password {
-			font-size: 50rpx;
+			font-size: 44rpx;
 		}
 
 		/* 协议 */
 		.agreement-box {
-			margin-top: 20rpx;
+			margin-top: 10rpx;
 			text-align: center;
 			color: $uni-tips-color;
 		}

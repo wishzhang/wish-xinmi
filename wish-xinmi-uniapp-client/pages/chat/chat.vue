@@ -136,7 +136,6 @@
 					}
 					// 生成VIEW_ID,大写,避免污染源数据
 					data.forEach(val => {
-						debugger
 						val.VIEW_ID = this.generateId() // 不以数字开头
 					})
 
