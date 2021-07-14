@@ -95,6 +95,33 @@ function uuid() {
 	return 'xinmi_' + uuid;
 }
 
+function showTabWarnNum(tabIndex, num){
+	num = Number.parseInt(num)
+	
+	if(num === 0){
+		uni.removeTabBarBadge({
+			index: tabIndex
+		})
+		return
+	}
+	
+	if (Number.isInteger(num) && num > 0) {
+		num = num + ''
+		uni.setTabBarBadge({
+			index: tabIndex,
+			text: num
+		})
+	}
+}
+
+function showContactWarnNum(num) {
+	showTabWarnNum(1, num)
+}
+
+function showMsgPageWarnNum(num){
+	showTabWarnNum(0, num)
+}
+
 
 
 export {
@@ -105,5 +132,7 @@ export {
 	rpx2px,
 	uuid,
 	langUtil,
-	formUtil
+	formUtil,
+	showContactWarnNum,
+	showMsgPageWarnNum
 }

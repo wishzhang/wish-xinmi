@@ -79,7 +79,8 @@
 		mapGetters
 	} from 'vuex'
 	import {
-		validEmail
+		validEmail,
+		showContactWarnNum
 	} from '@/common/util.js'
 	import {
 		loginByPasswordRequest,
@@ -179,6 +180,10 @@
 							const userInfo = res.data
 							this.$store.commit('SET_TOKEN', userInfo.token)
 							this.$store.commit('SET_USER_INFO', userInfo)
+
+							this.$store.dispatch('FetchContactWarnNum')
+							this.$store.dispatch('FetchMineAllChatList')
+
 							uni.switchTab({
 								url: '/pages/msg/msg'
 							})

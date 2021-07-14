@@ -15,6 +15,10 @@ import {
 	fetchMineAllChatListRequest
 } from '@/api/message.js'
 import style from '@/common/style.js'
+import{
+	showContactWarnNum,
+	showMsgPageWarnNum 
+} from '@/common/util.js'
 
 Vue.use(Vuex)
 
@@ -43,47 +47,6 @@ export default new Vuex.Store({
 				return total + chat.unreadCount
 			}, 0)
 			return total
-		},
-		tabbar: () => {
-			return {
-				list: [{
-						selectedIconPath: "xiaoxiintouch01",
-						iconPath: 'xiaoxiintouch01',
-						customPrefix: "xinmi-icon",
-						text: '消息',
-						count: 2,
-						isDot: true,
-						pagePath: "/pages/msg/msg"
-					},
-					{
-						selectedIconPath: "renshu",
-						iconPath: 'renshu',
-						customPrefix: "xinmi-icon",
-						text: '联系人',
-						count: 2,
-						isDot: true,
-						pagePath: "/pages/contact/contact"
-					},
-					{
-						selectedIconPath: "faxian",
-						iconPath: 'faxian',
-						customPrefix: "xinmi-icon",
-						text: '发现',
-						pagePath: "/pages/thought/thought"
-					},
-					{
-						selectedIconPath: "renyuan",
-						iconPath: 'renyuan',
-						customPrefix: "xinmi-icon",
-						text: '我的',
-						pagePath: "/pages/mine/mine"
-					}
-				],
-				iconSize: 44,
-				activeColor: style.uniColorPrimary,
-				inactiveColor: style.uniTipsColor,
-				height: 106
-			}
 		}
 	},
 	modules: {
@@ -154,6 +117,8 @@ export default new Vuex.Store({
 					})
 				},
 				SET_CONTACT_WARN_NUM(state, num) {
+					showContactWarnNum(num)
+					
 					num = Number.parseInt(num)
 					let str = num >= 1 ? num + '' : ''
 					state.contactWarnNum = str
@@ -163,7 +128,14 @@ export default new Vuex.Store({
 					})
 				},
 				SET_CHAT_LIST(state, list) {
+					let warnNum = 0
 					state.chatList = list
+					
+					warnNum = list.reduce((total, el)=>{
+						return total + Number.parseInt(el.unreadCount)
+					}, 0)
+					showMsgPageWarnNum(warnNum)
+					
 					setStore({
 						name: 'chatList',
 						content: list
@@ -188,7 +160,7 @@ export default new Vuex.Store({
 					commit,
 					rootState
 				}) {
-					// dispatch('FetchContactWarnNum');
+					// dispatch('FetchContactWarnNum')
 				},
 				FetchContactWarnNum({
 					dispatch,
@@ -201,6 +173,7 @@ export default new Vuex.Store({
 					}
 					return fetchContactWarnNumRequest(params).then(res => {
 						commit('SET_CONTACT_WARN_NUM', res.data)
+						return res.data
 					})
 				},
 				FetchMineAllChatList({

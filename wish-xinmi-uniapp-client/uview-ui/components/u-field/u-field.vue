@@ -6,7 +6,7 @@
 				flex: labelPosition == 'left' ? `0 0 ${labelWidth}rpx` : '1'
 			}">
 				<view class="u-icon-wrap" v-if="icon">
-					<u-icon size="32" :custom-style="iconStyle" :name="icon" :color="iconColor" class="u-icon"></u-icon>
+					<u-icon size="36" :custom-style="iconStyle" :name="icon" :color="iconColor" class="u-icon"></u-icon>
 				</view>
 				<slot name="icon"></slot>
 				<text class="u-label-text" :class="[this.$slots.icon || icon ? 'u-label-left-gap' : '']">{{ label }}</text>
@@ -284,8 +284,8 @@ export default {
 @import "../../libs/css/style.components.scss";
 	
 .u-field {
-	font-size: 28rpx;
-	padding: 20rpx 28rpx;
+	font-size: $uni-font-size-base;
+	padding: 20rpx $uni-spacing-row-lg;
 	text-align: left;
 	position: relative;
 	color: $u-main-color;
@@ -303,7 +303,7 @@ export default {
 .u-textarea-class {
 	min-height: 96rpx;
 	width: auto;
-	font-size: 28rpx;
+	font-size: $uni-font-size-base;
 }
 
 .fild-body {
@@ -353,7 +353,7 @@ export default {
 .u-field__input-wrap {
 	position: relative;
 	overflow: hidden;
-	font-size: 28rpx;
+	font-size: $uni-font-size-base;
 	height: 48rpx;
 	flex: 1;
 	width: auto;
@@ -375,7 +375,7 @@ export default {
 }
 
 .u-input-class {
-	font-size: 28rpx;
+	font-size: $uni-font-size-base;
 }
 
 .u-button-wrap {

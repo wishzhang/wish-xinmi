@@ -6,12 +6,15 @@
 			</template>
 		</uni-navbar>
 
-		<uni-cell-item title="新的朋友" :arrow="false" @click="onToContactConfirm">
-			<template slot="icon">
-				<u-icon name="lianxiren3" :size="50" custom-prefix="xinmi-icon" class="new-contact avatar"
-					@click="onToContactConfirm"></u-icon>
-			</template>
-		</uni-cell-item>
+		<uni-cell-group :border="false">
+			<uni-cell-item title="新的朋友" :arrow="false" @click="onToContactConfirm">
+				<template slot="icon">
+						<uni-avatar class="avatar" icon-name="lianxiren3" custom-prefix="xinmi-icon" :icon-size="50"
+							:bg-color="$style.uniColorWarning" size="small" :is-dot="true" 
+							:count="contactWarnNumStr"></uni-avatar>
+				</template>
+			</uni-cell-item>
+		</uni-cell-group>
 
 		<u-index-list :scrollTop="scrollTop">
 			<view v-for="(group, index) in list" :key="index">
@@ -31,9 +34,6 @@
 				</template>
 			</view>
 		</u-index-list>
-
-		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
-			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
 	</uni-index-layout>
 </template>
 
@@ -57,9 +57,9 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo', 'tabbar'])
+			...mapGetters(['userInfo', 'contactWarnNumStr'])
 		},
-		onLoad() {
+		onShow() {
 			const params = {
 				userId: this.userInfo.userId
 			}

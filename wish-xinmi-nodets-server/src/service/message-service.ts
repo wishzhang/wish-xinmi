@@ -62,7 +62,7 @@ async function addMessage(originUser: string, targetUser: string, content: strin
 
         // 发送即时消息
         await socket.emitMessageToOneContact(originUser, targetUser, content);
-        const messageChat = await getOneMessageChat(originUser, targetUser);
+        const messageChat = await getMineAllChatList(targetUser);
         await socket.emitUnread(originUser, targetUser, messageChat);
     } catch (e) {
         throw Error('消息发送失败');

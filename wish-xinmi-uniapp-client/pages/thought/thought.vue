@@ -15,8 +15,6 @@
 			</uni-cell-item>
 		</uni-cell-group>
 
-		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
-			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
 	</uni-index-layout>
 </template>
 

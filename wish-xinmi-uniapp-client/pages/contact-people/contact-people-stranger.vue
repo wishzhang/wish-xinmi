@@ -12,12 +12,9 @@
 			<uni-list-item title="朋友圈" link clickable @click="onToThoughtPeople"></uni-list-item>
 		</uni-list>
 
-		<template v-if="status===null">
-			<view class="contact-button uni-color-primary" type="default" plain @click="onAddContact">添加到联系人</view>
-		</template>
-		<template v-if="status===1">
-			<view class="contact-button uni-color-primary-disabled" type="default" plain>已发送验证请求</view>
-		</template>
+		<view v-if="contactDetail.contactStatus===null" class="contact-button uni-color-primary" type="default" plain @click="onAddContact">
+			添加到联系人</view>
+		<view v-if="contactDetail.contactStatus===1" class="contact-button uni-color-primary-disabled" type="default" plain>已发送验证请求</view>
 
 	</view>
 </template>
@@ -36,14 +33,14 @@
 		props: ['contactDetail'],
 		data() {
 			return {
-				status: this.contactDetail
+			
 			}
 		},
 		computed: {
 			...mapGetters(['userInfo'])
 		},
-		created() {
-
+		onLoad() {
+		
 		},
 		methods: {
 			fetchStatus() {
@@ -52,7 +49,7 @@
 					contactId: this.contactDetail.userId
 				}
 				return fetchUserContactStatusRequest(params).then(res => {
-					this.status = res.data
+					this.contactDetail.contactStatus = res.data
 				})
 			},
 			onToContactConfirm() {

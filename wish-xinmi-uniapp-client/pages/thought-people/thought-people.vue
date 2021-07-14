@@ -3,8 +3,8 @@
 		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
 			<uni-navbar></uni-navbar>
 
-			<uni-user-thought-bg :height="400" :to-user="userDetail.userId" :name="userDetail.name" :bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl"
-				@bg-click="onUpdateBg" />
+			<uni-user-thought-bg :height="400" :to-user="userDetail.userId" :name="userDetail.name"
+				:bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl" @bg-click="onUpdateBg" />
 
 			<view class="thought-list">
 				<view :key="name" class="thought-item-group" v-for="(groupItem, name) in group">
@@ -106,11 +106,9 @@
 					}
 				});
 			} else {
-				this.userDetail = {
-					name: this.userInfo.username,
-					avatarUrl: this.userInfo.avatarUrl,
-					bgUrl: this.userInfo.bgUrl
-				}
+				this.userDetail = Object.assign({}, this.userInfo, {
+					name: this.userInfo.username
+				})
 			}
 		},
 		methods: {

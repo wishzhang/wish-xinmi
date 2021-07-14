@@ -1,7 +1,7 @@
 <template>
 	<u-cell-item :style="theItemStyle" class="uni-cell-item" :title="title" :title-style="itemTitleStyle"
 		:hover-class="hoverClass" bg-color="white" :arrow="arrow" :value="value" :border-bottom="borderBottom"
-		@click="onClick">
+		:value-style="valueStyle" @click="onClick">
 
 		<view v-if="$slots.icon|| icon" slot="icon" class="left-icon">
 			<slot name="icon">
@@ -72,6 +72,9 @@
 			groupBorder: {
 				type: Boolean,
 				default: true
+			},
+			valueStyle: {
+				type: Object
 			}
 		},
 		data() {
@@ -120,8 +123,8 @@
 		background: black;
 		padding: 0 $uni-padding-horizontal;
 		min-height: 106rpx;
-		
-		/deep/ .u-cell__value{
+
+		/deep/ .u-cell__value {
 			font-size: $uni-font-size-base;
 		}
 	}

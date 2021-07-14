@@ -85,9 +85,12 @@
 		}
 	},
 	"tabBar": {
-		"borderStyle": "black",
+		"borderStyle": "#c0c4cc",
 		"backgroundColor": "#FFFFFF",
 		"color": "#8F8F94",
+		"height": "54px",
+		"iconWidth": "22px",
+		"fontSize": "12px",
 		"selectedColor": "#c471ed",
 		"list": [{
 				"pagePath": "pages/msg/msg",
@@ -99,7 +102,7 @@
 				"pagePath": "pages/contact/contact",
 				"iconPath": "static/img/tabbar/contact.png",
 				"selectedIconPath": "static/img/tabbar/contact_active.png",
-				"text": "通讯录"
+				"text": "联系人"
 			},
 			{
 				"pagePath": "pages/thought/thought",

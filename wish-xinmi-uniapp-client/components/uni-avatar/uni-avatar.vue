@@ -1,7 +1,14 @@
 <template>
-	<u-image class="avatar" :border-radius="borderRadius" :fade="false" :width="width" :height="height" :src="imageSrc"
-		@click="onClick">
-	</u-image>
+	<uni-badge :is-dot="isDot" :text="count+''" absolute="rightTop" :size="'small'" type="error">
+		<view class="avatar-box" :style="{backgroundColor:bgColor, borderRadius: borderRadius}">
+			<u-image class="avatar" :border-radius="borderRadius" :fade="false" :width="width" :height="height"
+				:src="imageSrc" :show-error="showError" :bg-color="bgColor" @click="onClick">
+			</u-image>
+		
+			<u-icon v-if="iconName" class="avatar-icon" :name="iconName" :custom-prefix="customPrefix"
+				:size="iconSize" :color="iconColor"></u-icon>
+		</view>
+	</uni-badge>
 </template>
 
 <script>
@@ -9,6 +16,14 @@
 		name: "uni-avatar",
 		inheritAttrs: false,
 		props: {
+			isDot: {
+				type: Boolean,
+				default: false
+			},
+			count: {
+				type: String|Number,
+				default: ''
+			},
 			src: {
 				type: String
 			},
@@ -22,14 +37,37 @@
 			},
 			toUser: {
 				type: String
+			},
+			bgColor: {
+				type: String
+			},
+			iconName: {
+				type: String
+			},
+			iconSize: {
+				type: Number
+			},
+			customPrefix: {
+				type: String
+			},
+			iconColor: {
+				type: String,
+				default: 'white'
 			}
 		},
 		data() {
-			return {}
+			return {
+
+			}
 		},
 		computed: {
+			showError() {
+				return this.iconName ? false : true
+			},
 			imageSrc() {
-				return this.src || '/static/img/default-avatar.png'
+				if (!this.iconName) {
+					return this.src || '/static/img/default-avatar.png'
+				}
 			},
 			width() {
 				if (this.size === 'default' || !this.size) {
@@ -85,7 +123,22 @@
 </script>
 
 <style scoped lang="scss">
-	.avatar {
-		border-radius: 3rpx;
+
+	.avatar-box {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.avatar-icon {
+		position: absolute;
+
+	}
+
+	.avatar-badge {
+		position: absolute;
+		right: 0;
+		top: 0;
 	}
 </style>

@@ -15,7 +15,7 @@
 
 	export default {
 		computed: {
-			...mapGetters(['userInfo', 'chatList'])
+			...mapGetters(['userInfo', 'chatList', 'contactWarnNumStr'])
 		},
 		created() {
 			const self = this
@@ -28,30 +28,19 @@
 				})
 
 				socket.on('message-unread-onechat', data => {
-					if (data && data.chatId) {
-						const chatId = data.chatId
-						const chatList = JSON.parse(JSON.stringify(self.chatList))
-
-						const index = chatList.findIndex(item => {
-							return item.chatId === chatId
-						})
-						if (index !== -1) {
-							chatList.splice(index, 1, data)
-						} else {
-							chatList.unshift(data)
-						}
-
-						self.$store.commit('SET_CHAT_LIST', chatList)
-					}
+					const ll = data.list;
+					self.$store.commit('SET_CHAT_LIST', ll)
 				})
 			}
+		},
+		methods: {
+
 		}
 	}
 </script>
 
 <style scoped lang="scss">
-
-	.uni-index-layout{
+	.uni-index-layout {
 		position: relative;
 		height: 100%;
 	}

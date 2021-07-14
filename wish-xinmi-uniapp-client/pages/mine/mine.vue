@@ -11,9 +11,6 @@
 			<uni-cell-item title="设置" to="/pages/setting/setting"></uni-cell-item>
 			<uni-cell-item title="我发的朋友圈" @click="onToMyThought"></uni-cell-item>
 		</uni-cell-group>
-
-		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
-			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
 	</uni-index-layout>
 </template>
 
@@ -28,7 +25,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo', 'tabbar'])
+			...mapGetters(['userInfo'])
 		},
 		methods: {
 			onToMineInfo() {

@@ -25,7 +25,7 @@ export default (emit:any) => {
                 data: {
                     originUser,
                     targetUser,
-                    ...data
+                    list: data
                 }
             });
         }

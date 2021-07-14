@@ -6,20 +6,24 @@
 			</template>
 		</uni-navbar>
 
-		<uni-list :border="false">
-			<uni-list-chat class="u-border-bottom" :title="item.name" :avatar="item.avatarUrl" :note="item.content"
-				:time="item.createdAt" :key="index" badge-positon="left"
-				:badge-text="item.unreadCount===0?'':item.unreadCount" v-for="(item,index) in chatList"
+		<uni-cell-group :border="false">
+			<uni-cell-item v-for="(item,index) in chatList" :arrow="false" :title="item.name" :label="item.content"
+				:key="index" :item-style="{padding: `${$style.uniSpacingColBase} ${$style.uniSpacingRowLg}`}"
 				@click.native="toChatClick(item)">
-			</uni-list-chat>
-		</uni-list>
+				<uni-avatar :count="item.unreadCount===0?'':item.unreadCount"
+					:style="{marginRight: $style.uniSpacingRowBase}" slot="icon" :src="item.avatarUrl">
+				</uni-avatar>
+
+				<view slot="right-icon" class="chat-item-time">
+					<text>{{item.createdAt}}</text>
+				</view>
+			</uni-cell-item>
+		</uni-cell-group>
 
 		<!-- 	<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @up="upCallback">
 		
 		</mescroll-body> -->
 
-		<u-tabbar :list="tabbar.list" :icon-size="tabbar.iconSize" :active-color="tabbar.activeColor"
-			:height="tabbar.height" :inactive-color="tabbar.inactiveColor"></u-tabbar>
 	</uni-index-layout>
 </template>
 
@@ -100,9 +104,9 @@
 			}
 		},
 		computed: {
-			...mapGetters(['userInfo', 'chatList', 'tabbar'])
+			...mapGetters(['userInfo', 'chatList'])
 		},
-		onLoad() {
+		onShow() {
 			this.$store.dispatch('FetchMineAllChatList')
 		},
 		methods: {
@@ -134,8 +138,15 @@
 </script>
 
 <style scoped lang="scss">
-	/deep/ .uni-list-chat__header {
-		width: $uni-img-size-base;
-		height: $uni-img-size-base;
+	.chat-item-time {
+		display: block;
+		color: $uni-tips-color;
+		font-size: $uni-font-size-xs;
+		margin-top: 4rpx;
+	}
+
+	/deep/ .u-cell_right {
+		line-height: 1;
+		align-self: flex-start;
 	}
 </style>

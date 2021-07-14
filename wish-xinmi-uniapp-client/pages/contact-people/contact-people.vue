@@ -1,7 +1,7 @@
 <template>
 	<uni-index-layout>
-		<contact-people-friend v-if="contactDetail.status ===3" :contact-detail="contactDetail"></contact-people-friend>
-		<contact-people-stranger v-else  :contact-detail="contactDetail"></contact-people-stranger>
+		<contact-people-friend v-if="contactDetail.contactStatus===3||option.userId===userInfo.userId" :contact-detail="contactDetail"></contact-people-friend>
+		<contact-people-stranger v-else :contact-detail="contactDetail"></contact-people-stranger>
 	</uni-index-layout>
 </template>
 

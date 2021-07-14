@@ -4,7 +4,7 @@
 
 		<mescroll-body ref="mescrollRef" bottom="100rpx" @init="mescrollInit" :up="upOption" :down="downOption"
 			@down="downCallback">
-			<u-loadmore v-if="isEnd" status="nomore" class="no-more"/>
+			<u-loadmore v-if="isEnd" status="nomore" class="no-more" />
 
 			<view class="list-item" :key="msg.VIEW_ID" :id="msg.VIEW_ID" :class="['item-'+msg.type]"
 				v-for="(msg,ind) in list">
@@ -38,6 +38,7 @@
 		fetchContactDetailRequest
 	} from '@/api/contact.js'
 	import {
+		checkMessageRequest,
 		fetchContactMessagePageRequest,
 		addMessageToContactRequest
 	} from '@/api/message.js'
@@ -108,6 +109,17 @@
 				this.contactDetail = res.data
 			}).finally(() => {
 				uni.hideLoading()
+			})
+		},
+		onUnload() {
+			const params = {
+				userId: this.userInfo.userId,
+				contactId: this.option.userId
+			};
+			checkMessageRequest(params).then(() => {
+			
+			}).catch(() => {
+
 			})
 		},
 		mounted() {

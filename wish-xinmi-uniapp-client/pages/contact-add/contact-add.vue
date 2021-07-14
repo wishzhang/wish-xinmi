@@ -3,19 +3,22 @@
 		<uni-navbar title="添加朋友"></uni-navbar>
 
 		<view>
-			<u-field v-model="value" icon="search" label-width="0" placeholder="请输入信迷号" @input="onValueInput">
-				<text slot="right">取消</text>
+			<u-field :icon-style="{fontSize: '44rpx', color: $style.uniTipsColor, position: 'relative',top: '1rpx'}"
+				:icon-color="$style.uniTipsColor" :clear-size="36" icon="search"
+				:placeholder-style="'color:'+$style.uniTipsColor" v-model="value" label-width="0" placeholder="请输入信迷号"
+				@input="onValueInput">
 			</u-field>
 
-			<uni-list :border="true">
+			<uni-cell-group :border="false">
 				<template v-for="(item,index) in list">
-					<uni-list-item :key="index" :title="item.username" clickable @click="onToContactPeople(item)">
-						<view style="margin-right: 22rpx;" slot="header">
-							<uni-avatar :src="item.avatarUrl"></uni-avatar>
+					<uni-cell-item :key="index" :title="item.username" :arrow="false" clickable
+						@click="onToContactPeople(item)">
+						<view :style="{marginRight: $style.uniPaddingHorizontal}" slot="icon">
+							<uni-avatar size="small" :src="item.avatarUrl"></uni-avatar>
 						</view>
-					</uni-list-item>
+					</uni-cell-item>
 				</template>
-			</uni-list>
+			</uni-cell-group>
 		</view>
 	</view>
 </template>

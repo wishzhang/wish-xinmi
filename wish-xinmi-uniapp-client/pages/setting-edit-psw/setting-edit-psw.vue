@@ -1,6 +1,6 @@
 <template>
 	<uni-index-layout>
-		<uni-navbar title="修改密码" class="uni-bg-white"></uni-navbar>
+		<uni-navbar title="修改密码" background="white"></uni-navbar>
 		<view class="current-email">
 			<text>当前绑定的邮箱是：</text>
 			<text class="uni-color-primary">{{userInfo.emailAddress}}</text>
