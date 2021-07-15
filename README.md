@@ -14,7 +14,7 @@
 
 #### 登录模块
 
-<img width="750px" height="auto" src="https://github.com/wishzhang/wish-xinmi/blob/master/wish-xinmi-docs/img/app_5.jpg" style="zoom:25%;" />
+<img width="450px" height="auto" src="https://github.com/wishzhang/wish-xinmi/blob/master/wish-xinmi-docs/img/app_5.jpg" style="zoom:25%;" />
 
 - 仅支持邮箱注册
 - 支持信迷号、邮箱两种登录方式
