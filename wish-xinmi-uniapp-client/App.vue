@@ -1,13 +1,14 @@
 <script>
 	// const origin = 'http://localhost:3000'
-	const origin = 'http://192.168.24.3:3000'
+	// const origin = 'http://192.168.24.3:3000'
 	// const origin = 'http://192.168.43.35:3000'
+	const origin = 'http://159.75.234.119'
 
 	export default {
 		// 全局的静态变量
 		globalData: {
 			origin: origin,
-			baseURL: `${origin}`,
+			baseURL: `${origin}/xinmi`,
 			socketPath: '/socket.io',
 			tokenHeader: 'xinmi-token'
 		},

@@ -7,7 +7,7 @@ function initSocket(account) {
 		const globalData = getApp().globalData
 
 		socket = io(globalData.origin, {
-			path: globalData.socketPath,
+			path: '/xinmi'+globalData.socketPath,
 			query: {},
 			transports: ['websocket', 'polling'],
 			withCredentials: true,

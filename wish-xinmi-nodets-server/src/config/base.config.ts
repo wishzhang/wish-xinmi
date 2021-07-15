@@ -19,7 +19,7 @@ export default {
     projectName: "xinmi",
     projectCName: "信迷",
     // 服务器配置, 没有实际用到，只用来打印
-    serverIp: ip,
+    serverIp: '159.75.234.119',
     // minio配置
     minioEndPoint: "localhost",
     minioPort: 9000,

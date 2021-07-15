@@ -121,7 +121,6 @@
 							this.list = []
 						}
 						this.list = this.list.concat(data.records)
-
 					}
 				}).catch(() => {
 					this.mescroll.endErr()

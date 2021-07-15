@@ -91,6 +91,8 @@
 			...mapGetters(['userInfo'])
 		},
 		onLoad(option) {
+			debugger
+			
 			uni.showLoading()
 			this.option = option
 
