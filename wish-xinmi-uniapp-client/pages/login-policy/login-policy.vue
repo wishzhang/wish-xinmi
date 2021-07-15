@@ -10,7 +10,7 @@
 	import marked from 'marked'
 
 	const text = marked(`
-	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 16px;text-align: center;">信迷用户隐私政策</div>
+	
 	本隐私政策将帮助您了解以下内容：
 	
 	一、个人信息定义及范围

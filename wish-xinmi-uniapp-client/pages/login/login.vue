@@ -19,7 +19,7 @@
 					<u-form-item label="验证码" prop="vcode">
 						<view class="v-code-box">
 							<u-input :inputBorder="false" type="text" placeholder="请输入验证码" v-model="formData.vcode" />
-							<uni-button-vcode :valid="isValidEmail"></uni-button-vcode>
+							<uni-button-vcode :emailAddress="formData.email"></uni-button-vcode>
 						</view>
 					</u-form-item>
 				</template>
@@ -98,15 +98,13 @@
 
 				// 是否统一登录协议
 				isAgree: true,
-				// 邮箱是否有效
-				isValidEmail: false,
 				// 当前使用的登录方式
 				curLoginType: 'email',
 
 				errorType: ['border-bottom', 'toast'],
 				formData: {
-					account: '00001',
-					password: '123456a'
+					account: '',
+					password: ''
 				},
 				rules: {
 					email: [{
@@ -135,9 +133,6 @@
 			...mapGetters(['loginType'])
 		},
 		watch: {
-			'formData.email': function(val) {
-				this.isValidEmail = validEmail(val)
-			}
 		},
 		created() {
 			this.curLoginType = this.loginType
@@ -236,7 +231,7 @@
 				align-items: center;
 
 				.logo {
-					margin-top: 80rpx;
+					margin-top: 120rpx;
 					margin-bottom: 60rpx;
 				}
 			}

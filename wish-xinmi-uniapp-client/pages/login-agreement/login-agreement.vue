@@ -10,7 +10,6 @@
 	import marked from 'marked'
 
 	const text = marked(`
-	<div style="margin: 12px 0 24px;font-weight:bold;font-size: 16px;text-align: center;">用户协议</div>
 	
 	感谢您选择此产品以及服务。
 	
