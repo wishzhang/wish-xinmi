@@ -3,8 +3,9 @@
 		<mescroll-body ref="mescrollRef" :down="downOption" :up="upOption" @init="mescrollInit" @up="upCallback">
 			<uni-navbar></uni-navbar>
 
-			<uni-user-thought-bg :height="400" :to-user="userDetail.userId" :name="userDetail.name"
-				:bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl" @bg-click="onUpdateBg" />
+			<uni-user-thought-bg v-if="userDetail.userId" :height="400" :to-user="userDetail.userId"
+				:name="userDetail.name" :bgSrc="userDetail.bgUrl" :avatarSrc="userDetail.avatarUrl"
+				@bg-click="onUpdateBg" />
 
 			<view class="thought-list">
 				<view :key="name" class="thought-item-group" v-for="(groupItem, name) in group">
@@ -119,6 +120,9 @@
 				})
 			},
 			onUpdateBg() {
+				if (this.userDetail.userId !== this.userInfo.userId) {
+					return
+				}
 				this.show = true
 			},
 			onClickLeft() {
@@ -213,7 +217,7 @@
 
 					.text {
 						display: block;
-						padding: 20rpx 0 20rpx 0;
+						padding: $uni-spacing-row-sm $uni-spacing-col-sm;
 						background-color: $uni-bg-color-grey;
 						margin-bottom: 20rpx;
 					}

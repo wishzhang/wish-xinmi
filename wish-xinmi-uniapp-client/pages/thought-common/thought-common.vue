@@ -78,6 +78,10 @@
 		computed: {
 			...mapGetters(['userInfo'])
 		},
+		onShow(){
+			this.list = []
+			this.mescroll && this.mescroll.resetUpScroll() 
+		},
 		methods: {
 			onChangeAlbumCover() {
 				this.show = false

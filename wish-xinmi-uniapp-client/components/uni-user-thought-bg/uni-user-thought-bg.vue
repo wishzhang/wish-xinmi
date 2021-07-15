@@ -1,7 +1,7 @@
 <template>
 	<view class="bg-box">
-		<u-image width="100%" :height="height" :src="bgSrc" @click="onBgClick">
-			<u-image slot="error" width="100%" :height="height" src="/static/img/bg-default.jpg"></u-image>
+		<u-image :mode="'aspectFill'" width="100%" :fade="false" :height="height" :src="bgSrc" @click="onBgClick">
+			<u-image :mode="'aspectFill'" slot="error" width="100%" :height="height" :fade="false" src="/static/img/bg-default.jpg"></u-image>
 		</u-image>
 
 		<view class="avatar-box">
@@ -49,6 +49,7 @@
 <style scoped lang="scss">
 	.bg-box {
 		position: relative;
+		background-image: url('/static/img/bg-default.jpg');
 	}
 
 	.avatar-box {

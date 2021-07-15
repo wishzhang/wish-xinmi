@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<uni-navbar :statusBar="true" left-icon="back">
+	<uni-index-layout class="uni-bg-white">
+		<uni-navbar :statusBar="true" left-icon="back" background="white">
 			<template slot="right">
 				<u-button class="publish-button" type="primary" :disabled="publishDisabled" @click.native="onPublish">发表
 				</u-button>
@@ -8,17 +8,21 @@
 		</uni-navbar>
 
 		<view class="uni-page-padding">
-			<u-input class="thought-text" v-model="value" type="textarea" :border="false" placeholder="这一刻的想法"
-				:clearable="false" auto-height />
+			<u-input class="thought-text" v-model="value" type="textarea" :border="false" placeholder="这一刻的想法" focus
+				:height="200" :clearable="false" :auto-height="true" />
 			<u-upload ref="uUpload" :upload-text="''" :auto-upload="false" action="http://uploasd"></u-upload>
 		</view>
-	</view>
+	</uni-index-layout>
 </template>
 
 <script>
-	import {addThoughtForUniappRequest} from '@/api/thought.js'
-	import {mapGetters} from 'vuex'
-	
+	import {
+		addThoughtForUniappRequest
+	} from '@/api/thought.js'
+	import {
+		mapGetters
+	} from 'vuex'
+
 	export default {
 		data() {
 			return {
@@ -38,7 +42,7 @@
 			},
 			onPublish() {
 				uni.showLoading()
-				const files = this.lists.map((el,index)=>{
+				const files = this.lists.map((el, index) => {
 					return {
 						name: `file${index}`,
 						file: el.file,
@@ -49,15 +53,15 @@
 					content: this.value,
 					files: files,
 					createUser: this.userInfo.userId,
-					success: ()=>{
+					success: () => {
 						this.$toast('发表成功')
 						uni.navigateBack()
 					},
-					fail: (err)=>{
+					fail: (err) => {
 						console.log(err)
 						this.$toast('发表失败')
 					},
-					complete: ()=>{
+					complete: () => {
 						uni.hideLoading()
 					}
 				})
@@ -86,7 +90,6 @@
 	.thought-text {
 		display: block;
 		margin-top: 6rpx;
-		min-height: 8em;
 	}
 
 	/deep/ .u-list-item {

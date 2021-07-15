@@ -3,7 +3,7 @@
 		<view class="uni-status-bar"></view>
 		<view class="login-main">
 			<view class="logo-box">
-				<u-image class="logo" :width="140" :height="140" :border-radius="10"
+				<u-image class="logo" :width="140" :height="140" :border-radius="10" :fade="false"
 					src="/static/img/logo/xinmi_1024.png">
 				</u-image>
 			</view>

@@ -14,7 +14,7 @@
 						<u-button v-if="item.status===2" type="primary" size="mini" :loading="acceptLoading"
 							@click="onAccept(item)">接受
 						</u-button>
-						<text v-else-if="item.status===2" class="u-tips-color">已添加</text>
+						<text v-else-if="item.status===3" class="u-tips-color">已添加</text>
 						<text v-else-if="item.status===1" class="u-tips-color">等待对方验证</text>
 					</template>
 				</uni-cell-item>
